@@ -79,7 +79,6 @@ void recomboFromFile::do_recombo_links(){
 		lengths.push_back(length);
 		if (length == 100){
 		    length_counter ++;
-			knot->
             sites = knot->countRecomboSites(48, 52);
             }
 	//}

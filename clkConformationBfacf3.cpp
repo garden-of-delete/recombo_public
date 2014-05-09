@@ -698,7 +698,11 @@ void clkConformationBfacf3::stepQ(int q, double z) //one component only -r
 	//perform_move_q(implementation->clkp); //will call the new step function(or possibly BE the new step function)
 
 	ComponentCLKPtr comp = implementation->clkp->fcomp;
-	int n = getComponent(0).size();
+	int n_comps = implementation->size();
+	int n = 0;
+	for (int i=0; i < n_comps; i++){
+		n += getComponent(i).size();
+	}
 	double p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
 	double p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
 	double p_0 = .5*(p_plus2 + p_minus2);

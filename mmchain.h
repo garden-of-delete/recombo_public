@@ -116,7 +116,7 @@ private:
 	* @param w number of warmup steps. Per M. Szafron, w needs to be much larger than c. 1 billion is sufficient for trefoils and more complicated topologies. 10+ billion may be required for the unknot / hopf-link.
 	* Warmup should is performed with swapping and must complete before calibration can begin.
 	*/
-	void set_mmc(double Z_m, double Z_1, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int n, int c, int m, long int w);
+	void set_mmc(double Z_m, double Z_1, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int n, int c, int m, double w);
 
 	/**
 	* records operating parameters and filenames to log.txt
@@ -180,10 +180,6 @@ private:
 	* finds the size of the conformation stored in each chain. prints the sizes to cout. useful for debugging
 	*/
 	void update_size();
-	/**
-	* displays the swap ratios for all intervals
-	*/
-	void print_swap_ratios();
 	//private member objects
 	vector<interval_data> intervals;
 	vector<chain> chains;

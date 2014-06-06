@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   threevector.h
  * Author: kmo
  *
@@ -10,6 +10,8 @@
 
 #include <cmath>
 #include <iostream>
+
+using namespace std;
 
 template <class T>
 class threevector;
@@ -29,7 +31,7 @@ public:
     * Default constructor, which makes no guarantee about the values of coordinates.
     */
    threevector() { }
-   
+
    /**
     * Constructor which explicitly sets coordinates.
     * @param x value to set first coordinate
@@ -37,37 +39,37 @@ public:
     * @param z value to set third coordinate
     */
    inline threevector(T x, T y, T z);
-   
+
    /**
     * Copy constructor.
     * @param orig new object will have same coordinates as orig
     */
    inline threevector(const threevector<T>& orig);
-   
+
    /**
-    * Constructor to copy coordinates from an array. 
-    * @param orig must be an array of at least length three. Constructor will 
+    * Constructor to copy coordinates from an array.
+    * @param orig must be an array of at least length three. Constructor will
     * copy coordinates from first three entries of orig
     */
    inline threevector(const T* orig);
-   
+
    /**
     * Constructor that will make a scaled copy of original threevector.
     * @param scale to multiply coordinates
-    * @param orig coordinates of new threevector will be those of orig 
-    * multiplied by scale 
+    * @param orig coordinates of new threevector will be those of orig
+    * multiplied by scale
     */
    inline threevector(T scale, const threevector<T>& orig);
-   
+
    /**
     * Constructor that will make a scaled copy of coordinates from an array.
     * @param scale to multiply coordinates
-    * @param orig expected to be an array of at least length three. The 
-    * coordinates of new threevector will be those from orig multiplied by 
+    * @param orig expected to be an array of at least length three. The
+    * coordinates of new threevector will be those from orig multiplied by
     * scale.
-    */   
+    */
    inline threevector(T scale, const T* orig);
-   
+
    /**
     * Destructor.
     */
@@ -122,14 +124,14 @@ public:
     * @return *this set to a*u + b*v.
     */
    inline threevector<T>& combine(T a, const threevector<T>& u, T b, const threevector<T>& v);
-   
+
    /**
     * Computes the inner product of threevector with another three vector
     * @param v another threevector
     * @return The inner product of *this and v.
     */
    inline T dot(const threevector<T>& v) const;
-   
+
    /**
     * Sets threevector to be the cross product of two other threevectors
     * @param u a threevector
@@ -137,7 +139,7 @@ public:
     * @return *this set to the cross product of u and v.
     */
    inline threevector<T>& cross(const threevector<T>& u, const threevector<T>& v);
-   
+
    /**
     * Computes the Euclidean norm of threevector.
     * @return The Euclidean norm.
@@ -156,43 +158,43 @@ public:
     * @return true if v has same three coordinates as this, false otherwise.
     */
    inline bool operator ==(const threevector<T>& v) const;
-   
+
    /**
     * Tests for equality of *this and another threevector are within eplsion of
     * each other in the Euclidean metric.
     * @param v another threevector.
     * @param epsilon expected to be nonnegative.
-    * @return true if the vector difference of this and v has same three 
+    * @return true if the vector difference of this and v has same three
     * has norm less than epsilon, false otherwise.
     */
    inline bool equalsEpsilon(const threevector<T>& v, double epsilon) const;
-   
+
    /**
     * Opposite of ==.
     * @param v another threevector.
     * @return false if v has same three coordinates as this, true otherwise.
     */
    inline bool operator !=(const threevector<T>& v) const;
-   
+
    /**
     * Assignment operator.
     * @param v another threevector.
     * @return *this with coordinates set to those of v.
     */
    inline threevector<T>& operator =(const threevector<T>& v);
-   
+
    /**
     * Produces the sum with a second threevector
     * @param v another threevector
-    * @return *this after adding the coordinates of v to the coordinates of 
+    * @return *this after adding the coordinates of v to the coordinates of
     * *this.
     */
    inline threevector<T>& operator +=(const threevector<T>& v);
-   
+
    /**
     * Produces the difference with a second threevector
     * @param v another threevector
-    * @return *this after subtracting the coordinates of v to the coordinates of 
+    * @return *this after subtracting the coordinates of v to the coordinates of
     * *this.
     */
    inline threevector<T>& operator -=(const threevector<T>& v);
@@ -213,7 +215,7 @@ public:
     * The type of the coordinates of threevector.
     */
    typedef T coordinate_type;
-   
+
 protected:
    T coords[3];
 };

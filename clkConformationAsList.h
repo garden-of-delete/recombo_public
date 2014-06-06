@@ -206,7 +206,6 @@ protected:
 
 private:
    bool lineIsVertex(std::string line);
-
 };
 
 #endif	/* CLKCONFORMATIONASLIST_H */

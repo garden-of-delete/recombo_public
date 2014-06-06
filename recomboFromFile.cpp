@@ -77,7 +77,7 @@ void recomboFromFile::do_recombo_links(){
 		//need to create new countRecomboSites function that is ideal for use with mmc
 		int length = knot->getComponent(0).size() + knot->getComponent(1).size();
 		lengths.push_back(length);
-		if (length == 100){
+		if ((knot->getComponent(0).size() == 50) && (knot->getComponent(1).size() == 50)){
 		    length_counter ++;
             sites = knot->countRecomboSites(48, 52);
             }
@@ -103,7 +103,7 @@ void recomboFromFile::do_recombo_links(){
 	for (int i=0; i < lengths.size(); i++){
         sum += lengths[i];
 	}
-	cout << "Length 100 conformations: " << length_counter << endl;
+	cout << "Length 50/50 conformations: " << length_counter << endl;
 	cout << "Average Length: " << sum / lengths.size() << endl;
 }
 

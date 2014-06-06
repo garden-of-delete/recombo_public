@@ -9,6 +9,7 @@
 #define	CLKCONFORMATIONSEQCONVERT_H
 
 #include <list>
+#include <map>
 
 #include "clk.h"
 #include "clkConformationAsList.h"
@@ -16,6 +17,13 @@
 #include "bfacfProbabilities.h"
 
 #define DEFAULT_Z 0.20815
+
+//stores a set of BFACF probabilities
+struct probs{
+	double p_plus2;
+	double p_minus2;
+	double p_0;
+};
 
 class clkConformationBfacf3Component;
 
@@ -25,11 +33,6 @@ class clkConformationBfacf3Component;
 class clkConformationBfacf3
 {
 public:
-	/**
-	* Robert's Q-Step Function
-	*/
-	void clkConformationBfacf3::stepQ(int c, int q, double z);
-
    /**
     * Constructor for single component link, a knot. The z-value will be set to
     * default value, and all probabilities will be calculated based on that
@@ -120,9 +123,9 @@ public:
    virtual void step(int n);
    
     /**
-    * Initialize the probabilities for Q. Note, this function will probably end up being completely replaced when the new way of calculating Q probilities is implimented.
+    * initializes an ordered hashmap of bfacf probability containing structures for a wide range of lengths
 	*/
-   void init_Q(int S, double z, double q, bool blurt);
+   void init_Q(double z, double q);
 
    /**
     * Attempt to perform a BFACF step on current conformation using Q
@@ -134,9 +137,9 @@ public:
     */
    //virtual void stepQ(int Q);
 
-   virtual void stepQ(int, double);
+   virtual void stepQ(int q, double z);
 
-   //virtual void stepQ(int, int, double);
+   virtual void stepQ(long int c, int q, double z);
 
    /**
     * If conformation is a knot, a one-component link, then function will search
@@ -183,7 +186,7 @@ public:
     * called since the most recent call to performRecombination(int).
     */
    void undoRecombination();
-   
+   std::map<int,probs>* probMap;
 protected:
 
    // Don't want default or copy constructors called, because they don't do anything now. Todo: make these constructors work

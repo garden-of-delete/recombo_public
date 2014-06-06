@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   genericConformation.h
  * Author: kmo
  *
@@ -11,19 +11,28 @@
 #include <iostream>
 #include <string>
 #include <iterator>
-
 #include "threevector.h"
+
+
+#ifdef WIN32
+#define ISNAN _isnan
+#else
+#define ISNAN std::isnan
+#endif
+
 
 #define TWOPI        6.28318530717958647693
 
+using namespace std;
+
 /**
- * Generic algorithm to copy a range of coordinates into a range of 
+ * Generic algorithm to copy a range of coordinates into a range of
  * three vectors.
- * 
+ *
  * @param start1 the beginning of range of scalars to be copied.
  * @param end1 the end of range of scalars to be copied.
  * @param start2 the beginning of range to three vectors into to which to copy.
- * 
+ *
  * @return the end of the range into which data was copied.
  */
 template <class scalarIterator, class vectorIterator>
@@ -46,19 +55,19 @@ vectorIterator copyScalarToVector(scalarIterator start1, scalarIterator end1, ve
 
 /**
  * Generic algorithm to output a single threevector.
- * 
+ *
  * <p> For example, the vector to output is v = (1,2,3),
  * then calling outputVertex(v, os, "(", ")", ", ") will
  * output
- * 
+ *
  * <p> (1, 2, 3)
- * 
+ *
  * @param v a threevector
  * @param os the ostream to which output threevectors
  * @param prevector a string to output at the beginning of each three vector
  * @param postvector a string to output at the end of each three vector
  * @param betweenCoords a string to output between coordinates of v
- * 
+ *
  * @return a reference to the ostream
  */
 template <class threevector>
@@ -75,13 +84,13 @@ const std::string& betweenCoords = " ")
 
 /**
  * Generic algorithm to output a range of threevectors.
- * 
+ *
  * <p> For example, if the range consists of two vertices, (0,0,0) and (1,0,0),
  * then calling outputVertices(start, end, os, "[", "]", "; ", "(", ")", ", ") will
  * output
- * 
+ *
  * <p> [(0, 0, 0); (1, 0, 0)]
- * 
+ *
  * @param start1 the beginning of range to be output
  * @param end1 the end of range to be output
  * @param os the ostream to which to output threevectors
@@ -91,7 +100,7 @@ const std::string& betweenCoords = " ")
  * @param prevector a string to output at the beginning of each three vector
  * @param postvector a string to output at the end of each three vector
  * @param betweenCoords a string to output between coordinates threevectors
- * 
+ *
  * @return a reference to the ostream
  */
 template <class vectorIterator>
@@ -123,10 +132,10 @@ const std::string& betweenCoords = " ")
 
 /**
  * Generic algorithm to compute the radius of gyration squared of a range of threevectors.
- * 
+ *
  * @param start the beginning of range threevectors
  * @param end the end of range of threevectors
- * 
+ *
  * @return radius of gyration squared
  */
 template <class vectorIterator> //, class T>
@@ -172,7 +181,7 @@ double computeRog(vectorIterator start, vectorIterator end)
 /**
  * Generic algorithm to compute the contribution of Writhe and ACN between one
  * edge and a range of threevectors representing the other edges.
- * 
+ *
  * @param start the beginning of range threevectors
  * @param end the end of range of threevectors
  * @param Wr will be set to the computed writhe
@@ -234,7 +243,7 @@ double &gauss_xing_number_sum)
               + asin(double(N3.dot(N4)) / (normN3 * normN4))
               + asin(double(N4.dot(N1)) / (normN4 * normN1));
 
-      if(!_isnan(exact_acn_contrib))
+      if(!ISNAN(exact_acn_contrib))
       {
          gauss_xing_number_sum += exact_acn_contrib;
          R34xR12.cross(R34, R12);
@@ -255,7 +264,7 @@ double &gauss_xing_number_sum)
 
 /**
  * Generic algorithm to compute the Writhe and ACN of a range of threevectors.
- * 
+ *
  * @param start the beginning of range threevectors.
  * @param end the end of range of threevectors.
  * @param last vertex in the range. It is expected that end == last + 1.
@@ -269,7 +278,7 @@ vectorIterator last, double &Wr, double &Acn)
    //   count = 0;
    if(start == end || start + 1 == end || start + 2 == end)
    {
-      // we are looking at an empty conformation, or a conformation 
+      // we are looking at an empty conformation, or a conformation
       // consisting of only one edge, or a triangle, so there is almost nothing
       // to do
       Wr = Acn = 0;
@@ -279,7 +288,7 @@ vectorIterator last, double &Wr, double &Acn)
    double gauss_xing_number_sum = 0.0;
    double space_writhe_sum = 0.0;
 
-   // we need some special treatment when one of the edges is the one between 
+   // we need some special treatment when one of the edges is the one between
    // the first and the last vertex
    // compute the contribution from when one edge is the last edge
    computeWrAcn(start + 1, last, last, start, space_writhe_sum, gauss_xing_number_sum);
@@ -302,9 +311,9 @@ vectorIterator last, double &Wr, double &Acn)
 }
 
 /**
- * A generic algorithm to find the last element in a range. This algorithm 
+ * A generic algorithm to find the last element in a range. This algorithm
  * will not give sensible results for empty ranges.
- * 
+ *
  * @param start the beginning of a range.
  * @param end the end of a range.
  * @return the last element of a range. Will satisfy the condition that
@@ -326,7 +335,7 @@ iterator findLast(iterator start, iterator end)
 /**
  * Generic algorithm to compute the Writhe and ACN of a range of threevectors.
  * For this algorithm, the position of the last vertex need not be known.
- * 
+ *
  * @param start the beginning of range threevectors.
  * @param end the end of range of threevectors.
  * @param Wr will be set to the computed writhe.
@@ -348,7 +357,7 @@ vectorIterator start1, vectorIterator end1, double &Wr, double &Acn)
    double gauss_xing_number_sum = 0.0;
    double space_writhe_sum = 0.0;
 
-   // we need some special treatment when one of the edges is the one between 
+   // we need some special treatment when one of the edges is the one between
    // the first and the last vertex
    // compute the contribution from when one edge is the last edge
    computeWrAcn(start0, end0, last1, start1, space_writhe_sum, gauss_xing_number_sum);
@@ -412,7 +421,7 @@ vectorIterator start1, vectorIterator end1, double &Wr, double &Acn)
            + asin(double(N3.dot(N4)) / (normN3 * normN4))
            + asin(double(N4.dot(N1)) / (normN4 * normN1));
 
-   if(!_isnan(exact_acn_contrib)) //changed for windows compatibility
+  if(!ISNAN(exact_acn_contrib))
    {
       gauss_xing_number_sum += exact_acn_contrib;
       R34xR12.cross(R34, R12);

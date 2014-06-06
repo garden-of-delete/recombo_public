@@ -88,7 +88,7 @@ bool mmchain::add_initial_conformation_from_file(string& filename){
 		return false;
 }
 
-void mmchain::set_mmc(double Z_1, double Z_m, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int num_samples, int iterations, int M, long int W){
+void mmchain::set_mmc(double Z_1, double Z_m, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int num_samples, int iterations, int M, double W){
 	z_m = Z_m;
 	z_1 = Z_1;
 	q = Q;
@@ -169,9 +169,9 @@ void mmchain::run_mmc(){
 	//warmup with swapping
 	cout << "Warming up " << m << " chains: (" << w << " steps)" << endl;
 	//update_size(); 
-	for(long int i = 0; i < w; i+=swap_interval){ 
-		cout <<"\rCurrent Progress: " << i+5 << '/' << w;
-		for(int j = 0; j < m; j+=swap_interval){
+	for(int i = 0; i < w; i++){ 
+		cout <<"\rCurrent Progress: " << i+1 << '/' << w;
+		for(int j = 0; j < m; j++){
 			chains[j].member_knot->stepQ(swap_interval, q, chains[j].z);
 		}
 		swap();
@@ -192,7 +192,7 @@ void mmchain::run_mmc(){
 		sample();
 		cout << "\rSampling Progress: " << i+1 << '/' << n;
 	}
-	//cout << endl;
+	cout << endl;
 	out.close();
 	if ((sample_mode == 'b') || (sample_mode == 'a')){
 		display_results();
@@ -202,11 +202,15 @@ void mmchain::run_mmc(){
 void mmchain::swap(){ 
 	int i;
 	clkConformationBfacf3* temp;
+	map<int, probs>* p_temp;
 	if (n_components == 1){ //tested
 		i = rand() % (m-1); //generate random integer from 0 to m-1
 			if((chains[i].member_knot->getComponent(0).size() < chains[i+1].member_knot->getComponent(0).size()) 
 				|| (((double) rand() / (RAND_MAX)) < pow((double)(chains[i+1].z)/(chains[i].z), (chains[i].member_knot->getComponent(0).size() - chains[i+1].member_knot->getComponent(0).size())))){
 					//perform swap
+				p_temp = chains[i].member_knot->probMap;
+				chains[i].member_knot->probMap = chains[i+1].member_knot->probMap;
+				chains[i+1].member_knot->probMap = p_temp;
 				temp = chains[i].member_knot;
 				chains[i].member_knot = chains[i+1].member_knot;
 				chains[i+1].member_knot = temp;
@@ -221,18 +225,21 @@ void mmchain::swap(){
 			i = rand() % (m-1); //generate random integer from 0 to m-1
 			if((chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size()) 
 				< (chains[i+1].member_knot->getComponent(0).size() + chains[i+1].member_knot->getComponent(1).size())
-				|| (((double) rand() / (RAND_MAX)) < pow((double)(chains[i+1].z)/(chains[i].z), 
+				|| (rand() < pow((double)(chains[i+1].z)/(chains[i].z), 
 				((chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size()) 
 				- (chains[i+1].member_knot->getComponent(0).size() + chains[i+1].member_knot->getComponent(1).size()))))){
+				p_temp = chains[i].member_knot->probMap;
+				chains[i].member_knot->probMap = chains[i+1].member_knot->probMap;
+				chains[i+1].member_knot->probMap = p_temp;
 					//perform swap
-					temp = chains[i].member_knot;
-					chains[i].member_knot = chains[i+1].member_knot;
-					chains[i+1].member_knot = temp;
-					intervals[i].attempted_swaps++;
-					intervals[i].sucessful_swaps++;
+				temp = chains[i].member_knot;
+				chains[i].member_knot = chains[i+1].member_knot;
+				chains[i+1].member_knot = temp;
+				intervals[i].attempted_swaps++;
+				intervals[i].sucessful_swaps++;
 			}
-			else{ 
-				intervals[i].attempted_swaps++;}
+			else 
+				intervals[i].attempted_swaps++;
 		}
 	}
 }
@@ -284,14 +291,11 @@ void mmchain::update_intervals(){ //possibly obsolete
 
 bool mmchain::test_intervals(){
 	int test = 1; //true by default
-	print_swap_ratios();
 	for (int i = 0; i < m-1 ; i++){
-		//compute confidence intervals 
-		//NOTE: May need to update the calculation of variance to reflect coorelated samples
+		//compute confidence intervals
 		double p = intervals[i].sucessful_swaps/intervals[i].attempted_swaps;
 		double z = 1.96; //95% confidence
 		double cw = z*sqrt((1/intervals[i].attempted_swaps)*p*(1-p));
-		//display all swap ratios
 		if ((p - cw) < target_swap_ratio){
 			insert_new_chain(i);
 			i++;
@@ -323,8 +327,7 @@ void mmchain::calibrate_chains(){
 		}
 		//run chains for the same # of steps as a warmup
 		cout << "\rTesting chains... " << endl;
-		for(long int i = 0; i < w; i+=swap_interval){
-			cout <<"\rCurrent Progress: " << i+5 << '/' << w;
+		for(int i = 0; i < w; i++){ 
 			for(int j = 0; j < m; j++){
 				chains[j].member_knot->stepQ(swap_interval, q, chains[j].z);
 			}
@@ -399,11 +402,4 @@ void mmchain::update_size(){
 			cout << chains[i].size <<" ";
 	}
 		cout << endl;
-}
-
-void mmchain::print_swap_ratios(){
-	cout << endl << "Swap Ratio Point Estimates: " << endl;
-	for (int i=0; i < m-1; i++){
-		cout << "	Interval "<< i+1 << ": " <<intervals[i].sucessful_swaps/intervals[i].attempted_swaps<<endl; 
-	}
 }

@@ -12,9 +12,9 @@
 #include "genericConformation.h"
 
 #define critical_z 0.2134
-/*#define CRTDBG_MAP_ALLOC  
-#include <stdlib.h>  
-#include <crtdbg.h>  
+/*#define CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
 //#include "asdf.h"*/
 
 using namespace std;
@@ -24,7 +24,7 @@ public:
 	double center, error, error_tol, z, autocorr_data, autocorr_error, length_var;
 	int n, c;
 	//scale tol with current length?
-	
+
 	search_data(): center(0), error(0), error_tol(50), z(0), n(5000), c(2500), autocorr_data(0), autocorr_error(0), length_var(0){}
 };
 
@@ -36,7 +36,7 @@ class Analyzer{
 	int n_components;
 	clkConformationAsList initialComp0;
 	clkConformationAsList initialComp1;
-	
+
 	//clk& initial_conformation_2;
 
 public:
@@ -84,7 +84,8 @@ bool Analyzer::add_initial_conformation(istream& is){
 
    // set z and seed the random number generator
    knot->setZ(0);
-   knot->setSeed(rand() % 20000);
+   knot->setSeed(42);
+   //knot->setSeed(rand() % 20000);
 
 
    return true;
@@ -116,7 +117,7 @@ bool Analyzer::z_from_length(double target_in, double mean_tol){
 	type = "length";
 	target = target_in;
 	cout << endl <<"Initializing Search..." << endl;
-	initialize_search(target, mean_tol); 
+	initialize_search(target, mean_tol);
 	cout << endl;
 	//main while loop
 	while ((guess.center + guess.error > target + mean_tol) || guess.center - guess.error < target - mean_tol){
@@ -143,7 +144,7 @@ bool Analyzer::z_from_length(double target_in, double mean_tol){
 	if (!timeout)
 		return false;
 	else
-		return true; 
+		return true;
 }
 
 bool Analyzer::length_from_z(search_data* in, bool probe){
@@ -151,7 +152,7 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 	autocorr ac;
 	autocorrInfo info;
 	info.autocorr = info.error_autocorr = 10.0;
-	info.error_mean = DBL_MAX;
+	//info.error_mean = DBL_MAX;
 	int timeout; //hopefully not needed after the code is complete
 	//clkConformationBfacf3 knot(*knot);
 	knot->setZ(in->z);
@@ -168,13 +169,13 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 		cout << "Warming up with 1000000 steps" << endl;
 		knot->step(1000000);
 		cout << "Taking " << in->n << " samples every " << in->c << " iterations." << endl;
-		for (int i = 0; i < in->n; i++)		//want to modify to work for two component links 
+		for (int i = 0; i < in->n; i++)		//want to modify to work for two component links
 		{
 			  if (n_components == 1){
 				knot->step(in->c);
 				data.push_back(knot->getComponent(0).size());
 			  }
-			else if (n_components == 2){ 
+			else if (n_components == 2){
 				knot->step(in->c);
 				data.push_back(knot->getComponent(0).size() + knot->getComponent(1).size());
 			  }
@@ -195,7 +196,7 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 }
 
 bool Analyzer::writhe_from_z(search_data* in, bool test){
-	
+
 	return true;
 }
 
@@ -216,7 +217,7 @@ bool Analyzer::initialize_search(double target_length, double mean_tol){
 	search_data temp;
 	min.z = init_lower;
 	max.z = init_upper;
-	
+
 	if (type == "length")
 	{
 		length_from_z(&min, true);
@@ -233,13 +234,13 @@ bool Analyzer::initialize_search(double target_length, double mean_tol){
 	}
 	else if (type == "writhe")
 	{
-		
+
 	}
 	else if (type == "RoG")
 	{
-		
+
 	}
-	else 
+	else
 	{
 		return false;
 	}
@@ -254,11 +255,11 @@ bool Analyzer::check_overlap(){
 	cout << "Checking overlap..." << endl;
 		while (timeout && (guess.center + guess.error) >= (max.center - max.error)){
 		timeout--;
-		if(type == "length"){ 
+		if(type == "length"){
 			guess.error_tol /= 2;
 			length_from_z(&guess, false);
 			if ((guess.center + guess.error) < (max.center - max.error))
-				goto part2; 
+				goto part2;
 			max.error_tol /= 2;
 			length_from_z(&max, false);
 		}

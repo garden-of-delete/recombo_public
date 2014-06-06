@@ -19,6 +19,9 @@ using namespace std;
 #define ARC1(I, J)  ((J) - (I) - 1)
 #define ARC2(I, J, N) ((N) + (I) - (J) - 1)
 #define DEFAULT_RECOMBO_MAX 108
+//maximum length to precompute BFACF transition probabilities when using the init_Q function
+#define MAX_PRECOMPUTE_LENGTH 5000
+
 
 ostream& operator<<(ostream& out, ivector v)
 {
@@ -323,7 +326,7 @@ class clkConformationBfacf3::impl
       // free the edgepool and the edges
       if (clkp->edgepool)
       {
-         for (int i = 0; i < clkp->poolsize; i++) //this is slow
+         for (int i = 0; i < clkp->poolsize; i++)
          {
             if (clkp->edgepool[i]) free(clkp->edgepool[i]);
          }
@@ -619,14 +622,19 @@ class clkConformationBfacf3::impl
 };
 
 clkConformationBfacf3::clkConformationBfacf3(const clk & firstComponent) :
-implementation(new clkConformationBfacf3::impl(firstComponent)) { }
+implementation(new clkConformationBfacf3::impl(firstComponent)) {
+	probMap = new map<int,probs>();
+}
 
 clkConformationBfacf3::clkConformationBfacf3(const clk& firstComponent, const clk & secondComponent) :
-implementation(new clkConformationBfacf3::impl(firstComponent, secondComponent)) { }
+implementation(new clkConformationBfacf3::impl(firstComponent, secondComponent)) {
+	probMap = new map<int,probs>();
+}
 
 clkConformationBfacf3::~clkConformationBfacf3()
 {
    delete implementation;
+   delete probMap;
 }
 
 void clkConformationBfacf3::setKnot(const clk & component)
@@ -688,38 +696,49 @@ void clkConformationBfacf3::step(int n)
       perform_move(implementation->clkp);
 }
 
-void clkConformationBfacf3::init_Q(int S, double z, double q, bool blurt)
+void clkConformationBfacf3::init_Q(double z, double q)
 {
-	init_probabilities_q(implementation->clkp, S, z, q, blurt); //possibly unneeded function
+	for (int i=4; i < MAX_PRECOMPUTE_LENGTH; i++){
+		(*probMap)[i].p_plus2 = (pow((i+2),(q-1))*(z * z)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
+		(*probMap)[i].p_minus2 = pow(i,(q-1)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
+		(*probMap)[i].p_0 = .5*((*probMap)[i].p_plus2 + (*probMap)[i].p_minus2);
+	}
 }
 
-void clkConformationBfacf3::stepQ(int q, double z) //one component only -r
+void clkConformationBfacf3::stepQ(int q, double z)
 {
 	//perform_move_q(implementation->clkp); //will call the new step function(or possibly BE the new step function)
-
 	ComponentCLKPtr comp = implementation->clkp->fcomp;
 	int n_comps = implementation->size();
 	int n = 0;
 	for (int i=0; i < n_comps; i++){
 		n += getComponent(i).size();
-	}
+	}/*
 	double p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
 	double p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
-	double p_0 = .5*(p_plus2 + p_minus2);
+	double p_0 = .5*(p_plus2 + p_minus2);*/
 
 	comp->z = z;
-	bfacf_set_probabilities(comp, p_minus2, p_0, p_plus2);
+	try {
+		probMap->at(n);
+	}
+	catch(exception e){
+		(*probMap)[n].p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
+		(*probMap)[n].p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);;
+		(*probMap)[n].p_0 = .5*((*probMap)[n].p_plus2 + (*probMap)[n].p_minus2);
+	}
+	bfacf_set_probabilities(comp, ((*probMap)[n].p_minus2, (*probMap)[n].p_0, (*probMap)[n].p_plus2));
 	perform_move(implementation->clkp);
 }
 
-void clkConformationBfacf3::stepQ(int c, int q, double z)
+void clkConformationBfacf3::stepQ(long int c, int q, double z)
 {
-	for (int i = 0; i < c; i++)
+	for (long int i = 0; i < c; i++)
 		stepQ(q, z);
 		//perform_move_q(implementation->clkp); //see above
 }
 
-int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength) //this function needs to be rewritten for mmc
+int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength)
 {
    if (size() == 1)
    {

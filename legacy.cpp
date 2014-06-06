@@ -5,13 +5,18 @@
 #include <cstring>
 #include <cmath>
 #include <ctime>
-#include <math.h> //added to resolve windows compatibility issues --r
-#include <float.h> 
+#include <cfloat>
 
 #define FALSE 0
 #define TRUE 1
 
 using namespace std;
+
+#ifdef WIN32
+#define ISNAN _isnan
+#else
+#define ISNAN std::isnan
+#endif
 
 // From random.cpp
 
@@ -79,7 +84,7 @@ real r_gaussian(real mean, real sigma)
    return mean + sigma * rand_gaussian();
 }
 
-/* function rand_integer (low, high) returns a random integer 
+/* function rand_integer (low, high) returns a random integer
 >= `low' and < `high' (NOTE: that's LESS THAN `high')
  */
 
@@ -103,7 +108,7 @@ void sRandSimple(int seed)
    iset_gaussian = 0;
    gset_gaussian = 0.0;
 
-   /* 
+   /*
    Cycle the random number generator a few times to get rid of
    any funny business.
     */
@@ -141,7 +146,7 @@ pseudorandom saveRandomState()
    r.lo = _Rand_lo;
    r.hi = _Rand_hi;
    r.test = _Rand_test;
-   
+
    return r;
 }
 
@@ -278,7 +283,7 @@ int equal_vector_within_epsilon(vector a, vector b)
    return is_a_zero_vector(hypergumby);
 }
 
-/* 
+/*
 Function returns a random point uniformly distributed
 on a sphere.  Not really a great method to use.
  */
@@ -380,7 +385,7 @@ void set_ivector2(ivector2 a, int x, int y)
 void perp_vector(vector a, vector b)
 {
    // creates a vector a perpendicular to b
-   // because of `hairy ball theorem', this cannot be done 
+   // because of `hairy ball theorem', this cannot be done
    // in a continuous fashion
    if (b [2] * b [2] > b [0] * b [0] + b [1] * b [1])
       cross(a, b, xHat);
@@ -602,8 +607,8 @@ void change_coord_system(vector new_a, vector a,
 {
    vector dum;
 
-   /* Two coordinate systems S and R, 
-      xhat yhat zhat are vectors expressed in S frame, 
+   /* Two coordinate systems S and R,
+      xhat yhat zhat are vectors expressed in S frame,
       xhat yhat zhat are orthonormal triad defining R frame,
       a is a vector expressed in the R frame,
       new_a is the same vector expressed in the S frame. */
@@ -619,8 +624,8 @@ void change_coord_system_inv(vector new_a, vector a,
         vector xhat, vector yhat, vector zhat)
 {
 
-   /* Two coordinate systems S and R, 
-      xhat yhat zhat are vectors expressed in S frame, 
+   /* Two coordinate systems S and R,
+      xhat yhat zhat are vectors expressed in S frame,
       xhat yhat zhat are orthonormal triad defining R frame,
       a is a vector expressed in the S frame,
       new_a is the same vector expressed in the R frame. */
@@ -653,7 +658,7 @@ void make_orthonormal_triad(vector u, vector v, vector w)
 
 void conv_to_xyz(vector vert, real radius, real theta, real phi)
 {
-   // vector `vert' is (radius, theta, phi) in spherical coordinates 
+   // vector `vert' is (radius, theta, phi) in spherical coordinates
    vert [0] = radius * sin(theta) * cos(phi);
    vert [1] = radius * sin(theta) * sin(phi);
    vert [2] = radius * cos(theta);
@@ -745,7 +750,7 @@ void conv_to_polar(vector vert, real *radius, real *theta, real *phi)
 
 int is_right_of(vector p, vector base, vector dir)
 {
-   // assumes all vectors / points lie in xy-plane 
+   // assumes all vectors / points lie in xy-plane
    // given a ray with base point `base' and direction `dir',
    // returns TRUE iff point `p' is on the right hand side of the ray
 
@@ -760,7 +765,7 @@ int is_right_of(vector p, vector base, vector dir)
 
 int inside_rect(vector a, vector b, real d, vector loc)
 {
-   // test point at location loc to see if it is 
+   // test point at location loc to see if it is
    // inside rectangle from a to b of width 2d
 
    // assumes vectors lie in xy-plane
@@ -797,7 +802,7 @@ void unit_vector_in_fan(vector f, vector g, point base, real angle)
 
    vector u, w;
 
-   cross(w, base, g); // treat base as a vector 
+   cross(w, base, g); // treat base as a vector
    normal_vector(w, w);
    cross(u, g, w);
 
@@ -808,7 +813,7 @@ void unit_vector_in_fan(vector f, vector g, point base, real angle)
 
 void horizon_point(vector hp, vector cent, vector eye, vector up, real radius)
 {
-   // computes a horizon point 
+   // computes a horizon point
 
    // assumes `up' is a unit vector
 
@@ -932,7 +937,7 @@ int read_bit(BitFilePtr bfp);
 int read_bit(BitFilePtr bfp);
 void write_bit(int value, BitFilePtr bfp);
 
-// KnotPlot 1.0 data files are stored using 
+// KnotPlot 1.0 data files are stored using
 // IRIX byte order ("big endian")
 
 void read_unsigned_short(unsigned short *v, FILE *fp)
@@ -1043,7 +1048,7 @@ void add_ivector (ivector v, ivector w, ivector z) {
   v [2] = w [2] + z [2];
 }
 
-  
+
 void copy_ivector (ivector v, ivector w) {
   v [0] = w [0];
   v [1] = w [1];
@@ -1053,13 +1058,13 @@ void copy_ivector (ivector v, ivector w) {
 void mult_ivector (ivector v, ivector w, double con) {
   v [0] = round_to_long ((double) w [0] * con);
   v [1] = round_to_long ((double) w [1] * con);
-  v [2] = round_to_long ((double) w [2] * con);    
+  v [2] = round_to_long ((double) w [2] * con);
 }
 
 void mult_ivector (ivector v, ivector w, int con) {
   v [0] = w [0] * con;
   v [1] = w [1] * con;
-  v [2] = w [2] * con;    
+  v [2] = w [2] * con;
 }
 
 void max_ivector (ivector v, ivector w, ivector z) {
@@ -1152,7 +1157,7 @@ bool input_CUBE(int &num_vertices, FILE *fp, ivector *coord)
       if (!read_increment(increment, &bf)) return false;
       add_ivector(coord [i], coord [i - 1], increment);
    }
-   if (!read_increment(increment, &bf)) return false; // ignore 
+   if (!read_increment(increment, &bf)) return false; // ignore
 
    int numbits = num_vertices * 3;
    int numbytes = (numbits + 7) / 8;
@@ -1361,7 +1366,7 @@ double writhe(double &ACN, int nvert, ivector *vert, double jitter)
          exact_acn_contrib = asin(dot(N1, N2)) + asin(dot(N2, N3)) +
                  asin(dot(N3, N4)) + asin(dot(N4, N1));
 
-        if (_isnan(exact_acn_contrib)) //replaced std::isnan with _isnan per visual c++
+         if (ISNAN(exact_acn_contrib))
             continue;
 
          gauss_xing_number_sum += exact_acn_contrib;
@@ -1424,7 +1429,7 @@ ivector i1, i2;
 sub_ivector (i1, vert [(i + 1) % nvert], vert [i]);
 sub_ivector (i2, vert [(j + 1) % nvert], vert [j]);
 
-printf ("NaN: %d %d %d  %d %d %d  %d %d %d  %d %d %d\n", 
+printf ("NaN: %d %d %d  %d %d %d  %d %d %d  %d %d %d\n",
 vert [i][0], vert [i][1], vert [i][2],
 vert [(i + 1) % nvert][0], vert [(i + 1) % nvert][1], vert [(i + 1) % nvert][2],
 vert [j][0], vert [j][1], vert [j][2],
@@ -1438,7 +1443,7 @@ i1 [0], i1 [1], i1 [2], i2 [0], i2 [1], i2 [2]);
 // From seqconvert.cpp main file
 
 /*
-seqconvert -h 
+seqconvert -h
 for usage information
 
 reads a knot sequence and writes sequences of various types
@@ -1593,7 +1598,7 @@ bool debug_energy = false;
 //      return true;                        // reject it
 //    }
 //  }
-//  if (debug_energy) 
+//  if (debug_energy)
 //    printf ("accept\n");
 //  previous_energy = current_energy;
 //  return false;
@@ -1605,12 +1610,12 @@ bool debug_energy = false;
 //  static int last_nvert;
 //  if (reject) {
 //    num_vertices = last_nvert;
-//    for (int i = 0; i < num_vertices; i++) 
+//    for (int i = 0; i < num_vertices; i++)
 //      copy_ivector (coord [i], coord_last [i]);
 //  }
 //  else {
 //    last_nvert = num_vertices;
-//    for (int i = 0; i < num_vertices; i++) 
+//    for (int i = 0; i < num_vertices; i++)
 //      copy_ivector (coord_last [i], coord [i]);
 //  }
 //  return false;
@@ -1733,7 +1738,7 @@ void put_a_knot_text(FILE *fp, int flags)
    num_converted++;
 }
 
-/* added by Reuben Brasher 
+/* added by Reuben Brasher
  For convenience, I wanted to list knot statistics with spaces between rather
  than new lines.
  */
@@ -1986,7 +1991,7 @@ bool get_a_knot_UofS(FILE *fp)
    }
    while (value != -111);
 
-   // last coord [index] set is actually the same location as coord [0], 
+   // last coord [index] set is actually the same location as coord [0],
    // but coord [index] never gets used
    num_vertices = index - 1;
    return true;
@@ -1999,7 +2004,7 @@ bool get_a_knot_newsud(FILE *fp)
 
    set_ivector(coord [index++], 0, 0, 0);
 
-   ivector incr;
+   ivector incr = {NULL};
 
    do
    {
@@ -2046,7 +2051,7 @@ bool get_a_knot_newsud(FILE *fp)
 }
 
 
-#define blurt if (wiki) fprintf (stderr, " "); 
+#define blurt if (wiki) fprintf (stderr, " ");
 
 void usage(char *s)
 {
@@ -2296,19 +2301,19 @@ int legacy_main(int argc, char **argv)
       }
 
          //    else if (!strcmp (argv [index], "-kappa")) {
-         //      if (index + 1 >= argc) 
+         //      if (index + 1 >= argc)
          //        usage ("expecting a value for kappa");
          //      energy_set_kappa (atof (argv [++index]));
          //    }
          //
          //    else if (!strcmp (argv [index], "-T")) {
-         //      if (index + 1 >= argc) 
+         //      if (index + 1 >= argc)
          //        usage ("expecting a value for T");
          //      energy_set_T (atof (argv [++index]));
          //    }
          //
          //    else if (!strcmp (argv [index], "-F")) {
-         //      if (index + 1 >= argc) 
+         //      if (index + 1 >= argc)
          //        usage ("expecting a value for the F factor");
          //      energy_set_fudge_factor (atof (argv [++index]));
          //    }
@@ -2349,7 +2354,7 @@ int legacy_main(int argc, char **argv)
    if (save_last_knot)
       coord_last = (ivector *) calloc(MAXSIZE, sizeof (ivector));
 
-   //  if (filter_energies) 
+   //  if (filter_energies)
    //    energy_blurt_values ();
 
    // if no more arguments, then read from stdin instead of opening file
@@ -2366,9 +2371,6 @@ int legacy_main(int argc, char **argv)
    if (read_from_stdin)
    {
       fpin = stdin;
-/*#ifdef WIN32 
-      _setmode(_fileno(stdin), _O_BINARY); //removed for windows compatibility
-#endif*/
       get_a_knot = get_a_knot_binary;
       input_format = BINARY;
    }
@@ -2381,9 +2383,6 @@ int legacy_main(int argc, char **argv)
    if (index == argc)
    {
       fpout = stdout;
-/*#ifdef WIN32
-      _setmode(_fileno(stdout), _O_BINARY); //removed for windows compatibility
-#endif*/
    }
    else if (index == argc - 1)
    {
@@ -2439,7 +2438,7 @@ int legacy_main(int argc, char **argv)
          rewind(fpin); // go to start of input file
    }
 
-   // if the user has not yet set the output format, 
+   // if the user has not yet set the output format,
    // set the output format to be the opposite of the input format
    // UNLESS output file ends in ".b", ".bin" or ".txt"
 
@@ -2523,7 +2522,7 @@ int legacy_main(int argc, char **argv)
    if (flags & PROVIDE_INFO)
    {
       /*
-      if (output_format == ENERGY) 
+      if (output_format == ENERGY)
       fprintf (stderr, "%d knots skipped because outside energy range\n", energy_number_skipped);
        */
 

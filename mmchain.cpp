@@ -202,7 +202,7 @@ void mmchain::run_mmc(){
 void mmchain::swap(){ 
 	int i;
 	clkConformationBfacf3* temp;
-	map<int, probs>* p_temp;
+	probs* p_temp;
 	if (n_components == 1){ //tested
 		i = rand() % (m-1); //generate random integer from 0 to m-1
 			if((chains[i].member_knot->getComponent(0).size() < chains[i+1].member_knot->getComponent(0).size()) 
@@ -218,7 +218,8 @@ void mmchain::swap(){
 				intervals[i].sucessful_swaps++;
 			}
 			else{ 
-				intervals[i].attempted_swaps++;}
+				intervals[i].attempted_swaps++;
+			}
 		}
 	if (n_components == 2){ //rewritten for new swap condition, untested
 		for (i = 0; i < m-1;i++){

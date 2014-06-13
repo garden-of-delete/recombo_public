@@ -17,6 +17,7 @@
 #include "bfacfProbabilities.h"
 
 #define DEFAULT_Z 0.20815
+#define MAX_PRECOMPUTE_LENGTH 5000
 
 //stores a set of BFACF probabilities
 struct probs{
@@ -186,7 +187,8 @@ public:
     * called since the most recent call to performRecombination(int).
     */
    void undoRecombination();
-   std::map<int,probs>* probMap;
+   probs* probMap;
+
 protected:
 
    // Don't want default or copy constructors called, because they don't do anything now. Todo: make these constructors work

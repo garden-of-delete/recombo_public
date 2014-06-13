@@ -20,7 +20,6 @@ using namespace std;
 #define ARC2(I, J, N) ((N) + (I) - (J) - 1)
 #define DEFAULT_RECOMBO_MAX 108
 //maximum length to precompute BFACF transition probabilities when using the init_Q function
-#define MAX_PRECOMPUTE_LENGTH 5000
 
 
 ostream& operator<<(ostream& out, ivector v)
@@ -623,12 +622,12 @@ class clkConformationBfacf3::impl
 
 clkConformationBfacf3::clkConformationBfacf3(const clk & firstComponent) :
 implementation(new clkConformationBfacf3::impl(firstComponent)) {
-	probMap = new map<int,probs>();
+	probMap = new probs[MAX_PRECOMPUTE_LENGTH];
 }
 
 clkConformationBfacf3::clkConformationBfacf3(const clk& firstComponent, const clk & secondComponent) :
 implementation(new clkConformationBfacf3::impl(firstComponent, secondComponent)) {
-	probMap = new map<int,probs>();
+	probMap = new probs[MAX_PRECOMPUTE_LENGTH];
 }
 
 clkConformationBfacf3::~clkConformationBfacf3()
@@ -699,9 +698,9 @@ void clkConformationBfacf3::step(int n)
 void clkConformationBfacf3::init_Q(double z, double q)
 {
 	for (int i=4; i < MAX_PRECOMPUTE_LENGTH; i++){
-		(*probMap)[i].p_plus2 = (pow((i+2),(q-1))*(z * z)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
-		(*probMap)[i].p_minus2 = pow(i,(q-1)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
-		(*probMap)[i].p_0 = .5*((*probMap)[i].p_plus2 + (*probMap)[i].p_minus2);
+		probMap[i].p_plus2 = (pow((i+2),(q-1))*(z * z)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
+		probMap[i].p_minus2 = pow(i,(q-1)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
+		probMap[i].p_0 = .5*probMap[i].p_plus2 + probMap[i].p_minus2;
 	}
 }
 
@@ -719,15 +718,16 @@ void clkConformationBfacf3::stepQ(int q, double z)
 	double p_0 = .5*(p_plus2 + p_minus2);*/
 
 	comp->z = z;
-	try {
-		probMap->at(n);
+	if (n < MAX_PRECOMPUTE_LENGTH){
+		bfacf_set_probabilities(comp, probMap[n].p_minus2, probMap[n].p_0, probMap[n].p_plus2);
 	}
-	catch(exception e){
-		(*probMap)[n].p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
-		(*probMap)[n].p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);;
-		(*probMap)[n].p_0 = .5*((*probMap)[n].p_plus2 + (*probMap)[n].p_minus2);
+	else{
+		double p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
+		double p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
+		double p_0 = .5*(p_plus2 + p_minus2);
+		bfacf_set_probabilities(comp, p_minus2, p_0, p_plus2);
 	}
-	bfacf_set_probabilities(comp, ((*probMap)[n].p_minus2, (*probMap)[n].p_0, (*probMap)[n].p_plus2));
+
 	perform_move(implementation->clkp);
 }
 

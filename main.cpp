@@ -36,7 +36,7 @@ int main(void){
     recombo.do_recombo();
     system("PAUSE");
 }*/
-
+/*
 int main(void){
 	clkConformationBfacf3* knot;
 	vector<double> lengths;
@@ -54,7 +54,7 @@ int main(void){
 		cout << '\r' << i+1 << '/' << p;
 	}
 
-}
+}*/
 /*
 //Q Test code
 int main(void){

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\src\Analyzer.h" />
+    <ClInclude Include="..\..\..\src\argprocessor.h" />
+    <ClInclude Include="..\..\..\src\autocorr.h" />
+    <ClInclude Include="..\..\..\src\bfacfProbabilities.h" />
+    <ClInclude Include="..\..\..\src\bfacfProbabilitiesFromZ.h" />
+    <ClInclude Include="..\..\..\src\bfacfProbabilitiesFromZFixed.h" />
+    <ClInclude Include="..\..\..\src\clk.h" />
+    <ClInclude Include="..\..\..\src\clkCigar.h" />
+    <ClInclude Include="..\..\..\src\clkConformationAsList.h" />
+    <ClInclude Include="..\..\..\src\clkConformationBfacf3.h" />
+    <ClInclude Include="..\..\..\src\clkConformationSeqconvert.h" />
+    <ClInclude Include="..\..\..\src\conformation.h" />
+    <ClInclude Include="..\..\..\src\conformationAsList.h" />
+    <ClInclude Include="..\..\..\src\conformationWlc.h" />
+    <ClInclude Include="..\..\..\src\genericConformation.h" />
+    <ClInclude Include="..\..\..\src\legacy.h" />
+    <ClInclude Include="..\..\..\src\legacyBfacf.h" />
+    <ClInclude Include="..\..\..\src\mmchain.h" />
+    <ClInclude Include="..\..\..\src\random.h" />
+    <ClInclude Include="..\..\..\src\recomboArgprocessor.h" />
+    <ClInclude Include="..\..\..\src\recomboFromFile.h" />
+    <ClInclude Include="..\..\..\src\regularNgon.h" />
+    <ClInclude Include="..\..\..\src\runRecombo.h" />
+    <ClInclude Include="..\..\..\src\testFramework.h" />
+    <ClInclude Include="..\..\..\src\threevector.h" />
+    <ClInclude Include="..\..\..\src\unitTests.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\argprocessor.cpp" />
+    <ClCompile Include="..\..\..\src\autocorr.cpp" />
+    <ClCompile Include="..\..\..\src\bfacfProbabilities.cpp" />
+    <ClCompile Include="..\..\..\src\bfacfProbabilitiesFromZ.cpp" />
+    <ClCompile Include="..\..\..\src\bfacfProbabilitiesFromZFixed.cpp" />
+    <ClCompile Include="..\..\..\src\clk.cpp" />
+    <ClCompile Include="..\..\..\src\clkCigar.cpp" />
+    <ClCompile Include="..\..\..\src\clkConformationAsList.cpp" />
+    <ClCompile Include="..\..\..\src\clkConformationBfacf3.cpp" />
+    <ClCompile Include="..\..\..\src\clkConformationSeqconvert.cpp" />
+    <ClCompile Include="..\..\..\src\conformation.cpp" />
+    <ClCompile Include="..\..\..\src\conformationAsList.cpp" />
+    <ClCompile Include="..\..\..\src\conformationWlc.cpp" />
+    <ClCompile Include="..\..\..\src\legacy.cpp" />
+    <ClCompile Include="..\..\..\src\legacyBfacf.cpp" />
+    <ClCompile Include="..\..\..\src\mmchain.cpp" />
+    <ClCompile Include="..\..\..\src\random.cpp" />
+    <ClCompile Include="..\..\..\src\recomboArgprocessor.cpp" />
+    <ClCompile Include="..\..\..\src\recomboFromFile.cpp" />
+    <ClCompile Include="..\..\..\src\regularNgon.cpp" />
+    <ClCompile Include="..\..\..\src\runRecombo.cpp" />
+    <ClCompile Include="..\..\..\src\testFramework.cpp" />
+    <ClCompile Include="..\..\..\src\unitTests.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A9543E82-8498-4505-AB25-FE4D821C5A96}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>library</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,13 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recombo", "recombo\recombo.vcxproj", "{26CA8788-0F71-44D5-AAE0-AFA07E70D8EE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "library", "library\library.vcxproj", "{A9543E82-8498-4505-AB25-FE4D821C5A96}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tests", "tests\tests.vcxproj", "{8EF92F50-8C1E-44C0-A847-99DB523FDE06}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmc", "mmc\mmc.vcxproj", "{AD6AB267-C3BB-4FF6-BD40-B3FBE889A514}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A9543E82-8498-4505-AB25-FE4D821C5A96} = {A9543E82-8498-4505-AB25-FE4D821C5A96}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +30,10 @@ Global
 		{8EF92F50-8C1E-44C0-A847-99DB523FDE06}.Debug|Win32.Build.0 = Debug|Win32
 		{8EF92F50-8C1E-44C0-A847-99DB523FDE06}.Release|Win32.ActiveCfg = Release|Win32
 		{8EF92F50-8C1E-44C0-A847-99DB523FDE06}.Release|Win32.Build.0 = Release|Win32
+		{AD6AB267-C3BB-4FF6-BD40-B3FBE889A514}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AD6AB267-C3BB-4FF6-BD40-B3FBE889A514}.Debug|Win32.Build.0 = Debug|Win32
+		{AD6AB267-C3BB-4FF6-BD40-B3FBE889A514}.Release|Win32.ActiveCfg = Release|Win32
+		{AD6AB267-C3BB-4FF6-BD40-B3FBE889A514}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,5 @@
-#include "testFramework.h";
-#include "unitTests.h";
+#include "testFramework.h"
+#include "unitTests.h"
 
 using namespace std;
 
@@ -17,4 +17,5 @@ int main(void){
 	//do the delete
 	delete test1;
 	delete test2;
+	system("PAUSE");
 }

@@ -3,8 +3,10 @@
  * Author: rstolz
  * 
  * Created on April 17th 2013
- * Updated on 12/29/2013
+ * Updated on 6/24/14
  */
+
+#pragma once
 
 #include <iostream>
 #include <list>

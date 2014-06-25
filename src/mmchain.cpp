@@ -160,6 +160,7 @@ void mmchain::run_mmc(){
 	for (i = 0; i < m; i++){
 		chains[i].member_knot->setZ(exp((log(chains[0].member_knot->getZ()) - i*init_delta_b))); 
 		chains[i].z = chains[i].member_knot->getZ();
+		chains[i].data.resize(n);
 	}
 	for (i = 0; i < m-1; i++){
 		temp_interval.delta_b = abs(log(chains[i].member_knot->getZ()) - log(chains[i+1].member_knot->getZ()));
@@ -180,8 +181,8 @@ void mmchain::run_mmc(){
 	//calibrate chains
 	calibrate_chains();
 	cout << endl << "Starting sampling with " << m << " chains..." << endl;
+	
 	//main loop
-
 	for(i=0; i<n; i++){
 		for(j = 0; j < c/swap_interval; j++){
 			for(k = 0; k < m; k++){

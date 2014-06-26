@@ -13,13 +13,13 @@ void print_usage(){
 	cout << "-ncomp\tnumber of components" << endl;
 }
 
-void main(int argc, char* argv[]){
+int main(int argc, char* argv[]){
 	int min_arc = 0, max_arc = 0, ncomp = 0; 
 	char* infile = NULL, *outfile = NULL;
 	
 	if (argc < 6){
 		print_usage();
-		return;
+		return 0;
 	}
 	
 	infile = argv[2];
@@ -40,16 +40,17 @@ void main(int argc, char* argv[]){
 		}
 		else{
 			cout << "unrecognized operator/option. Terminating program...";
-			return;
+			return 0;
 		}
 	}
 
 	//sanity check
 	if (min_arc > max_arc){
 		cout << "mininum arclength must be strictly <= maximum arclength. Terminating program...";
-		return;
+		return 0;
 	}
 
 	recomboFromFile recombo(min_arc, max_arc, infile, outfile, ncomp);
 	recombo.do_recombo();
+	return 0;
 }

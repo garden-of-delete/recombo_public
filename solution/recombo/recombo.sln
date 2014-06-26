@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mmc", "mmc\mmc.vcxproj", "{
 		{A9543E82-8498-4505-AB25-FE4D821C5A96} = {A9543E82-8498-4505-AB25-FE4D821C5A96}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recomboFromFile", "recomboFromFile\recomboFromFile.vcxproj", "{F9E0FAED-2538-43EB-BFB6-7780E5E62DAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -34,6 +36,10 @@ Global
 		{AD6AB267-C3BB-4FF6-BD40-B3FBE889A514}.Debug|Win32.Build.0 = Debug|Win32
 		{AD6AB267-C3BB-4FF6-BD40-B3FBE889A514}.Release|Win32.ActiveCfg = Release|Win32
 		{AD6AB267-C3BB-4FF6-BD40-B3FBE889A514}.Release|Win32.Build.0 = Release|Win32
+		{F9E0FAED-2538-43EB-BFB6-7780E5E62DAE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9E0FAED-2538-43EB-BFB6-7780E5E62DAE}.Debug|Win32.Build.0 = Debug|Win32
+		{F9E0FAED-2538-43EB-BFB6-7780E5E62DAE}.Release|Win32.ActiveCfg = Release|Win32
+		{F9E0FAED-2538-43EB-BFB6-7780E5E62DAE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,7 +11,7 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 	if (!in->good())
 		{cout << "Error reading input file" << endl; exit(3);}
 	if (!out->good())
-		{cout << "Error reading output file" << endl; exit(3);}
+		{cout << "Error creating output file" << endl; exit(3);}
 
 }
 

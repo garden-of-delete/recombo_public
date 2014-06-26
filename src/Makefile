@@ -19,7 +19,7 @@ mmc: 			$(OBJS) mmcMain.o
 
 recomboFromFile: 	$(OBJS) recomboFromFileMain.o
 			echo build
-			$(cc) -o recomboFromFile  $(CFLAGS) $(OBJS) recomboFromFileMain.o
+			$(CC) -o recomboFromFile  $(CFLAGS) $(OBJS) recomboFromFileMain.o
 
 unitTests:		$(OBJS) unitTestMain.o
 			echo build

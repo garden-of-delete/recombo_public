@@ -37,6 +37,7 @@
     <ClInclude Include="..\..\..\src\testFramework.h" />
     <ClInclude Include="..\..\..\src\threevector.h" />
     <ClInclude Include="..\..\..\src\unitTests.h" />
+    <ClInclude Include="..\..\..\src\zAnalyzer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\argprocessor.cpp" />
@@ -62,6 +63,7 @@
     <ClCompile Include="..\..\..\src\runRecombo.cpp" />
     <ClCompile Include="..\..\..\src\testFramework.cpp" />
     <ClCompile Include="..\..\..\src\unitTests.cpp" />
+    <ClCompile Include="..\..\..\src\zAnalyzer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9543E82-8498-4505-AB25-FE4D821C5A96}</ProjectGuid>

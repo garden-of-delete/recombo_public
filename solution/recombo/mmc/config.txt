@@ -1,0 +1,11 @@
+initial_file= 
+zmin= 
+zmax= 
+q= 
+target_swap_ratio= 
+swap_interval= 
+n_samples= 
+steps_between_samples= 
+initial_n_chains= 10
+warmup= 
+sample_mode= b

@@ -1,9 +1,6 @@
 CC = g++ -g
 CC = g++ 
 
-# clean makefile for on-server solution build (rstolz 6/24/14)
-
-
 CFLAGS = -g -fpermissive
 
 .SUFFIXES: .cpp
@@ -11,20 +8,35 @@ CFLAGS = -g -fpermissive
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
-OBJS = autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o random.o recomboFromFile.o testFramework.o regularNgon.o 
+OBJS = autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o random.o recomboFromFile.o regularNgon.o 
 
-mmc: 			$(OBJS) mmcMain.o
-			echo build
-			$(CC) -o mmc $(CFLAGS) $(OBJS) mmcMain.o
+TESTOBJS = testFramework.o unitTests.o unitTestMain.o
 
-recomboFromFile: 	$(OBJS) recomboFromFileMain.o
-			echo build
-			$(CC) -o recomboFromFile  $(CFLAGS) $(OBJS) recomboFromFileMain.o
+all: programs test 
 
-unitTests:		$(OBJS) unitTestMain.o
-			echo build
-			$(CC) -o unitTests $(CFLAGS) $(OBJS) unitTestMain.o
+programs: mmc recomboFromFile
 
-clean:
-			rm $(OBJS) mmcMain.o unitTestMain.o recomboFromFileMain.o
+mmc: $(OBJS) mmcMain.o
+	@echo Build mmc.
+	$(CC) -o mmc $(CFLAGS) $(OBJS) mmcMain.o
+
+recomboFromFile: $(OBJS) recomboFromFileMain.o
+	@echo Build recombo from file.
+	$(CC) -o recomboFromFile  $(CFLAGS) $(OBJS) recomboFromFileMain.o
+
+unitTests: $(OBJS) $(TESTOBJS)
+	@echo Build unit tests.
+	$(CC) -o unitTests $(CFLAGS) $(OBJS) $(TESTOBJS)
+
+test: unitTests
+	@echo Run unit tests.
+	./unitTests
+
+clean: 
+	@echo Clean.
+	rm -f *.o
+
+clobber: clean
+	@echo Clobber.
+	rm -f mmc recomboFromFile unitTests
 

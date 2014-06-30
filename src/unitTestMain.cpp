@@ -3,19 +3,13 @@
 
 using namespace std;
 
-int main(void){
-	//create tests first
-	unit_test* test1 = new pass();
-	unit_test* test2 = new fail();
-	//create test framework, (doesn't work? -r.s.)
+int main(void)
+{
 	test_suite suite;
-	//register? tests
-	suite.add_test(test1);
-	suite.add_test(test2);
-	//run tests?
+
+	suite.add_test(new pass());
+	suite.add_test(new fail());
+
 	suite.run_suite();
-	//do the delete
-	delete test1;
-	delete test2;
-	system("PAUSE");
 }
+

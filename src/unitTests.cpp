@@ -1,21 +1,35 @@
 #include "testFramework.h"
 #include "unitTests.h"
 
+#include <iostream>
+
 using namespace std;
 
-pass::pass(){
-	pass_message = "this is the pass message";
+pass::pass():
+	unit_test("pass", "This is the pass message.", "This is the fail message.")
+{}
+
+pass::~pass()
+{
+	cout << "Delete pass." << endl;
 }
 
-fail::fail(){
-	fail_message = "this is the fail message";
-}
-
-bool pass::execute(){
+bool pass::execute()
+{
 	return true;
 }
 
-bool fail::execute(){
+fail::fail():
+	unit_test("fail", "This is the pass message.", "This is the fail message.")
+{}
+
+fail::~fail()
+{
+	cout << "Delete fail." << endl;
+}
+
+bool fail::execute()
+{
 	return false;
 }
 

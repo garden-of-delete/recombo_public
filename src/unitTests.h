@@ -1,14 +1,22 @@
 #pragma once
 
-class fail: public unit_test{
+#include "unitTests.h"
+
+class fail: public unit_test
+{
 public:
-	bool execute();
 	fail();
+	~fail();
+
+	bool execute();
 };
 
-class pass: public unit_test{
+class pass: public unit_test
+{
 public:
-	bool execute();
 	pass();
+	~pass();
+
+	bool execute();
 };
 

@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#define ASSERT(assertion) if(!(assertion)) {cout << " in file " << __FILE__ << ", on line " << __LINE__ ; return false;}
+
 class unit_test
 {
 public:

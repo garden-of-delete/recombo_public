@@ -154,3 +154,10 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# Results from makefile
+*.o
+src/mmc
+src/recomboFromFile
+src/unitTests
+

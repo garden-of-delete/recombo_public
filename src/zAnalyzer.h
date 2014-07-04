@@ -42,7 +42,7 @@ public:
 	bool add_initial_conformation(istream&);
 	bool Analyzer::add_initial_conformation_from_file(char* filename);
 	void reset();
-	bool z_from_length(double, double);
+	bool z_from_length(double target, double mean_tol);
 	bool z_from_writhe(double, double, double*);
 	bool z_from_RoG(double, double, double*);
 	bool length_from_z(search_data*, bool);

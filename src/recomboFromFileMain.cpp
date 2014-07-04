@@ -22,10 +22,10 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 	
-	infile = argv[2];
-	outfile = argv[3];
+	infile = argv[1];
+	outfile = argv[2];
 
-	for (int i=1; i < argc; i++){
+	for (int i=3; i < argc; i++){
 		if (!strcmp(argv[i], "-min")){
 			min_arc = atoi(argv[i+1]);
 			i++;

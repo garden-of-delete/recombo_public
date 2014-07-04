@@ -52,7 +52,7 @@ public:
 	bool check_overlap();
 	void write_log(ostream);
 	void read_table(istream);
-	void generate_table(char*, char*, int, int, int);
+	void generate_table(char* ifilename, char* ofilename, int min, int max, int tol);
 	bool write_table(ofstream);
 	//void read_from_file(ifstream&);
 

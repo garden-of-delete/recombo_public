@@ -21,9 +21,6 @@ bool Analyzer::add_initial_conformation(istream& is){
 
    // set z and seed the random number generator
    knot->setZ(0);
-   knot->setSeed(42);
-   //knot->setSeed(rand() % 20000);
-
 
    return true;
 }

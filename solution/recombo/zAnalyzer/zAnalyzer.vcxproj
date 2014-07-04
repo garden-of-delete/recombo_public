@@ -80,6 +80,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\zAnalyzerMain.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\library\library.vcxproj">
+      <Project>{a9543e82-8498-4505-ab25-fe4d821c5a96}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

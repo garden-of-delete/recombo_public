@@ -1,4 +1,8 @@
 #include "zAnalyzer.h"
+#include <string.h>
+#include <stdlib.h>
+
+using namespace std;
 
 void print_usage(){
 	cout << "Usage:" << endl;

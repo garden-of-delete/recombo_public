@@ -14,7 +14,7 @@ TESTOBJS = testFramework.o unitTests.o unitTestMain.o
 
 all: programs test 
 
-programs: mmc recomboFromFile
+programs: mmc recomboFromFile zAnalyzer
 
 mmc: $(OBJS) mmcMain.o
 	@echo Build mmc.

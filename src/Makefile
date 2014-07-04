@@ -8,7 +8,7 @@ CFLAGS = -g -fpermissive
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
-OBJS = autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o random.o recomboFromFile.o regularNgon.o 
+OBJS = autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o random.o recomboFromFile.o regularNgon.o zAnalyzer.o
 
 TESTOBJS = testFramework.o unitTests.o unitTestMain.o
 
@@ -24,6 +24,10 @@ recomboFromFile: $(OBJS) recomboFromFileMain.o
 	@echo Build recombo from file.
 	$(CC) -o recomboFromFile  $(CFLAGS) $(OBJS) recomboFromFileMain.o
 
+zAnalyzer: $(OBJS) zAnalyzerMain.o
+	@echo Build zAnalyzer
+	$(CC) -o zAnalyzer $(CFLAGS) $(OBJS) zAnalyzerMain.o
+
 unitTests: $(OBJS) $(TESTOBJS)
 	@echo Build unit tests.
 	$(CC) -o unitTests $(CFLAGS) $(OBJS) $(TESTOBJS)
@@ -38,5 +42,5 @@ clean:
 
 clobber: clean
 	@echo Clobber.
-	rm -f mmc recomboFromFile unitTests
+	rm -f mmc recomboFromFile unitTests zAnalyzer
 

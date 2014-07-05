@@ -1,8 +1,6 @@
-#include "randomTests.h"
+#include <testFramework.h>
 
 #include <pseudorandom.h>
-
-using namespace std;
 
 static int randVals[] = {
     43374145,

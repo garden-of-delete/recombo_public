@@ -8,7 +8,7 @@ CFLAGS = -g -fpermissive -I..
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
-OBJS = randomTests.o unitTestMain.o
+OBJS = argprocessorTests.o randomTests.o unitTestMain.o
 
 all: unitTests samples
 

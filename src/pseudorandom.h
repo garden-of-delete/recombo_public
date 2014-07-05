@@ -1,18 +1,26 @@
 /* 
- * File:   random.h
+ * File:   pseudorandom.h
  * Author: kmo
  *
  * Created on October 3, 2012, 3:40 PM
  */
 
-#ifndef RANDOM_H
-#define	RANDOM_H
+#pragma once
 
 #include <ctime>
 
 /**
  * A linear congruential pseudorandom number generator.
- */
+ * Based on random number subroutines from KnotPlot by Rob Scharein
+ * Original algorithm from 
+ * "Random number Generators: Good Ones Are Hard To Find",
+ * Park, Stephen K., and Miller, Keith W.,
+ * Communications of the ACM, 31 (10): 1192-1201., October, 1988.
+ *
+ * http://en.wikipedia.org/wiki/Park%E2%80%93Miller_RNG
+ * http://portal.acm.org/citation.cfm?id=63042
+ *
+*/
 class pseudorandom
 {
 public:
@@ -135,6 +143,4 @@ private:
 };
 
 pseudorandom saveRandomState();
-
-#endif	/* RANDOM_H */
 

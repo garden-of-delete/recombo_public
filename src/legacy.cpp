@@ -133,7 +133,7 @@ void set_sRand_seed_to_clocktime()
 // Reuben Brasher: the following added so that we can save the state of random
 // number generator.
 
-#include "random.h"
+#include "pseudorandom.h"
 
 pseudorandom saveRandomState()
 {

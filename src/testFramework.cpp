@@ -51,9 +51,7 @@ public:
 	{}
 
 	~simple_test()
-	{
-		cout << "Delete " << test_name << '.' << endl;
-	}
+	{}
 
 	bool execute()
 	{
@@ -68,7 +66,6 @@ test_suite::test_suite(){}
 
 test_suite::~test_suite()
 {
-	cout << "Delete the tests." << endl;
 	for (int i = 0; i < tests.size(); i++)
 	{
 		delete tests[i];

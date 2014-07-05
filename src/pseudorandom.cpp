@@ -5,7 +5,7 @@
  * Created on October 3, 2012, 3:40 PM
  */
 
-#include "random.h"
+#include "pseudorandom.h"
 
 #include <cmath>
 

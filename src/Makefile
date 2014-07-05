@@ -8,7 +8,7 @@ CFLAGS = -g -fpermissive
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
-OBJS = autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o random.o recomboFromFile.o regularNgon.o zAnalyzer.o
+OBJS = autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o pseudorandom.o recomboFromFile.o regularNgon.o zAnalyzer.o
 
 all: programs librecombo libunittest test 
 
@@ -41,6 +41,10 @@ unitTests: bin librecombo libunittest
 
 test: unitTests
 	@echo Run unit tests.
+	bin/test
+
+sampleTest: unitTests
+	@echo Run example unit tests.
 	bin/samples
 
 clean: 

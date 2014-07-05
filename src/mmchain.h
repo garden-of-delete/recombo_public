@@ -15,7 +15,7 @@
 #include <cstdlib>
 #include <string.h>
 
-#include "random.h"
+#include "pseudorandom.h"
 #include "autocorr.h"
 #include "clk.h"
 #include "clkCigar.h"

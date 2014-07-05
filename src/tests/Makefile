@@ -8,11 +8,15 @@ CFLAGS = -g -fpermissive -I..
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
-OBJS = unitTestMain.o unitTests.o
+OBJS = randomTests.o unitTestMain.o
 
-all: samples 
+all: unitTests samples
 
-samples: $(OBJS)
-	@echo Build sample tests.
-	$(CC) -o ../bin/samples $(CFLAGS) $(OBJS) ../libunittest.a
+unitTests: $(OBJS)
+	@echo Build unit tests.
+	$(CC) -o ../bin/test $(CFLAGS) $(OBJS) ../librecombo.a ../libunittest.a
+
+samples: sampleUnitTestMain.o sampleUnitTests.o
+	@echo Build example tests.
+	$(CC) -o ../bin/samples $(CFLAGS) sampleUnitTestMain.o sampleUnitTests.o ../libunittest.a
 

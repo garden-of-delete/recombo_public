@@ -13,7 +13,7 @@
 
 #include "recomboArgprocessor.h"
 #include "clkConformationBfacf3.h"
-#include "random.h"
+#include "pseudorandom.h"
 
 /**
  * A class to handle the details of recombination experiments.

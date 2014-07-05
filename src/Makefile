@@ -8,7 +8,7 @@ CFLAGS = -g -fpermissive
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
-OBJS = argprocessor.o autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o pseudorandom.o recomboFromFile.o regularNgon.o zAnalyzer.o
+OBJS = argprocessor.o autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o pseudorandom.o recomboArgprocessor.o recomboFromFile.o regularNgon.o runRecombo.o zAnalyzer.o
 
 all: programs librecombo libunittest test 
 

@@ -245,4 +245,6 @@ bool testArgprocessor()
    ASSERT(b->options["e"].found && b->options["e"].content == "asdf");
 
    delete b;
+   
+   return true;
 }

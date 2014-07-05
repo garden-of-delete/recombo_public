@@ -157,7 +157,5 @@ $RECYCLE.BIN/
 
 # Results from makefile
 *.o
-src/mmc
-src/recomboFromFile
-src/unitTests
+*.a
 

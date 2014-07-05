@@ -10,37 +10,44 @@ CFLAGS = -g -fpermissive
 
 OBJS = autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o random.o recomboFromFile.o regularNgon.o zAnalyzer.o
 
-TESTOBJS = testFramework.o unitTests.o unitTestMain.o
-
-all: programs test 
+all: programs librecombo libunittest test 
 
 programs: mmc recomboFromFile zAnalyzer
 
-mmc: $(OBJS) mmcMain.o
+bin:
+	mkdir -p bin
+
+librecombo: $(OBJS)
+	ar r librecombo.a $(OBJS)
+
+mmc: bin $(OBJS) mmcMain.o
 	@echo Build mmc.
-	$(CC) -o mmc $(CFLAGS) $(OBJS) mmcMain.o
+	$(CC) -o bin/mmc $(CFLAGS) $(OBJS) mmcMain.o
 
-recomboFromFile: $(OBJS) recomboFromFileMain.o
+recomboFromFile: bin $(OBJS) recomboFromFileMain.o
 	@echo Build recombo from file.
-	$(CC) -o recomboFromFile  $(CFLAGS) $(OBJS) recomboFromFileMain.o
+	$(CC) -o bin/recomboFromFile  $(CFLAGS) $(OBJS) recomboFromFileMain.o
 
-zAnalyzer: $(OBJS) zAnalyzerMain.o
+zAnalyzer: bin $(OBJS) zAnalyzerMain.o
 	@echo Build zAnalyzer
-	$(CC) -o zAnalyzer $(CFLAGS) $(OBJS) zAnalyzerMain.o
+	$(CC) -o bin/zAnalyzer $(CFLAGS) $(OBJS) zAnalyzerMain.o
 
-unitTests: $(OBJS) $(TESTOBJS)
+libunittest: bin testFramework.o
+	ar r libunittest.a testFramework.o
+
+unitTests: bin librecombo libunittest
 	@echo Build unit tests.
-	$(CC) -o unitTests $(CFLAGS) $(OBJS) $(TESTOBJS)
+	(cd tests; $(MAKE))
 
 test: unitTests
 	@echo Run unit tests.
-	./unitTests
+	bin/samples
 
 clean: 
 	@echo Clean.
-	rm -f *.o
+	rm -f *.o *.a tests/*.o
 
 clobber: clean
 	@echo Clobber.
-	rm -f mmc recomboFromFile unitTests zAnalyzer
+	rm -fr bin
 

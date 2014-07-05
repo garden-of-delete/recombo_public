@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\..\..\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -76,13 +77,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\tests\argprocessorTests.h" />
+    <ClInclude Include="..\..\..\src\tests\randomTests.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\unitTestMain.cpp" />
+    <ClCompile Include="..\..\..\src\tests\argprocessorTests.cpp" />
+    <ClCompile Include="..\..\..\src\tests\randomTests.cpp" />
+    <ClCompile Include="..\..\..\src\tests\unitTestMain.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\library\library.vcxproj">

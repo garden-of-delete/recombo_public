@@ -3,7 +3,7 @@
 #include <fstream>
 
 //#include "mmchain.h"
-#include "random.h"
+#include "pseudorandom.h"
 #include "autocorr.h"
 #include "clk.h"
 #include "clkCigar.h"
@@ -11,7 +11,7 @@
 #include "clkConformationBfacf3.h"
 #include "conformationAsList.h"
 #include "genericConformation.h"
-#include "Analyzer.h"
+//#include "Analyzer.h"
 //#include "mmchain.h" included in recomboFromFile.h
 #include <string.h>
 #include "runRecombo.h"

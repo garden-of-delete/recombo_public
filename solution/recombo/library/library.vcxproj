@@ -28,14 +28,13 @@
     <ClInclude Include="..\..\..\src\legacy.h" />
     <ClInclude Include="..\..\..\src\legacyBfacf.h" />
     <ClInclude Include="..\..\..\src\mmchain.h" />
-    <ClInclude Include="..\..\..\src\random.h" />
+    <ClInclude Include="..\..\..\src\pseudorandom.h" />
     <ClInclude Include="..\..\..\src\recomboArgprocessor.h" />
     <ClInclude Include="..\..\..\src\recomboFromFile.h" />
     <ClInclude Include="..\..\..\src\regularNgon.h" />
     <ClInclude Include="..\..\..\src\runRecombo.h" />
     <ClInclude Include="..\..\..\src\testFramework.h" />
     <ClInclude Include="..\..\..\src\threevector.h" />
-    <ClInclude Include="..\..\..\src\unitTests.h" />
     <ClInclude Include="..\..\..\src\zAnalyzer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -55,13 +54,12 @@
     <ClCompile Include="..\..\..\src\legacy.cpp" />
     <ClCompile Include="..\..\..\src\legacyBfacf.cpp" />
     <ClCompile Include="..\..\..\src\mmchain.cpp" />
-    <ClCompile Include="..\..\..\src\random.cpp" />
+    <ClCompile Include="..\..\..\src\pseudorandom.cpp" />
     <ClCompile Include="..\..\..\src\recomboArgprocessor.cpp" />
     <ClCompile Include="..\..\..\src\recomboFromFile.cpp" />
     <ClCompile Include="..\..\..\src\regularNgon.cpp" />
     <ClCompile Include="..\..\..\src\runRecombo.cpp" />
     <ClCompile Include="..\..\..\src\testFramework.cpp" />
-    <ClCompile Include="..\..\..\src\unitTests.cpp" />
     <ClCompile Include="..\..\..\src\zAnalyzer.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

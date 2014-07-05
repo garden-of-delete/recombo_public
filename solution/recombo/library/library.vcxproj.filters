@@ -66,9 +66,6 @@
     <ClInclude Include="..\..\..\src\mmchain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\recomboArgprocessor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -87,10 +84,10 @@
     <ClInclude Include="..\..\..\src\threevector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\unitTests.h">
+    <ClInclude Include="..\..\..\src\zAnalyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\zAnalyzer.h">
+    <ClInclude Include="..\..\..\src\pseudorandom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -143,9 +140,6 @@
     <ClCompile Include="..\..\..\src\mmchain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\recomboArgprocessor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -161,10 +155,10 @@
     <ClCompile Include="..\..\..\src\testFramework.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\unitTests.cpp">
+    <ClCompile Include="..\..\..\src\zAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\zAnalyzer.cpp">
+    <ClCompile Include="..\..\..\src\pseudorandom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

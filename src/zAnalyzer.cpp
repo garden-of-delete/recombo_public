@@ -143,7 +143,7 @@ bool Analyzer::initialize_search(double target_length, double mean_tol){
 	//probe
 	reset();
 	//double init_lower = .1, init_upper = critical_z;
-	double init_lower = .21508, init_upper = critical_z-.00000000000000001;//for unknot
+	double init_lower = .21508, init_upper = critical_z - .0004;
 	double step_size = (init_upper - init_lower)/20; //changed to /20 for unknot;
 	//scale with 1/(z-z0(^2)) //pulls
 	/*[3/31/13 10:41:09 AM] Reuben Brasher: length, 1/(z-z_0), 1/(z-z_0)^2, 1/(z_z_0)^3...

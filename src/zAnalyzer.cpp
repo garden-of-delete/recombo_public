@@ -155,7 +155,7 @@ bool Analyzer::initialize_search(double mean_tol){
 	search_data temp;
 	min.z = init_lower;
 	max.z = init_upper;
-	
+	knot->stepQ(q,w);
 top:
 	length_from_z(&max, true);
 	if (max.center + max.std_dev < target){
@@ -167,6 +167,7 @@ top:
 	while ((max.center - max.std_dev) > target){
 		temp = min;
 		max.z -= step_size;
+		knot->init_Q(max.z, q);
 		length_from_z(&max, true);
 		max = min;
 		min = temp;

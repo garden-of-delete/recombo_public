@@ -623,12 +623,14 @@ class clkConformationBfacf3::impl
 clkConformationBfacf3::clkConformationBfacf3(const clk & firstComponent) :
 implementation(new clkConformationBfacf3::impl(firstComponent)) {
 	probMap = new probs[MAX_PRECOMPUTE_LENGTH];
+	q = 1;
 }
 
 clkConformationBfacf3::clkConformationBfacf3(const clk& firstComponent, const clk & secondComponent) :
 implementation(new clkConformationBfacf3::impl(firstComponent, secondComponent)) {
 	probMap = new probs[MAX_PRECOMPUTE_LENGTH];
-}
+	q = 1;
+}	
 
 clkConformationBfacf3::~clkConformationBfacf3()
 {
@@ -704,7 +706,7 @@ void clkConformationBfacf3::init_Q(double z, double q)
 	}
 }
 
-void clkConformationBfacf3::stepQ(int q, double z)
+void clkConformationBfacf3::stepQ(int current_q, double z)
 {
 	//perform_move_q(implementation->clkp); //will call the new step function(or possibly BE the new step function)
 	ComponentCLKPtr comp = implementation->clkp->fcomp;
@@ -717,7 +719,11 @@ void clkConformationBfacf3::stepQ(int q, double z)
 	double p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
 	double p_0 = .5*(p_plus2 + p_minus2);*/
 
-	comp->z = z;
+	if (comp->z != z || current_q != q){
+		comp->z = z;
+		q = current_q;
+		init_Q(z, q);
+	}
 	if (n < MAX_PRECOMPUTE_LENGTH){
 		bfacf_set_probabilities(comp, probMap[n].p_minus2, probMap[n].p_0, probMap[n].p_plus2);
 	}

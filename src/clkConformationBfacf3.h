@@ -198,7 +198,7 @@ protected:
 private:
    class impl;
    impl *implementation;
-
+   int q;
 };
 
 /**

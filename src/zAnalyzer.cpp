@@ -94,23 +94,23 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 	if (probe == true)
 		timeout = 1;
 	else
-		timeout = 3;
-	while(timeout &&  (std_dev > in->std_dev_tol)){
+		timeout = 20;
+	while(timeout && ((std_dev > in->std_dev_tol) || std_dev == 0)){
 		timeout--;
 		data.clear();
 		cout << "========================================================================="<< endl;
 		cout << in->z << " --> ???" << endl;
 		cout << "Warming up with " << w <<" steps" << endl;
-		knot->stepQ(q, w);
+		knot->stepQ(w, q, in->z);
 		cout << "Taking " << in->n << " samples every " << c_steps << " iterations." << endl;
 		for (int i = 0; i < in->n; i++)		//want to modify to work for two component links
 		{
 			  if (n_components == 1){
-				knot->stepQ(q, c_steps);
+				knot->stepQ(c_steps, q, in->z);
 				data.push_back(knot->getComponent(0).size());
 			  }
 			else if (n_components == 2){
-				knot->stepQ(q, c_steps);
+				knot->stepQ(c_steps, q, in->z);
 				data.push_back(knot->getComponent(0).size() + knot->getComponent(1).size());
 			  }
 		}
@@ -155,7 +155,7 @@ bool Analyzer::initialize_search(double mean_tol){
 	search_data temp;
 	min.z = init_lower;
 	max.z = init_upper;
-	knot->stepQ(q,w);
+	knot->stepQ(w, q, max.z);
 top:
 	length_from_z(&max, true);
 	if (max.center + max.std_dev < target){

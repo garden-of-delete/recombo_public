@@ -32,7 +32,7 @@ int main(int argc, char* argv[]){
 
 	infile = argv[1];
 
-		for (int i=3; i < argc; i++){
+		for (int i=2; i < argc; i++){
 			if (!strcmp(argv[i], "-l")){
 			target_length = atoi(argv[i+1]);
 			i++;
@@ -42,11 +42,11 @@ int main(int argc, char* argv[]){
 			i++;
 		}
 		else if (!strcmp(argv[i], "-zmax")){
-			z_max = atoi(argv[i + 1]);
+			z_max = atof(argv[i + 1]);
 			i++;
 		}
 		else if (!strcmp(argv[i], "-zmin")){
-			z_min = atoi(argv[i + 1]);
+			z_min = atof(argv[i + 1]);
 			i++;
 		}
 		else if (!strcmp(argv[i], "-q")){

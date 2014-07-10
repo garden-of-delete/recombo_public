@@ -116,15 +116,15 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 		}
 		//compute mean
 		double mean = 0;
-		for (int i = 0; i < data.size; i++){
+		for (int i = 0; i < data.size(); i++){
 			mean += data[i];
 		}
-		mean /= data.size;
+		mean /= data.size();
 
 		//compute std dev
 		double std_dev = 0;
-		for (int i = 0; i < data.size; i++){
-			std_dev += pow((mean - data[i]), 2) / data.size;
+		for (int i = 0; i < data.size(); i++){
+			std_dev += (pow((mean - data[i]), 2) / data.size());
 		}
 		std_dev = sqrt(std_dev);
 
@@ -191,46 +191,47 @@ bool Analyzer::check_overlap(){
 		max.std_dev_tol /= 2;
 		length_from_z(&max, false);
 
-		part2:
+	part2:
 		while (timeout && (min.center + min.std_dev) >= (guess.center - guess.std_dev)){
-		timeout--;
-		min.std_dev_tol /= 2;
-		length_from_z(&min, false);
-		if ((min.center + min.std_dev) < (guess.center - guess.std_dev))
-			goto end;
-		guess.std_dev_tol /= 2;
-		length_from_z(&guess, false);
+			timeout--;
+			min.std_dev_tol /= 2;
+			length_from_z(&min, false);
+			if ((min.center + min.std_dev) < (guess.center - guess.std_dev))
+				goto end;
+			guess.std_dev_tol /= 2;
+			length_from_z(&guess, false);
 
 		end:
-		if (max.center < min.center){
-			temp = min;
-			min = max;
-			max = temp;
+			if (max.center < min.center){
+				temp = min;
+				min = max;
+				max = temp;
+			}
+			if (min.center > guess.center){
+				temp = min;
+				min = guess;
+				guess = temp;
+			}
+			if (max.center < guess.center){
+				temp = guess;
+				guess = max;
+				max = temp;
+			}
+			// if the target goes out of range of the search, purturbs the z values until it comes back into range
+			while (min.center > target){
+				min.z -= .0025;
+				length_from_z(&min, false);
+			}
+			while (max.center < target){
+				max.z += .0025;
+				length_from_z(&max, true);
+			}
 		}
-		if (min.center > guess.center){
-			temp = min;
-			min = guess;
-			guess = temp;
-		}
-		if (max.center < guess.center){
-			temp = guess;
-			guess = max;
-			max = temp;
-		}
-		// if the target goes out of range of the search, purturbs the z values until it comes back into range
-		while (min.center > target){
-			min.z -= .0025;
-			length_from_z(&min, false);
-		}
-		while (max.center < target){
-			max.z += .0025;
-			length_from_z(&max, true);
-		}
+		return true;
 	}
-	return true;
 }
-/*
-void Analyzer::generate_table(char* ifilename, char* ofilename, int min, int max, int tol){
+	/*
+	void Analyzer::generate_table(char* ifilename, char* ofilename, int min, int max, int tol){
 	ofstream out;
 	ofstream log;
 	add_initial_conformation_from_file(ifilename);
@@ -239,8 +240,8 @@ void Analyzer::generate_table(char* ifilename, char* ofilename, int min, int max
 	out << "target,z-val,center,std_deviation,length_var,autocorr,std_deviation,iterations,samples" << endl;
 	for (int i = min; i <= max; i += 2)
 	{
-		z_from_length(i, tol);
-		out << i <<","<< guess.z <<"," << guess.center << "," << guess.error << "," <<guess.length_var << "," << guess.autocorr_data << "," << guess.autocorr_error <<","<< guess.c << "," << guess.n << endl;
+	z_from_length(i, tol);
+	out << i <<","<< guess.z <<"," << guess.center << "," << guess.error << "," <<guess.length_var << "," << guess.autocorr_data << "," << guess.autocorr_error <<","<< guess.c << "," << guess.n << endl;
 	}
 	/*int i = 0; //code for the roobs
 	i = 100;
@@ -255,5 +256,5 @@ void Analyzer::generate_table(char* ifilename, char* ofilename, int min, int max
 	i = 200;
 	z_from_length(i, 5);
 	out << i <<","<< guess.z <<"," << guess.center << "," << guess.error << "," << guess.autocorr_data << "," << guess.autocorr_error <<","<< guess.c << "," << guess.n << endl;
-	
-}*/
+
+	}*/

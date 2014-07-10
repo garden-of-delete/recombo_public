@@ -84,10 +84,10 @@
     <ClInclude Include="..\..\..\src\threevector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\zAnalyzer.h">
+    <ClInclude Include="..\..\..\src\pseudorandom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\pseudorandom.h">
+    <ClInclude Include="..\..\..\src\zAnalyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -155,10 +155,10 @@
     <ClCompile Include="..\..\..\src\testFramework.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\zAnalyzer.cpp">
+    <ClCompile Include="..\..\..\src\pseudorandom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\pseudorandom.cpp">
+    <ClCompile Include="..\..\..\src\zAnalyzer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

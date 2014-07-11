@@ -1,5 +1,5 @@
 #include <testFramework.h>
-
+#include <algorithm>
 #include <pseudorandom.h>
 
 static int randVals[] = {

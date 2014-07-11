@@ -693,3 +693,7 @@ bool testBfacf3CountEdges()
    return true;
 }
 
+bool testBfacf3WithQ(){
+	//need to test BFACF3 with Q =/= 1 here.
+}
+

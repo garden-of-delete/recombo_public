@@ -12,13 +12,7 @@ int main(void)
 {
 	test_suite suite;
 
-	suite.add_test(testArgprocessor, "argument processor");
-
 	suite.add_test(testAutocorr, "autocorr");
-
-	suite.add_test(testRecomboArgs, "testRecomboArgs");
-	suite.add_test(testRunRecombo, "testRunRecombo");
-	suite.add_test(testRerecomboArgs, "testRerecomboArgs");
 
 	suite.add_test(testData, "data");
 	suite.add_test(testCopyScalarToVector, "testCopyScalarToVector");

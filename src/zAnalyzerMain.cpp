@@ -10,19 +10,20 @@ void print_usage(){
 	cout << "zAnalyzer takes an input file of cubic lattice conformations " << 
 		"written in Rob Schaerin's CUBE format and outputs a table of average length / Z " << 
 		"vaue associations with the provided tolerance" << endl << endl;
-	cout << "recomboFromFile operators:" << endl;
+	cout << "zAnalyzer operators:" << endl;
 	cout << "-l\ttarget length" << endl;
 	cout << "-tol\ttolerated error in avg length of the returned z-value" << endl;
 	cout << "-zmin\tbest guess for Z value that is a lower bound for the target Z value" << endl;
 	cout << "-zmax\tbest guess for Z valye that is an upper bound for the target Z value" << endl;
 	cout << "-c\tbest guess for the number of BFACF steps needed between samples for independence" << endl;
 	cout << "-w\tbest guess for an appropriate warmup" << endl;
-	cout << "-q\t best guess for an initial q value" << endl;
+	cout << "-q\tbest guess for an initial q value" << endl;
+	cout << "-s\tset seed to a specific valye (default is current system time)" << endl;
 }
 
 int main(int argc, char* argv[]){
 	char* infile = NULL, *outfile = NULL;
-	int target_length = 0, tol = 0, warmup = 0, c = 0, q = 0;
+	int target_length = 0, tol = 0, warmup = 0, c = 0, q = 0, seed = time(NULL);
 	double z_min = 0, z_max = 0;
 
 	if  (argc < 9){
@@ -61,6 +62,10 @@ int main(int argc, char* argv[]){
 			warmup = atoi(argv[i + 1]);
 			i++;
 		}
+		else if (!strcmp(argv[i], "-s")){
+			seed = atoi(argv[i + 1]);
+			i++;
+		}
 		else{
 			cout << "unrecognized operator/option. Terminating program...";
 			return 0;
@@ -71,6 +76,7 @@ int main(int argc, char* argv[]){
 		cout << "zmin must be strictly greater than zmax. terminating program..." << endl;
 		return 0;
 	}
+	srand(seed);
 	Analyzer analyzer(infile, z_min, z_max, warmup, c, q);
 	analyzer.z_from_length(target_length, tol);
 	

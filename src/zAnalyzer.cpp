@@ -99,9 +99,7 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 		timeout--;
 		data.clear();
 		cout << "========================================================================="<< endl;
-		cout << in->z << " --> ???" << endl;
-		cout << "Warming up with " << w <<" steps" << endl;
-		knot->stepQ(w, q, in->z);
+		cout << in->z << " --> ??? w/ q: " << q << endl;
 		cout << "Taking " << in->n << " samples every " << c_steps << " iterations." << endl;
 		for (int i = 0; i < in->n; i++)		//want to modify to work for two component links
 		{
@@ -115,14 +113,12 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 			  }
 		}
 		//compute mean
-		double mean = 0;
 		for (int i = 0; i < data.size(); i++){
 			mean += data[i];
 		}
 		mean /= data.size();
 
 		//compute std dev
-		double std_dev = 0;
 		for (int i = 0; i < data.size(); i++){
 			std_dev += (pow((mean - data[i]), 2) / data.size());
 		}
@@ -141,6 +137,7 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 	in->autocorr_error = info.error_autocorr;
 	in->center = info.mean;
 	in->error = info.error_mean;*/
+	cout << in->z << " --> " << in->center << " +- " << in->std_dev << endl;
 	return timeout != 0;
 }
 
@@ -155,6 +152,7 @@ bool Analyzer::initialize_search(double mean_tol){
 	search_data temp;
 	min.z = init_lower;
 	max.z = init_upper;
+	cout << "Warming up with " << w << " steps" << endl;
 	knot->stepQ(w, q, max.z);
 top:
 	length_from_z(&max, true);

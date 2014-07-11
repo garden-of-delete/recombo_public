@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#define ASSERT(assertion) if(!(assertion)) {cout << " in file " << __FILE__ << ", on line " << __LINE__ ; return false;}
+#define ASSERT(assertion) if(!(assertion)) {cout << " in file " << __FILE__ << ", on line " << __LINE__; return false;}
 #define ASSERT_MESSAGE(message, assertion) if(!(assertion)) {cout << " " << message << " in file " << __FILE__ << ", on line " << __LINE__ ; return false;}
 #define ASSERT_EQUAL(x, y) ASSERT((x) == (y)) 
 #define ASSERT_EQUAL_MESSAGE(message, x, y) ASSERT_MESSAGE((message), (x) == (y))

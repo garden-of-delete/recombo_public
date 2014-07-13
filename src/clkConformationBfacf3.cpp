@@ -717,6 +717,7 @@ void clkConformationBfacf3::stepQ(int current_q, double z)
 		n += getComponent(i).size();
 	}
 	/*
+	//direct computation
 	double p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
 	double p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
 	double p_0 = .5*(p_plus2 + p_minus2);

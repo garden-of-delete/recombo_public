@@ -152,6 +152,7 @@ bool Analyzer::initialize_search(double mean_tol){
 	search_data temp;
 	min.z = init_lower;
 	max.z = init_upper;
+	guess.z = exp((log(max.z) + log(min.z)) / 2);
 	cout << "Warming up with " << w << " steps" << endl;
 	knot->stepQ(w, q, max.z);
 top:
@@ -169,7 +170,7 @@ top:
 		length_from_z(&max, true);
 		max = min;
 		min = temp;
-		guess.z = (min.z + max.z) / 2;
+		guess.z = exp((log(max.z) + log(min.z)) / 2);
 		length_from_z(&guess, true);
 	}
 	check_overlap();

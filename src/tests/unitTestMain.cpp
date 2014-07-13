@@ -36,6 +36,7 @@ int main(void)
 		"Random number generator fails to produce expected sequence.");
 	suite.add_test(testRandomInteger, "pseudorandom integers");
 	suite.add_test(testBfacf3WithQ, "BFACF iterations with Q");
+	suite.add_test(testPrecomputedBfacf3Probs, "Precomputed BFACF probabilities");
 
 	suite.run_suite();
 }

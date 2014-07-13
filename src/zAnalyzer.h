@@ -23,7 +23,7 @@ public:
 	int n;
 	//scale tol with current length?
 
-	search_data(): center(0), std_dev(0), std_dev_tol(50), z(0), n(5000)/*,autocorr_data(0), autocorr_error(0), length_var(0)*/{}
+	search_data(): center(0), std_dev(0), std_dev_tol(20), z(0), n(10000)/*,autocorr_data(0), autocorr_error(0), length_var(0)*/{}
 };
 
 class Analyzer{

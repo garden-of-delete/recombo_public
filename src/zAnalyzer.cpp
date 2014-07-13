@@ -127,9 +127,10 @@ bool Analyzer::length_from_z(search_data* in, bool probe){
 		/*info = ac.autocorrelation(data, false);
 		in->length_var = ac.computeVariance(data);
 		cout << info << endl;
-		cout << in->z << " --> " << info.mean << endl;
-		if (timeout &&  (info.error_mean > in->std_dev_tol))
-			in->n *= 2;*/
+		cout << in->z << " --> " << info.mean << endl;*/
+		//if (timeout &&  (info.error_mean > in->std_dev_tol))
+			in->n *= 2;
+		
 	}
 	in->center = mean;
 	in->std_dev = std_dev;
@@ -157,22 +158,27 @@ bool Analyzer::initialize_search(double mean_tol){
 	knot->stepQ(w, q, max.z);
 top:
 	length_from_z(&max, true);
-	if (max.center + max.std_dev < target){
+	if (max.center < target){
 		q += 1;
 		reset();
 		goto top;
 	}
-
-	while ((max.center - max.std_dev) > target){
-		temp = min;
+	/*
+	while ((max.center - max.std_dev) > target){ 
+		temp = max;
 		max.z -= step_size;
 		knot->init_Q(max.z, q);
 		length_from_z(&max, true);
-		max = min;
-		min = temp;
-		guess.z = exp((log(max.z) + log(min.z)) / 2);
+		if (!(max.center - max.std_dev > target)){
+			
+		}
+	}
+	if (guess.center == 0){
 		length_from_z(&guess, true);
 	}
+	if (min.center == 0){
+		length from
+	}*/
 	check_overlap();
 	min.std_dev_tol = guess.std_dev_tol = max.std_dev_tol = mean_tol;
 	return true;

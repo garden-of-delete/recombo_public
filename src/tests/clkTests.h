@@ -19,4 +19,5 @@ bool testBfacf3SetZ();
 bool testBfacf3Run();
 bool testBfacf3CountEdges();
 bool testBfacf3WithQ();
+bool testPrecomputedBfacf3Probs();
 

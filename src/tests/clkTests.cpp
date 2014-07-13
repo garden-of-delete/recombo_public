@@ -712,3 +712,43 @@ bool testBfacf3WithQ(){
 	return true;
 }
 
+bool testPrecomputedBfacf3Probs(){
+
+	struct probs{
+		double p_plus2;
+		double p_minus2;
+		double p_0;
+	};
+
+	probs* probMap = new probs[MAX_PRECOMPUTE_LENGTH];
+
+	int z = .2100;
+	int q = 1;
+	for (int i = 4; i < MAX_PRECOMPUTE_LENGTH; i++){
+		probMap[i].p_plus2 = (pow((i + 2), (q - 1))*(z * z)) / (pow(i, (q - 1)) + 3.0*pow((i + 2), q - 1) * z * z);
+		probMap[i].p_minus2 = pow(i, (q - 1)) / (pow(i, (q - 1)) + 3.0*pow((i + 2), q - 1) * z * z);
+		probMap[i].p_0 = .5*(probMap[i].p_plus2 + probMap[i].p_minus2);
+	}
+	for (int n = 4; n < MAX_PRECOMPUTE_LENGTH; n++){
+		ASSERT(probMap[n].p_plus2 == (pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
+		ASSERT(probMap[n].p_minus2 == pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
+		ASSERT(probMap[n].p_0 == .5*((pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z)
+			+ pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z)));
+	}
+
+	z = .1800;
+	q = 3;
+	for (int i = 4; i < MAX_PRECOMPUTE_LENGTH; i++){
+		probMap[i].p_plus2 = (pow((i + 2), (q - 1))*(z * z)) / (pow(i, (q - 1)) + 3.0*pow((i + 2), q - 1) * z * z);
+		probMap[i].p_minus2 = pow(i, (q - 1)) / (pow(i, (q - 1)) + 3.0*pow((i + 2), q - 1) * z * z);
+		probMap[i].p_0 = .5*(probMap[i].p_plus2 + probMap[i].p_minus2);
+	}
+	for (int n = 4; n < MAX_PRECOMPUTE_LENGTH; n++){
+		ASSERT(probMap[n].p_plus2 == (pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
+		ASSERT(probMap[n].p_minus2 == pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
+		ASSERT(probMap[n].p_0 == .5*((pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z)
+			+ pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z)));
+	}
+	return true;
+}
+

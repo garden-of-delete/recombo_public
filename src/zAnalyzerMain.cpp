@@ -76,6 +76,7 @@ int main(int argc, char* argv[]){
 		cout << "zmin must be strictly greater than zmax. terminating program..." << endl;
 		return 0;
 	}
+	
 	srand(seed);
 	Analyzer analyzer(infile, z_min, z_max, warmup, c, q);
 	analyzer.z_from_length(target_length, tol);

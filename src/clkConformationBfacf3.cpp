@@ -676,7 +676,8 @@ double clkConformationBfacf3::getZ() const
 
 void clkConformationBfacf3::setZ(double z)
 {
-   bfacf_set_probabilities(implementation->clkp, z);
+	init_Q(z, q);
+    bfacf_set_probabilities(implementation->clkp, z);
 }
 
 extern void sRandSimple(int seed);
@@ -702,7 +703,7 @@ void clkConformationBfacf3::init_Q(double z, double q)
 	for (int i=4; i < MAX_PRECOMPUTE_LENGTH; i++){
 		probMap[i].p_plus2 = (pow((i+2),(q-1))*(z * z)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
 		probMap[i].p_minus2 = pow(i,(q-1)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
-		probMap[i].p_0 = .5*probMap[i].p_plus2 + probMap[i].p_minus2;
+		probMap[i].p_0 = .5*(probMap[i].p_plus2 + probMap[i].p_minus2);
 	}
 }
 
@@ -714,18 +715,19 @@ void clkConformationBfacf3::stepQ(int current_q, double z)
 	int n = 0;
 	for (int i=0; i < n_comps; i++){
 		n += getComponent(i).size();
-	}/*
+	}
+	/*
 	double p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
 	double p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
-	double p_0 = .5*(p_plus2 + p_minus2);*/
-
-	if (comp->z != z || current_q != q){
-		comp->z = z;
+	double p_0 = .5*(p_plus2 + p_minus2);
+	bfacf_set_probabilities(comp, p_minus2, p_0, p_plus2);*/
+	
+	if (getZ() != z || current_q != q){
 		q = current_q;
-		init_Q(z, q);
+		setZ(z);
 	}
 	if (n < MAX_PRECOMPUTE_LENGTH){
-		bfacf_set_probabilities(comp, probMap[n].p_minus2, probMap[n].p_0, probMap[n].p_plus2);
+		bfacf_set_probabilities(comp, probMap[4].p_minus2, probMap[4].p_0, probMap[4].p_plus2);
 	}
 	else{
 		double p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);

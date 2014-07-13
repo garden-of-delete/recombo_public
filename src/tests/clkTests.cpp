@@ -700,7 +700,6 @@ bool testBfacf3WithQ(){
 	clkConformationBfacf3 knot0(square1);
 	clkConformationBfacf3 knot1(square1);
 
-	ASSERT(knot0.getComponent(1) == knot1.getComponent(1));
 	ASSERT(knot0.size() == knot1.size());
 	knot0.setZ(.2000);
 	knot1.setZ(.2000);
@@ -709,7 +708,6 @@ bool testBfacf3WithQ(){
 	knot1.stepQ(12345, 1, .2100);
 	//would prefer to compare the actual vectors of each conformation. 
 	ASSERT(knot0.size() == knot1.size());
-	ASSERT(knot0.getComponent(1) == knot1.getComponent(1));
 	
 	return true;
 }

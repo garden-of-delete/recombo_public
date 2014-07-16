@@ -156,7 +156,7 @@ bool testAutocorr()
     double expectedMean = -0.8590288609;
     
     ASSERT_DOUBLES_EQUAL_MESSAGE("mean incorrect", mean, expectedMean, EPSILON);
-    ASSERT_DOUBLES_EQUAL_MESSAGE("means should be same computed by both methods", mean, meanByVector, 0.0);
+    ASSERT_DOUBLES_EQUAL_MESSAGE("means should be same computed by both methods", mean, meanByVector, EPSILON);
 
     double mean_sq = ac.computeMeanSquare(autocorrTestData, autocorrTestDataNumVals);
     double mean_sqByVector = ac.computeMeanSquare(data);
@@ -166,9 +166,9 @@ bool testAutocorr()
     double varByVector = ac.computeVariance(data);
 
     ASSERT_DOUBLES_EQUAL_MESSAGE("mean square incorrect",mean_sq, expectedMean_sq, EPSILON);
-    ASSERT_DOUBLES_EQUAL_MESSAGE("mean squares should be same computed by both methods", mean_sq, mean_sqByVector, 0.0);
+    ASSERT_DOUBLES_EQUAL_MESSAGE("mean squares should be same computed by both methods", mean_sq, mean_sqByVector, EPSILON);
     ASSERT_DOUBLES_EQUAL_MESSAGE("variance incorrect", var, expectedVariance, EPSILON);
-    ASSERT_DOUBLES_EQUAL_MESSAGE("variance should be same computed by both methods", var, varByVector, 0.0);
+    ASSERT_DOUBLES_EQUAL_MESSAGE("variance should be same computed by both methods", var, varByVector, EPSILON);
 
     // compute the values exactly as in Stu Whittington's program 
     double meanSW, mean_sqSW;
@@ -188,14 +188,14 @@ bool testAutocorr()
         mean_sqSW += data [i] * data [i];
     mean_sqSW = mean_sqSW / (double) num_values;
 
-    ASSERT_DOUBLES_EQUAL_MESSAGE("means should be same computed by SW", mean, meanSW, 0.0);
-    ASSERT_DOUBLES_EQUAL_MESSAGE("mean squares should be same computed by SW", mean_sq, mean_sqSW, 0.0);
+    ASSERT_DOUBLES_EQUAL_MESSAGE("means should be same computed by SW", mean, meanSW, EPSILON);
+    ASSERT_DOUBLES_EQUAL_MESSAGE("mean squares should be same computed by SW", mean_sq, mean_sqSW, EPSILON);
 
     // Calculate the autocorrelation function now
     mean_sqSW -= meanSW * meanSW;
 
     // mean_sqSW should be the variance now
-    ASSERT_DOUBLES_EQUAL_MESSAGE("variance should be same computed by SW", var, mean_sqSW, 0.0);
+    ASSERT_DOUBLES_EQUAL_MESSAGE("variance should be same computed by SW", var, mean_sqSW, EPSILON);
 
     autocorrInfo aci(1, 2, 3, 4, 5);
 //    cout << aci << endl;

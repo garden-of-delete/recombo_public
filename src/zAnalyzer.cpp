@@ -22,7 +22,7 @@ bool Analyzer::add_initial_conformation(istream& is){
    else if (n_components == 1)
       knot = new clkConformationBfacf3(initialComp0);
 
-   // set z and seed the random number generator
+   // set z 
    knot->setZ(0);
 
    return true;
@@ -155,10 +155,16 @@ bool Analyzer::initialize_search(double mean_tol){
 	max.z = init_upper;
 	guess.z = exp((log(max.z) + log(min.z)) / 2);
 	cout << "Warming up with " << w << " steps" << endl;
-	knot->stepQ(w, q, max.z);
 	length_from_z(&min, true);
+	knot->stepQ(w, q, max.z);
+top:
 	length_from_z(&max, true);
+	if (max.center < target){
+		q += 1;
+		goto top;
+	}
 	length_from_z(&guess, true);
+	
 /*top:
 	length_from_z(&max, true);
 	if (max.center < target){

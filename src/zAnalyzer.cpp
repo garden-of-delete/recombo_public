@@ -45,8 +45,8 @@ void Analyzer::reset(){
 	min.center = min.std_dev /*= min.autocorr_data = min.autocorr_error*/ = 0;
 	guess.center = guess.std_dev /*= guess.autocorr_data = guess.autocorr_error*/ = 0;
 	max.center = max.std_dev /*= max.autocorr_data = max.autocorr_error = 0*/;
-	min.n = guess.n = max.n = 5000;
-	min.std_dev_tol = guess.std_dev_tol = /*max.autocorr_error =*/ 50;
+	min.n = guess.n = max.n = 10000;
+	min.std_dev_tol = guess.std_dev_tol = /*max.autocorr_error =*/ 25;
 }
 
 bool Analyzer::z_from_length(double target_in, double mean_tol){
@@ -55,8 +55,8 @@ bool Analyzer::z_from_length(double target_in, double mean_tol){
 	cout << endl <<"Initializing Search..." << endl;
 	initialize_search(mean_tol);
 	cout << endl;
-	//main while loop
-	while ((guess.center + guess.std_dev > target + mean_tol) || (guess.center - guess.std_dev < target - mean_tol)){
+	//while the target is outside the guess window
+	while ((guess.center - guess.std_dev > target + mean_tol) || (guess.center + guess.std_dev < target - mean_tol)){
 		cout << "=========================================================================" << endl;
 		cout << endl << "Step("<< 21 - timeout <<"): Current Z-vals: "<< min.z << "(" << min.center <<")  " << guess.z << "(" << guess.center << ")  " << max.z << "(" << max.center << ")" << endl;
 		cout << "=========================================================================" << endl;
@@ -156,7 +156,10 @@ bool Analyzer::initialize_search(double mean_tol){
 	guess.z = exp((log(max.z) + log(min.z)) / 2);
 	cout << "Warming up with " << w << " steps" << endl;
 	knot->stepQ(w, q, max.z);
-top:
+	length_from_z(&min, true);
+	length_from_z(&max, true);
+	length_from_z(&guess, true);
+/*top:
 	length_from_z(&max, true);
 	if (max.center < target){
 		q += 1;
@@ -180,7 +183,7 @@ top:
 		length from
 	}*/
 	check_overlap();
-	min.std_dev_tol = guess.std_dev_tol = max.std_dev_tol = mean_tol;
+	//min.std_dev_tol = guess.std_dev_tol = max.std_dev_tol = mean_tol;
 	return true;
 }
 

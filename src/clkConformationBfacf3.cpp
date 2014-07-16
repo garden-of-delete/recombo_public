@@ -710,6 +710,13 @@ void clkConformationBfacf3::init_Q(double z, double q)
 void clkConformationBfacf3::stepQ(int current_q, double z)
 {
 	//perform_move_q(implementation->clkp); //will call the new step function(or possibly BE the new step function)
+	if (current_q == 1){
+		if (getZ() != z){
+			bfacf_set_probabilities(implementation->clkp, z);
+		}
+		perform_move(implementation->clkp);
+		return;
+	}
 	ComponentCLKPtr comp = implementation->clkp->fcomp;
 	int n_comps = implementation->size();
 	int n = 0;

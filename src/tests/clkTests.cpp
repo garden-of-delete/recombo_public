@@ -744,5 +744,7 @@ bool testPrecomputedBfacf3Probs(){
 		ASSERT(knot.probMap[n].p_0 == .5*((pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z) +
 			pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z)));
 	}
+	
+	return true;
 }
 

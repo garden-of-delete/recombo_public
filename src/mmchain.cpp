@@ -41,6 +41,14 @@ void mmchain::initialize(){
 	return;
 }
 
+void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int nchains, int w, int m, int seed){
+	string infile;
+	infile.append(infile);
+	set_mmc(zmin, zmax, q, sr, s, m, n, c, nchains, w);
+	srand(seed);
+	add_initial_conformation_from_file(infile);
+}
+
 void mmchain::create_config_file(){
 	ofstream config("config.txt", ios::out);
 	config << "initial_file= " << endl << "zmin= " << endl << "zmax= " << endl << "q= " << endl

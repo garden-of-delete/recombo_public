@@ -56,6 +56,11 @@ public:
 	*/
 	void initialize();
 
+	/*
+	* Alternate constructor for use with command line argument processor
+	*/
+	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int i, int w, int m, int seed);
+
 	/**
 	* adds an initial conformation from the given istream. practically speaking, will only be called from outside add_initial_conformation_From_file(...)
 	* in debugging and other special scenarios. 

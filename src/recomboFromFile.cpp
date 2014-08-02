@@ -1,9 +1,11 @@
 #include "recomboFromFile.h"
 
+using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components/*, char Mode*/){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode){
 	min_arc = Min_arc;
 	max_arc = Max_arc;
+	read_mode = Read_mode;
 	in = new ifstream(Infile, ios::in | ios::binary);
 	out = new ofstream(Outfile, ios::out | ios::binary);
 	//mode = Mode;
@@ -12,7 +14,26 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 		{cout << "Error reading input file" << endl; exit(3);}
 	if (!out->good())
 		{cout << "Error creating output file" << endl; exit(3);}
+}
 
+bool recomboFromFile::read_comp_knots(ifstream* in){
+	if (read_mode == 'b'){
+		return initialComp0.readFromCube(*in);
+	}
+	else if (read_mode == 't'){
+		return initialComp0.readFromText(*in);
+	}
+	else return false;
+}
+
+bool recomboFromFile::read_comp_links(ifstream* in){
+	if (read_mode == 'b'){
+		return (initialComp0.readFromCube(*in) && initialComp1.readFromCube(*in));
+	}
+	else if (read_mode == 't'){
+		return (initialComp0.readFromText(*in) && initialComp1.readFromText(*in));
+	}
+	else return false;
 }
 
 void recomboFromFile::do_recombo(){
@@ -29,19 +50,19 @@ void recomboFromFile::do_recombo(){
 void recomboFromFile::do_recombo_knots(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
 	vector<int> lengths;
-	while (initialComp0.readFromCube(*in)){
+	while (read_comp_knots(in)){
 	    sites = 0;
 		cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
 		knot = new clkConformationBfacf3(initialComp0);
 		//need to create new countRecomboSites function that is ideal for use with mmc
 		int length = knot->getComponent(0).size();
 		lengths.push_back(length);
-		if (length == 100){
+		if (length == (min_arc + max_arc)){
 		    length_counter ++;
-            sites = knot->countRecomboSites(48, 52);
-            }
+            sites = knot->countRecomboSites(min_arc, max_arc);
+        }
 	//}
-		//sites = knot->countRecomboSites(knot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);
+		//sites = knot->countRecomboSitesknot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);
 
 		if(sites > 0){
 			list<clkConformationAsList> components;
@@ -70,16 +91,17 @@ void recomboFromFile::do_recombo_knots(){
 void recomboFromFile::do_recombo_links(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
 	vector<int> lengths;
-	while (initialComp0.readFromCube(*in) && initialComp1.readFromCube(*in)){
+	while (read_comp_links(in)){
 	    sites = 0;
 		cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
 		knot = new clkConformationBfacf3(initialComp0, initialComp1);
 		//need to create new countRecomboSites function that is ideal for use with mmc
-		int length = knot->getComponent(0).size() + knot->getComponent(1).size();
-		lengths.push_back(length);
-		if ((knot->getComponent(0).size() == 50) && (knot->getComponent(1).size() == 50)){
+		int short_length = min(knot->getComponent(0).size(),knot->getComponent(1).size());
+		int long_length = max(knot->getComponent(0).size(), knot->getComponent(1).size());
+		lengths.push_back(short_length + long_length);
+		if ((short_length >= min_arc) && (long_length <= max_arc)){
 		    length_counter ++;
-            sites = knot->countRecomboSites(48, 52);
+            sites = knot->countRecomboSites(min_arc, max_arc);
             }
 	//}
 		//sites = knot->countRecomboSites(knot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);

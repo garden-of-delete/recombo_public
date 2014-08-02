@@ -11,11 +11,13 @@ void print_usage(){
 	cout << "-min\tminimum arclength" << endl;
 	cout << "-max\tmaximum arclength" << endl;
 	cout << "-ncomp\tnumber of components" << endl;
+	cout << "--m\tinput file format. use --m b for binary (default). use --m t for plain text." << endl;
 }
 
 int main(int argc, char* argv[]){
 	int min_arc = 0, max_arc = 0, ncomp = 0; 
 	char* infile = NULL, *outfile = NULL;
+	char read_mode;
 	
 	if (argc < 6){
 		print_usage();
@@ -38,6 +40,10 @@ int main(int argc, char* argv[]){
 			ncomp = atoi(argv[i+1]);
 			i++;
 		}
+		else if (!strcmp(argv[i], "--m")){
+			read_mode = *(argv[i+1]);
+			i++;
+		}
 		else{
 			cout << "unrecognized operator/option. Terminating program...";
 			return 0;
@@ -50,7 +56,7 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 
-	recomboFromFile recombo(min_arc, max_arc, infile, outfile, ncomp);
+	recomboFromFile recombo(min_arc, max_arc, infile, outfile, ncomp, read_mode);
 	recombo.do_recombo();
 	return 0;
 }

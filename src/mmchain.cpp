@@ -43,6 +43,25 @@ void mmchain::initialize(){
 
 void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int nchains, int w, int m, int seed){
 	string infile;
+	min_arc = 0;
+	max_arc = 0;
+	target_recombo_length = 0;
+	infile.append(infile);
+	set_mmc(zmin, zmax, q, sr, s, m, n, c, nchains, w);
+	srand(seed);
+	add_initial_conformation_from_file(infile);
+}
+
+void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int nchains, int w, int m, int seed,
+	int Min_arc, int Max_arc, int Target_recombo_length){
+	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
+		initialize(in, zmin, zmax, q, sr, s, n, c, nchains, w, m, seed);
+		return;
+	}
+	string infile;
+	min_arc = Min_arc;
+	max_arc = Max_arc;
+	target_recombo_length = Target_recombo_length;
 	infile.append(infile);
 	set_mmc(zmin, zmax, q, sr, s, m, n, c, nchains, w);
 	srand(seed);
@@ -191,15 +210,19 @@ void mmchain::run_mmc(){
 	cout << endl << "Starting sampling with " << m << " chains..." << endl;
 	
 	//main loop
-	for(i=0; i<n; i++){
+	i = 0;
+	while(i < n){
 		for(j = 0; j < c/swap_interval; j++){
 			for(k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
 			}
 			swap();
 		}
-		sample();
-		cout << "\rSampling Progress: " << i+1 << '/' << n;
+		i += sample();
+		if (sample_mode != 'f'){
+			i++;
+		}
+		cout << "\rSampling Progress: " << i << '/' << n;
 	}
 	cout << endl;
 	out.close();
@@ -346,7 +369,7 @@ void mmchain::calibrate_chains(){
 	}  while (!test_intervals()); //Compute and Check confidence intervals, add more chains as needed
 }
 
-void mmchain::sample(){
+int mmchain::sample(){
 	if (n_components == 1){
 		if(sample_mode == 's'){ //sample only
 			for(int i = 0; i < m; i++){
@@ -365,6 +388,17 @@ void mmchain::sample(){
 				clkConformationAsList toPrint(chains[i].member_knot->getComponent(0));
 				toPrint.writeAsCube(out);
 			}
+		}
+		else if (sample_mode == 'f'){ //filter sampling
+			int samples = 0;
+			for (int i = 0; i < m; i++){
+				if (chains[i].member_knot->getComponent(0).size() == target_recombo_length &&
+					chains[i].member_knot->countRecomboSites(min_arc, max_arc) > 0){
+					clkConformationAsList toPrint(chains[i].member_knot->getComponent(0));
+					toPrint.writeAsCube(out);
+				}
+			}
+			return samples;
 		}
 	}
 	else if (n_components == 2){
@@ -388,7 +422,21 @@ void mmchain::sample(){
 				toPrint_2.writeAsCube(out);
 			}
 		}
+		else if (sample_mode == 'f'){ //filter sampling
+			int samples = 0;
+			for (int i = 0; i < m; i++){
+				if (chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(0).size() == target_recombo_length &&
+					chains[i].member_knot->countRecomboSites(min_arc, max_arc) > 0){
+					clkConformationAsList toPrint(chains[i].member_knot->getComponent(0)), toPrint_2(chains[i].member_knot->getComponent(1));
+					toPrint.writeAsCube(out);
+					toPrint_2.writeAsCube(out);
+					samples++;
+				}
+			}
+			return samples;
+		}
 	}
+	return 0;
 }
 
 void mmchain::display_results(){

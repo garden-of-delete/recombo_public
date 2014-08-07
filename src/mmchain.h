@@ -61,6 +61,12 @@ public:
 	*/
 	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int i, int w, int m, int seed);
 
+	/*
+	* Constructor for filtering samples to ones that meet recombination criteria
+	*/
+	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int i, int w, int m, int seed,
+		int Min_arc, int Max_arc, int Target_recombo_length);
+
 	/**
 	* adds an initial conformation from the given istream. practically speaking, will only be called from outside add_initial_conformation_From_file(...)
 	* in debugging and other special scenarios. 
@@ -93,7 +99,7 @@ private:
 	ofstream logfile;
 	ofstream out;
 	//conformationAsList toPrint;
-	int m, n_components, swap_interval, n, c, q;
+	int m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length;
 
 	/**
 	* Randomly selects two adjacent chains and attempts a swap using orlandini's swap criteria.
@@ -181,7 +187,7 @@ private:
 	/**
 	* samples according to the specified sample_mode. sample_mode options described in set_mmc(...) documentation.
 	*/
-	void sample();
+	int sample();
 
 	/**
 	* finds the size of the conformation stored in each chain. prints the sizes to cout. useful for debugging

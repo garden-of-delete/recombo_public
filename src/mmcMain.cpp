@@ -16,7 +16,10 @@ void print_usage(){
 	cout << "c\tnumber of BFACF steps between samples" << endl;
 	cout << "-nchains\tinitial number of CMC chains" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
-	cout << "-m\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample]" << endl;
+	cout << "-m\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['f' Filter Samples]" << endl;
+	cout << "['f' mode ONLY] -minarc\tsample filtering criteria";
+	cout << "['f' mode ONLY] -maxarc\tsample filtering criteria";
+	cout << "['f' mode ONLY] -targetlength\tsample filtering criteria";
 	cout << "-seed\tset seed for random number generator" << endl;
 	
 
@@ -25,7 +28,7 @@ void print_usage(){
 int main(int argc, char* argv[]){
 	char* infile;
 	double zmin = 0, zmax = 0, sr=0;
-	int q = 0, s = 0, n = 0, c = 0, nchains = 0, w = 0, m = 0, seed = 0;
+	int q = 0, s = 0, n = 0, c = 0, nchains = 0, w = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0;
 
 	if (argc <= 1){
 		print_usage();
@@ -82,6 +85,18 @@ int main(int argc, char* argv[]){
 				seed = atoi(argv[i + 1]);
 				i++;
 			}
+			else if (!strcmp(argv[i], "-minarc")){
+				minarc = atoi(argv[i + 1]);
+				i++;
+			}
+			else if (!strcmp(argv[i], "-maxarc")){
+				maxarc = atoi(argv[i + 1]);
+				i++;
+			}
+			else if (!strcmp(argv[i], "-targetlength")){
+				targetlength = atoi(argv[i + 1]);
+				i++;
+			}
 			else{
 				cout << "unrecognized operator/option. Terminating program...";
 				return 0;
@@ -89,7 +104,7 @@ int main(int argc, char* argv[]){
 		}
 		//need to write checks for invalid operating parameters
 		mmchain mmc;
-		mmc.initialize(infile, zmin, zmax, q, sr, s, n, c, nchains, w, m, seed);
+		mmc.initialize(infile, zmin, zmax, q, sr, s, n, c, nchains, w, m, seed, minarc, maxarc, targetlength);
 		mmc.run_mmc();
 	}
 

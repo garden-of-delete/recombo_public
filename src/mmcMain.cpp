@@ -17,12 +17,10 @@ void print_usage(){
 	cout << "-nchains\tinitial number of CMC chains" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
 	cout << "-m\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['f' Filter Samples]" << endl;
-	cout << "['f' mode ONLY] -minarc\tsample filtering criteria";
-	cout << "['f' mode ONLY] -maxarc\tsample filtering criteria";
-	cout << "['f' mode ONLY] -targetlength\tsample filtering criteria";
+	cout << "['f' mode ONLY] -minarc\tsample filtering criteria" << endl;
+	cout << "['f' mode ONLY] -maxarc\tsample filtering criteria" << endl;
+	cout << "['f' mode ONLY] -targetlength\tsample filtering criteria" << endl;
 	cout << "-seed\tset seed for random number generator" << endl;
-	
-
 }
 
 int main(int argc, char* argv[]){

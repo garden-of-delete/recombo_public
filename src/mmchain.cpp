@@ -46,7 +46,7 @@ void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, i
 	min_arc = 0;
 	max_arc = 0;
 	target_recombo_length = 0;
-	infile.append(infile);
+	infile.append(in);
 	set_mmc(zmin, zmax, q, sr, s, m, n, c, nchains, w);
 	srand(seed);
 	add_initial_conformation_from_file(infile);
@@ -62,7 +62,7 @@ void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, i
 	min_arc = Min_arc;
 	max_arc = Max_arc;
 	target_recombo_length = Target_recombo_length;
-	infile.append(infile);
+	infile.append(in);
 	set_mmc(zmin, zmax, q, sr, s, m, n, c, nchains, w);
 	srand(seed);
 	add_initial_conformation_from_file(infile);

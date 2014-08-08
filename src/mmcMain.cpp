@@ -13,7 +13,7 @@ void print_usage(){
 	cout << "-sr\tlower bound for swap ratio" << endl;
 	cout << "-s\tnumber of BFACF steps between swaps" << endl;
 	cout << "-n\tnumber of samples per chain before completion" << endl;
-	cout << "c\tnumber of BFACF steps between samples" << endl;
+	cout << "-c\tnumber of BFACF steps between samples" << endl;
 	cout << "-nchains\tinitial number of CMC chains" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
 	cout << "-m\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['f' Filter Samples]" << endl;

@@ -41,21 +41,21 @@ void mmchain::initialize(){
 	return;
 }
 
-void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int nchains, int w, int m, int seed){
+void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int w, int m, char mode, int seed){
 	string infile;
 	min_arc = 0;
 	max_arc = 0;
 	target_recombo_length = 0;
 	infile.append(in);
-	set_mmc(zmin, zmax, q, sr, s, m, n, c, nchains, w);
+	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
 	srand(seed);
 	add_initial_conformation_from_file(infile);
 }
 
-void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int nchains, int w, int m, int seed,
+void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int w, int m, char mode, int seed,
 	int Min_arc, int Max_arc, int Target_recombo_length){
 	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
-		initialize(in, zmin, zmax, q, sr, s, n, c, nchains, w, m, seed);
+		initialize(in, zmin, zmax, q, sr, s, n, c, w, m, mode, seed);
 		return;
 	}
 	string infile;
@@ -63,7 +63,7 @@ void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, i
 	max_arc = Max_arc;
 	target_recombo_length = Target_recombo_length;
 	infile.append(in);
-	set_mmc(zmin, zmax, q, sr, s, m, n, c, nchains, w);
+	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
 	srand(seed);
 	add_initial_conformation_from_file(infile);
 }
@@ -191,7 +191,7 @@ void mmchain::run_mmc(){
 	}
 	for (i = 0; i < m-1; i++){
 		temp_interval.delta_b = abs(log(chains[i].member_knot->getZ()) - log(chains[i+1].member_knot->getZ()));
-		intervals.push_back(temp_interval); //consider static casting to save memory here
+		intervals.push_back(temp_interval);
 	}
 
 	//warmup with swapping
@@ -256,11 +256,15 @@ void mmchain::swap(){
 	if (n_components == 2){ //rewritten for new swap condition, untested
 		for (i = 0; i < m-1;i++){
 			i = rand() % (m-1); //generate random integer from 0 to m-1
+			//test code
+			//int shouldBeLarger = chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size();
+			//int shouldBeSmaller = chains[i + 1].member_knot->getComponent(0).size() + chains[i + 1].member_knot->getComponent(1).size();
 			if((chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size()) 
 				< (chains[i+1].member_knot->getComponent(0).size() + chains[i+1].member_knot->getComponent(1).size())
-				|| (rand() < pow((double)(chains[i+1].z)/(chains[i].z), 
+				|| (((double)rand() / (RAND_MAX)) < pow((double)(chains[i + 1].z) / (chains[i].z),
 				((chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size()) 
 				- (chains[i+1].member_knot->getComponent(0).size() + chains[i+1].member_knot->getComponent(1).size()))))){
+				//swap pre-computed bfacf probabilities
 				p_temp = chains[i].member_knot->probMap;
 				chains[i].member_knot->probMap = chains[i+1].member_knot->probMap;
 				chains[i+1].member_knot->probMap = p_temp;
@@ -329,6 +333,7 @@ bool mmchain::test_intervals(){
 		double p = intervals[i].sucessful_swaps/intervals[i].attempted_swaps;
 		double z = 1.96; //95% confidence
 		double cw = z*sqrt((1/intervals[i].attempted_swaps)*p*(1-p));
+		cout << "Interval: " << i << ": " << p - cw << ' ';
 		if ((p - cw) < target_swap_ratio){
 			insert_new_chain(i);
 			i++;

@@ -59,12 +59,12 @@ public:
 	/*
 	* Alternate constructor for use with command line argument processor
 	*/
-	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int i, int w, int m, int seed);
+	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int w, int m, char mode, int seed);
 
 	/*
 	* Constructor for filtering samples to ones that meet recombination criteria
 	*/
-	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int i, int w, int m, int seed,
+	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int w, int m, char mode, int seed,
 		int Min_arc, int Max_arc, int Target_recombo_length);
 
 	/**

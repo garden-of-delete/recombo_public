@@ -14,9 +14,9 @@ void print_usage(){
 	cout << "-s\tnumber of BFACF steps between swaps" << endl;
 	cout << "-n\tnumber of samples per chain before completion" << endl;
 	cout << "-c\tnumber of BFACF steps between samples" << endl;
-	cout << "-nchains\tinitial number of CMC chains" << endl;
+	cout << "-m\tinitial number of CMC chains" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
-	cout << "-m\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['f' Filter Samples]" << endl;
+	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['f' Filter Samples]" << endl;
 	cout << "['f' mode ONLY] -minarc\tsample filtering criteria" << endl;
 	cout << "['f' mode ONLY] -maxarc\tsample filtering criteria" << endl;
 	cout << "['f' mode ONLY] -targetlength\tsample filtering criteria" << endl;
@@ -24,9 +24,9 @@ void print_usage(){
 }
 
 int main(int argc, char* argv[]){
-	char* infile;
+	char* infile, mode = 0;
 	double zmin = 0, zmax = 0, sr=0;
-	int q = 0, s = 0, n = 0, c = 0, nchains = 0, w = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0;
+	int q = 0, s = 0, n = 0, c = 0, m = 0, w = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0;
 
 	if (argc <= 1){
 		print_usage();
@@ -67,16 +67,16 @@ int main(int argc, char* argv[]){
 				c = atoi(argv[i + 1]);
 				i++;
 			}
-			else if (!strcmp(argv[i], "-nchains")){
-				nchains = atoi(argv[i + 1]);
+			else if (!strcmp(argv[i], "-m")){
+				m = atoi(argv[i + 1]);
 				i++;
 			}
 			else if (!strcmp(argv[i], "-w")){
 				w = atoi(argv[i + 1]);
 				i++;
 			}
-			else if (!strcmp(argv[i], "-m")){
-				m = atoi(argv[i + 1]);
+			else if (!strcmp(argv[i], "-mode")){
+				mode = *argv[i + 1];
 				i++;
 			}
 			else if (!strcmp(argv[i], "-seed")){
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]){
 		}
 		//need to write checks for invalid operating parameters
 		mmchain mmc;
-		mmc.initialize(infile, zmin, zmax, q, sr, s, n, c, nchains, w, m, seed, minarc, maxarc, targetlength);
+		mmc.initialize(infile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength);
 		mmc.run_mmc();
 	}
 

@@ -41,7 +41,7 @@ void mmchain::initialize(){
 	return;
 }
 
-void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int w, int m, char mode, int seed){
+void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed){
 	string infile;
 	min_arc = 0;
 	max_arc = 0;
@@ -52,7 +52,7 @@ void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, i
 	add_initial_conformation_from_file(infile);
 }
 
-void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int w, int m, char mode, int seed,
+void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed,
 	int Min_arc, int Max_arc, int Target_recombo_length){
 	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
 		initialize(in, zmin, zmax, q, sr, s, n, c, w, m, mode, seed);
@@ -115,7 +115,7 @@ bool mmchain::add_initial_conformation_from_file(string& filename){
 		return false;
 }
 
-void mmchain::set_mmc(double Z_1, double Z_m, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int num_samples, int iterations, int M, double W){
+void mmchain::set_mmc(double Z_1, double Z_m, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int num_samples, int iterations, int M, long int W){
 	z_m = Z_m;
 	z_1 = Z_1;
 	q = Q;

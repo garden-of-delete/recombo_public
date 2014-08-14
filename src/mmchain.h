@@ -59,12 +59,12 @@ public:
 	/*
 	* Alternate constructor for use with command line argument processor
 	*/
-	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int w, int m, char mode, int seed);
+	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed);
 
 	/*
 	* Constructor for filtering samples to ones that meet recombination criteria
 	*/
-	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, int w, int m, char mode, int seed,
+	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed,
 		int Min_arc, int Max_arc, int Target_recombo_length);
 
 	/**
@@ -94,12 +94,13 @@ public:
 
 private:
 	char sample_mode;
-	double z_m, z_1, target_swap_ratio, w, seed;
+	double z_m, z_1, target_swap_ratio, seed;
 	clkConformationAsList initialComp0, initialComp1;
 	ofstream logfile;
 	ofstream out;
 	//conformationAsList toPrint;
 	int m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length;
+	long int w;
 
 	/**
 	* Randomly selects two adjacent chains and attempts a swap using orlandini's swap criteria.
@@ -129,7 +130,7 @@ private:
 	* @param w number of warmup steps. Per M. Szafron, w needs to be much larger than c. 1 billion is sufficient for trefoils and more complicated topologies. 10+ billion may be required for the unknot / hopf-link.
 	* Warmup should is performed with swapping and must complete before calibration can begin.
 	*/
-	void set_mmc(double Z_m, double Z_1, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int n, int c, int m, double w);
+	void set_mmc(double Z_m, double Z_1, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int n, int c, int m, long int w);
 
 	/**
 	* records operating parameters and filenames to log.txt

@@ -26,7 +26,8 @@ void print_usage(){
 int main(int argc, char* argv[]){
 	char* infile, mode = 0;
 	double zmin = 0, zmax = 0, sr=0;
-	int q = 0, s = 0, n = 0, c = 0, m = 0, w = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0;
+	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0;
+	long int w = 0;
 
 	if (argc <= 1){
 		print_usage();

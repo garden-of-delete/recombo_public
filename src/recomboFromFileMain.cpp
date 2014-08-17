@@ -17,7 +17,7 @@ void print_usage(){
 int main(int argc, char* argv[]){
 	int min_arc = 0, max_arc = 0, ncomp = 0; 
 	char* infile = NULL, *outfile = NULL;
-	char read_mode;
+	char read_mode = 0;
 	
 	if (argc < 6){
 		print_usage();
@@ -55,7 +55,10 @@ int main(int argc, char* argv[]){
 		cout << "mininum arclength must be strictly <= maximum arclength. Terminating program...";
 		return 0;
 	}
-
+	//set defauly read mode if none specified
+	if (read_mode == 0){
+		read_mode = 'b';
+	}
 	recomboFromFile recombo(min_arc, max_arc, infile, outfile, ncomp, read_mode);
 	recombo.do_recombo();
 	return 0;

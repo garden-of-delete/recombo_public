@@ -59,7 +59,7 @@ void recomboFromFile::do_recombo_knots(){
 		lengths.push_back(length);
 		if (length == (min_arc + max_arc)){
 		    length_counter ++;
-            sites = knot->countRecomboSites(min_arc, max_arc);
+            sites = knot->countRecomboSites(min_arc-1, max_arc+1);
         }
 	//}
 		//sites = knot->countRecomboSitesknot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);
@@ -101,7 +101,7 @@ void recomboFromFile::do_recombo_links(){
 		lengths.push_back(short_length + long_length);
 		if ((short_length >= min_arc) && (long_length <= max_arc)){
 		    length_counter ++;
-            sites = knot->countRecomboSites(min_arc, max_arc);
+            sites = knot->countRecomboSites(min_arc-1, max_arc+1);
             }
 	//}
 		//sites = knot->countRecomboSites(knot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);

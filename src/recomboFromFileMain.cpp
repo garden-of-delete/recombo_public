@@ -11,11 +11,12 @@ void print_usage(){
 	cout << "-min\tminimum arclength" << endl;
 	cout << "-max\tmaximum arclength" << endl;
 	cout << "-ncomp\tnumber of components" << endl;
+	cout << "--mode\tEnter an integer n > 0 to make a uniform selection of n samples from the file." << endl;
 	cout << "--m\tinput file format. use --m b for binary (default). use --m t for plain text." << endl;
 }
 
 int main(int argc, char* argv[]){
-	int min_arc = 0, max_arc = 0, ncomp = 0; 
+	int min_arc = 0, max_arc = 0, ncomp = 0, sampling_mode = 0;
 	char* infile = NULL, *outfile = NULL;
 	char read_mode = 0;
 	
@@ -44,6 +45,10 @@ int main(int argc, char* argv[]){
 			read_mode = *(argv[i+1]);
 			i++;
 		}
+		else if (!strcmp(argv[i], "--ss")){
+			sampling_mode = atoi(argv[i+1]);
+			i++;
+		}
 		else{
 			cout << "unrecognized operator/option. Terminating program...";
 			return 0;
@@ -59,7 +64,7 @@ int main(int argc, char* argv[]){
 	if (read_mode == 0){
 		read_mode = 'b';
 	}
-	recomboFromFile recombo(min_arc, max_arc, infile, outfile, ncomp, read_mode);
+	recomboFromFile recombo(min_arc, max_arc, infile, outfile, ncomp, read_mode, sampling_mode);
 	recombo.do_recombo();
 	return 0;
 }

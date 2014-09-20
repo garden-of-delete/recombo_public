@@ -2,10 +2,11 @@
 
 using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode){
 	min_arc = Min_arc;
 	max_arc = Max_arc;
 	read_mode = Read_mode;
+	sampling_mode = Sampling_mode;
 	in = new ifstream(Infile, ios::in | ios::binary);
 	out = new ofstream(Outfile, ios::out | ios::binary);
 	//mode = Mode;
@@ -37,6 +38,9 @@ bool recomboFromFile::read_comp_links(ifstream* in){
 }
 
 void recomboFromFile::do_recombo(){
+	if (sampling_mode == 0){
+		sampling_mode == -1;
+	}
 	if (n_components == 1)
 		do_recombo_knots();
 	else if (n_components == 2)
@@ -50,7 +54,7 @@ void recomboFromFile::do_recombo(){
 void recomboFromFile::do_recombo_knots(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
 	vector<int> lengths;
-	while (read_comp_knots(in)){
+	while (read_comp_knots(in) && sampling_mode != 0){
 	    sites = 0;
 		cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
 		knot = new clkConformationBfacf3(initialComp0);
@@ -75,6 +79,9 @@ void recomboFromFile::do_recombo_knots(){
 				i->writeAsCube(*out);
 			}
 			count++;
+			if (sampling_mode > 0){
+				sampling_mode--;
+			}
 		}
 		delete knot;
 	}
@@ -91,7 +98,7 @@ void recomboFromFile::do_recombo_knots(){
 void recomboFromFile::do_recombo_links(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
 	vector<int> lengths;
-	while (read_comp_links(in)){
+	while (read_comp_links(in) && sampling_mode != 0){
 	    sites = 0;
 		cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
 		knot = new clkConformationBfacf3(initialComp0, initialComp1);
@@ -117,6 +124,9 @@ void recomboFromFile::do_recombo_links(){
 				i->writeAsCube(*out);
 			}
 			count++;
+			if (sampling_mode > 0){
+				sampling_mode--;
+			}
 		}
 		delete knot;
 	}

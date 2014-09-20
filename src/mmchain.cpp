@@ -401,6 +401,7 @@ int mmchain::sample(){
 					chains[i].member_knot->countRecomboSites(min_arc, max_arc) > 0){
 					clkConformationAsList toPrint(chains[i].member_knot->getComponent(0));
 					toPrint.writeAsCube(out);
+					samples++;
 				}
 			}
 			return samples;

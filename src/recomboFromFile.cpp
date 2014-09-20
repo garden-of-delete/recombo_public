@@ -39,7 +39,7 @@ bool recomboFromFile::read_comp_links(ifstream* in){
 
 void recomboFromFile::do_recombo(){
 	if (sampling_mode == 0){
-		sampling_mode == -1;
+		sampling_mode = -1;
 	}
 	if (n_components == 1)
 		do_recombo_knots();

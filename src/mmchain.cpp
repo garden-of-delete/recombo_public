@@ -51,15 +51,15 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	srand(seed);
 	add_initial_conformation_from_file(infile);
 	block_file_size = bfs;
-	outfile_name.append(Outfile_name);
-	outfile_name.append("%00%.b");
+	block_file_index = 0;
+	outfile_name = Outfile_name;
 	current_block_file_number = 0;
 }
 
-void mmchain::initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs,
+void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs,
 	int Min_arc, int Max_arc, int Target_recombo_length){
 	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
-		initialize(in, outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, bfs);
+		initialize(in, Outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, bfs);
 		return;
 	}
 	string infile;
@@ -70,7 +70,10 @@ void mmchain::initialize(char* in, char* outfile_name, double zmin, double zmax,
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
 	srand(seed);
 	add_initial_conformation_from_file(infile);
+	block_file_size = bfs;
 	block_file_index = 0;
+	outfile_name = Outfile_name;
+	current_block_file_number = 0;
 }
 
 void mmchain::create_config_file(){
@@ -468,7 +471,7 @@ void mmchain::update_size(){
 }
 
 void mmchain::write_to_block_file(clkConformationBfacf3* clk){
-	if ((block_file_index < block_file_size) && (block_file_size != 0)){
+	if ((block_file_index < block_file_size) && (block_file_index != 0)){
 		//write conformation to file
 		if (n_components == 1){
 			clkConformationAsList toPrint(clk->getComponent(0));
@@ -489,14 +492,31 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	else 
 	{
 		//close current file if open
-		if (!out.fail()){
-			out.close();
-		}
+		out.close();
 		//incriment file name
 		current_block_file_number++;
+		//reset block file index
+		block_file_index = 0;
 		stringstream ss;
 		ss << outfile_name << current_block_file_number << ".b";
 		//open new file
-		out.open(ss.str().c_str() , ios::out | ios::binary);
+		out.open(ss.str().c_str(), ios::out | ios::binary);
+		
+		//write conformation to file
+		if (n_components == 1){
+			clkConformationAsList toPrint(clk->getComponent(0));
+			toPrint.writeAsCube(out);
+		}
+		else if (n_components == 2){
+			clkConformationAsList toPrint(clk->getComponent(0));
+			clkConformationAsList toPrint2(clk->getComponent(1));
+			toPrint.writeAsCube(out);
+			toPrint2.writeAsCube(out);
+		}
+		else{
+			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
+			exit(1);
+		}
+		block_file_index++;
 	}
 }

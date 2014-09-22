@@ -56,8 +56,8 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 }
 
-void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs,
-	int Min_arc, int Max_arc, int Target_recombo_length){
+void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed,
+	int Min_arc, int Max_arc, int Target_recombo_length, int bfs){
 	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
 		initialize(in, Outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, bfs);
 		return;
@@ -498,7 +498,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		//reset block file index
 		block_file_index = 0;
 		stringstream ss;
-		ss << outfile_name << current_block_file_number << ".b";
+		ss << outfile_name << '_' << current_block_file_number << ".b";
 		//open new file
 		out.open(ss.str().c_str(), ios::out | ios::binary);
 		

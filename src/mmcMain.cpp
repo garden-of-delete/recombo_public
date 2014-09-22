@@ -40,7 +40,7 @@ int main(int argc, char* argv[]){
 		infile = argv[1];
 		outfile = argv[2];
 
-		for (int i = 2; i < argc; i++){
+		for (int i = 3; i < argc; i++){
 			if (!strcmp(argv[i], "-zmin")){
 				zmin = atof(argv[i + 1]);
 				i++;

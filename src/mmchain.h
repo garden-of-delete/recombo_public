@@ -101,7 +101,7 @@ private:
 	ofstream logfile;
 	ofstream out;
 	//conformationAsList toPrint;
-	int m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, const block_file_size, block_file_index, current_block_file_number;
+	int m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number;
 	long int w;
 
 	/**

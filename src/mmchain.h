@@ -14,6 +14,7 @@
 #include <time.h>
 #include <cstdlib>
 #include <string.h>
+#include <sstream>
 
 #include "pseudorandom.h"
 #include "autocorr.h"
@@ -59,12 +60,12 @@ public:
 	/*
 	* Alternate constructor for use with command line argument processor
 	*/
-	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed);
+	void initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs);
 
 	/*
 	* Constructor for filtering samples to ones that meet recombination criteria
 	*/
-	void initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed,
+	void initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs,
 		int Min_arc, int Max_arc, int Target_recombo_length);
 
 	/**
@@ -93,13 +94,14 @@ public:
 	void display_results();
 
 private:
+	string outfile_name;
 	char sample_mode;
 	double z_m, z_1, target_swap_ratio, seed;
 	clkConformationAsList initialComp0, initialComp1;
 	ofstream logfile;
 	ofstream out;
 	//conformationAsList toPrint;
-	int m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length;
+	int m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, const block_file_size, block_file_index, current_block_file_number;
 	long int w;
 
 	/**
@@ -194,6 +196,12 @@ private:
 	* finds the size of the conformation stored in each chain. prints the sizes to cout. useful for debugging
 	*/
 	void update_size();
+	
+	/**
+	* writes conformations to block files of size block_file_size binary clks
+	*/
+	void write_to_block_file(clkConformationBfacf3* clk);
+
 	//private member objects
 	vector<interval_data> intervals;
 	vector<chain> chains;

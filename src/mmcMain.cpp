@@ -4,7 +4,7 @@ using namespace std;
 
 void print_usage(){
 	cout << "Usage:" << endl;
-	cout << "mmc input_file [operators/options]" << endl;
+	cout << "mmc input_file initial_output_file_name [operators/options]" << endl;
 	cout << "mmc sets up a composite markov chain sampling process using the provided initial clk file." << endl;
 	cout << "mmc operators:" << endl;
 	cout << "-zmin\tlowest z-value" << endl;
@@ -21,12 +21,13 @@ void print_usage(){
 	cout << "['f' mode ONLY] -maxarc\tsample filtering criteria" << endl;
 	cout << "['f' mode ONLY] -targetlength\tsample filtering criteria" << endl;
 	cout << "-seed\tset seed for random number generator" << endl;
+	cout << "-bfs\tnumber of conformations to save per .b file" << endl;
 }
 
 int main(int argc, char* argv[]){
-	char* infile, mode = 0;
+	char* infile, *outfile, mode = 0;
 	double zmin = 0, zmax = 0, sr=0;
-	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0;
+	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0, bfs = 0;
 	long int w = 0;
 
 	if (argc <= 1){
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]){
 	}
 	else{
 		infile = argv[1];
-		//outfile = argv[2];
+		outfile = argv[2];
 
 		for (int i = 2; i < argc; i++){
 			if (!strcmp(argv[i], "-zmin")){
@@ -96,6 +97,10 @@ int main(int argc, char* argv[]){
 				targetlength = atoi(argv[i + 1]);
 				i++;
 			}
+			else if (!strcmp(argv[i], "-bfs")){
+				bfs = atoi(argv[i + 1]);
+				i++;
+			}
 			else{
 				cout << "unrecognized operator/option. Terminating program...";
 				return 0;
@@ -103,7 +108,7 @@ int main(int argc, char* argv[]){
 		}
 		//need to write checks for invalid operating parameters
 		mmchain mmc;
-		mmc.initialize(infile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength);
+		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs);
 		mmc.run_mmc();
 	}
 

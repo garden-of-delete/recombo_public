@@ -41,7 +41,7 @@ void mmchain::initialize(){
 	return;
 }
 
-void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed){
+void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs){
 	string infile;
 	min_arc = 0;
 	max_arc = 0;
@@ -50,12 +50,16 @@ void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, i
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
 	srand(seed);
 	add_initial_conformation_from_file(infile);
+	block_file_size = bfs;
+	outfile_name.append(Outfile_name);
+	outfile_name.append("%00%.b");
+	current_block_file_number = 0;
 }
 
-void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed,
+void mmchain::initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs,
 	int Min_arc, int Max_arc, int Target_recombo_length){
 	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
-		initialize(in, zmin, zmax, q, sr, s, n, c, w, m, mode, seed);
+		initialize(in, outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, bfs);
 		return;
 	}
 	string infile;
@@ -66,6 +70,7 @@ void mmchain::initialize(char* in, double zmin, double zmax, int q, double sr, i
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
 	srand(seed);
 	add_initial_conformation_from_file(infile);
+	block_file_index = 0;
 }
 
 void mmchain::create_config_file(){
@@ -147,6 +152,7 @@ bool mmchain::stamp_log(string logname, string buff){
 	logfile << "warmup= " << w << endl;
 	logfile << "sample_mode= " << sample_mode << endl;
 	logfile << "seed= " << seed << endl;
+	logfile << "block_file_size= " << block_file_size << endl;
 	cout << endl;
 	logfile.close();
 
@@ -173,10 +179,11 @@ void mmchain::run_mmc(){
     std::puts(buffer);
 	stamp_log("log.txt", buffer);
 
+	/*
 	//open chronological block file
 	char* buff = strcat(buffer, ".b");
-	out.open(buff, std::ios::out);
-
+	out.open(buff, std::ios::out | std::iostream::binary);
+	*/
 	//calculate delta_b, produce initial spacing
 	b_1 = log(z_1);
 	b_m = log(z_m);
@@ -378,8 +385,7 @@ int mmchain::sample(){
 	if (n_components == 1){
 		if(sample_mode == 's'){ //sample only
 			for(int i = 0; i < m; i++){
-				clkConformationAsList toPrint(chains[i].member_knot->getComponent(0));
-				toPrint.writeAsCube(out);
+				write_to_block_file(chains[i].member_knot);
 			}
 		}
 		else if(sample_mode == 'a'){ //analyze length statistics
@@ -390,8 +396,7 @@ int mmchain::sample(){
 		else if(sample_mode == 'b'){ //both
 			for(int i = 0; i < m; i++){
 				chains[i].data.push_back(chains[i].member_knot->getComponent(0).size());
-				clkConformationAsList toPrint(chains[i].member_knot->getComponent(0));
-				toPrint.writeAsCube(out);
+				write_to_block_file(chains[i].member_knot);
 			}
 		}
 		else if (sample_mode == 'f'){ //filter sampling
@@ -399,9 +404,8 @@ int mmchain::sample(){
 			for (int i = 0; i < m; i++){
 				if (chains[i].member_knot->getComponent(0).size() == target_recombo_length &&
 					chains[i].member_knot->countRecomboSites(min_arc, max_arc) > 0){
-					clkConformationAsList toPrint(chains[i].member_knot->getComponent(0));
-					toPrint.writeAsCube(out);
-					samples++;
+						write_to_block_file(chains[i].member_knot);
+						samples++;
 				}
 			}
 			return samples;
@@ -411,8 +415,7 @@ int mmchain::sample(){
 		if(sample_mode == 's'){ //sample only
 			for(int i = 0; i < m; i++){
 				clkConformationAsList toPrint(chains[i].member_knot->getComponent(0)), toPrint_2(chains[i].member_knot->getComponent(1));
-				toPrint.writeAsCube(out);
-				toPrint_2.writeAsCube(out);
+				write_to_block_file(chains[i].member_knot);
 			}
 		}
 		else if(sample_mode == 'a'){ //analyze length statistics
@@ -423,9 +426,7 @@ int mmchain::sample(){
 		else if(sample_mode == 'b'){ //both
 			for(int i = 0; i < m; i++){
 				chains[i].data.push_back(chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size());
-				clkConformationAsList toPrint(chains[i].member_knot->getComponent(0)), toPrint_2(chains[i].member_knot->getComponent(1));
-				toPrint.writeAsCube(out);
-				toPrint_2.writeAsCube(out);
+				write_to_block_file(chains[i].member_knot);
 			}
 		}
 		else if (sample_mode == 'f'){ //filter sampling
@@ -433,9 +434,7 @@ int mmchain::sample(){
 			for (int i = 0; i < m; i++){
 				if (chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size() == target_recombo_length &&
 					chains[i].member_knot->countRecomboSites(min_arc, max_arc) > 0){
-					clkConformationAsList toPrint(chains[i].member_knot->getComponent(0)), toPrint_2(chains[i].member_knot->getComponent(1));
-					toPrint.writeAsCube(out);
-					toPrint_2.writeAsCube(out);
+					write_to_block_file(chains[i].member_knot);
 					samples++;
 				}
 			}
@@ -466,4 +465,38 @@ void mmchain::update_size(){
 			cout << chains[i].size <<" ";
 	}
 		cout << endl;
+}
+
+void mmchain::write_to_block_file(clkConformationBfacf3* clk){
+	if ((block_file_index < block_file_size) && (block_file_size != 0)){
+		//write conformation to file
+		if (n_components == 1){
+			clkConformationAsList toPrint(clk->getComponent(0));
+			toPrint.writeAsCube(out);
+		}
+		else if (n_components == 2){
+			clkConformationAsList toPrint(clk->getComponent(0));
+			clkConformationAsList toPrint2(clk->getComponent(1));
+			toPrint.writeAsCube(out);
+			toPrint2.writeAsCube(out);
+		}
+		else{
+			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
+			exit(1);
+		}
+		block_file_index++;
+	}
+	else 
+	{
+		//close current file
+		if (out.is_open){
+			out.close();
+		}
+		//incriment file name
+		current_block_file_number++;
+		stringstream ss;
+		ss << outfile_name << current_block_file_number << ".b";
+		//open new file
+		out.open(ss.str , ios::out | ios::binary);
+	}
 }

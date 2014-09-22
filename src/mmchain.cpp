@@ -488,8 +488,8 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	}
 	else 
 	{
-		//close current file
-		if (out.is_open){
+		//close current file if open
+		if (!out.fail()){
 			out.close();
 		}
 		//incriment file name
@@ -497,6 +497,6 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		stringstream ss;
 		ss << outfile_name << current_block_file_number << ".b";
 		//open new file
-		out.open(ss.str , ios::out | ios::binary);
+		out.open(ss.str().c_str() , ios::out | ios::binary);
 	}
 }

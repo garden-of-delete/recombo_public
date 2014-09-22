@@ -498,7 +498,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		//reset block file index
 		block_file_index = 0;
 		stringstream ss;
-		ss << outfile_name << '_' << current_block_file_number << ".b";
+		ss << outfile_name << '%' << current_block_file_number << ".b";
 		//open new file
 		out.open(ss.str().c_str(), ios::out | ios::binary);
 		

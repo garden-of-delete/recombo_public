@@ -60,13 +60,13 @@ public:
 	/*
 	* Alternate constructor for use with command line argument processor
 	*/
-	void initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs);
+	void initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs, bool Supress_output);
 
 	/*
 	* Constructor for filtering samples to ones that meet recombination criteria
 	*/
 	void initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs,
-		int Min_arc, int Max_arc, int Target_recombo_length);
+		int Min_arc, int Max_arc, int Target_recombo_length, bool Supress_output);
 
 	/**
 	* adds an initial conformation from the given istream. practically speaking, will only be called from outside add_initial_conformation_From_file(...)
@@ -95,6 +95,7 @@ public:
 
 private:
 	string outfile_name;
+	bool supress_output;
 	char sample_mode;
 	double z_m, z_1, target_swap_ratio, seed;
 	clkConformationAsList initialComp0, initialComp1;

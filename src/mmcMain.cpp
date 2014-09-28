@@ -22,9 +22,11 @@ void print_usage(){
 	cout << "['f' mode ONLY] -targetlength\tsample filtering criteria" << endl;
 	cout << "-seed\tset seed for random number generator" << endl;
 	cout << "-bfs\tnumber of conformations to save per .b file" << endl;
+	cout << "+s\tsupress status output. For use with shell scripts." << endl;
 }
 
 int main(int argc, char* argv[]){
+	bool supress_output = false;
 	char* infile, *outfile, mode = 0;
 	double zmin = 0, zmax = 0, sr=0;
 	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0, bfs = 0;
@@ -101,6 +103,9 @@ int main(int argc, char* argv[]){
 				bfs = atoi(argv[i + 1]);
 				i++;
 			}
+			else if (!strcmp(argv[i], "+s")){
+				supress_output = true;
+			}
 			else{
 				cout << "unrecognized operator/option. Terminating program...";
 				return 0;
@@ -108,7 +113,7 @@ int main(int argc, char* argv[]){
 		}
 		//need to write checks for invalid operating parameters
 		mmchain mmc;
-		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs);
+		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, supress_output);
 		mmc.run_mmc();
 	}
 

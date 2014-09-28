@@ -41,7 +41,7 @@ void mmchain::initialize(){
 	return;
 }
 
-void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs){
+void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs, bool Supress_output){
 	string infile;
 	min_arc = 0;
 	max_arc = 0;
@@ -54,12 +54,13 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	block_file_index = 0;
 	outfile_name = Outfile_name;
 	current_block_file_number = 0;
+	supress_output = Supress_output;
 }
 
 void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed,
-	int Min_arc, int Max_arc, int Target_recombo_length, int bfs){
+	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, bool Supress_output){
 	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
-		initialize(in, Outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, bfs);
+		initialize(in, Outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, bfs, Supress_output);
 		return;
 	}
 	string infile;
@@ -74,6 +75,7 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	block_file_index = 0;
 	outfile_name = Outfile_name;
 	current_block_file_number = 0;
+	supress_output = Supress_output;
 }
 
 void mmchain::create_config_file(){
@@ -208,7 +210,9 @@ void mmchain::run_mmc(){
 	cout << "Warming up " << m << " chains: (" << w << " steps)" << endl;
 	//update_size(); 
 	for(int i = 0; i < w; i++){ 
-		cout <<"\rCurrent Progress: " << i+1 << '/' << w;
+		if (!supress_output){
+			cout << "\rCurrent Progress: " << i + 1 << '/' << w;
+		}
 		for(int j = 0; j < m; j++){
 			chains[j].member_knot->stepQ(swap_interval, q, chains[j].z);
 		}
@@ -217,7 +221,9 @@ void mmchain::run_mmc(){
 
 	//calibrate chains
 	calibrate_chains();
-	cout << endl << "Starting sampling with " << m << " chains..." << endl;
+	if (!supress_output){
+		cout << endl << "Starting sampling with " << m << " chains..." << endl;
+	}
 	
 	//main loop
 	i = 0;
@@ -232,7 +238,9 @@ void mmchain::run_mmc(){
 		if (sample_mode != 'f'){
 			i++;
 		}
-		cout << "\rSampling Progress: " << i << '/' << n;
+		if (!supress_output){
+			cout << "\rSampling Progress: " << i << '/' << n;
+		}
 	}
 	cout << endl;
 	out.close();

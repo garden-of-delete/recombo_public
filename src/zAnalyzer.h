@@ -36,7 +36,7 @@ class Analyzer{
 
 public:
 	bool add_initial_conformation(istream&);
-	bool Analyzer::add_initial_conformation_from_file(char* filename);
+	bool add_initial_conformation_from_file(char* filename);
 	void reset();
 	bool z_from_length(double target, double mean_tol);
 	bool length_from_z(search_data* in, bool probe);

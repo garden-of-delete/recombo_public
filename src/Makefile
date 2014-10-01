@@ -32,7 +32,7 @@ zAnalyzer: bin $(OBJS) zAnalyzerMain.o
 	@echo Build zAnalyzer
 	$(CC) -o bin/zAnalyzer $(CFLAGS) $(OBJS) zAnalyzerMain.o
 
-idknot: bin id.o idknot.o
+idknot: bin $(OBJS) idknot.o
 	@echo Build idknot
 	$(CC) -o bin/idknot $(CFLAGS) $(OBJS) idknot.o
 

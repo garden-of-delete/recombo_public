@@ -27,10 +27,11 @@
 
 using namespace std;
 
-class testClkConformationBfacf3 : public clkConformationBfacf3{
+class testClkConformationBfacf3 : public clkConformationBfacf3
+{
 public:
 	testClkConformationBfacf3(const clkConformationAsList knot) : clkConformationBfacf3(knot) {};
-	friend bool testClkConformationBfacf3::testPrecomputedBfacf3Probs();
+	friend class testClkConformationBfacf3;
 };
 
 class clktestclass

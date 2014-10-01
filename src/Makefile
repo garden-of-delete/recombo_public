@@ -8,11 +8,11 @@ CFLAGS = -g -fpermissive
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
-OBJS = argprocessor.o autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o pseudorandom.o recomboArgprocessor.o recomboFromFile.o regularNgon.o runRecombo.o zAnalyzer.o
+OBJS = argprocessor.o autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o pseudorandom.o recomboArgprocessor.o recomboFromFile.o regularNgon.o runRecombo.o zAnalyzer.o id.o
 
 all: programs librecombo libunittest test 
 
-programs: mmc recomboFromFile zAnalyzer
+programs: mmc recomboFromFile zAnalyzer idknot
 
 bin:
 	mkdir -p bin
@@ -31,6 +31,10 @@ recomboFromFile: bin $(OBJS) recomboFromFileMain.o
 zAnalyzer: bin $(OBJS) zAnalyzerMain.o
 	@echo Build zAnalyzer
 	$(CC) -o bin/zAnalyzer $(CFLAGS) $(OBJS) zAnalyzerMain.o
+
+idknot: bin id.o idknot.o
+	@echo Build idknot
+	$(CC) -o bin/idknot $(CFLAGS) $(OBJS) idknot.o
 
 libunittest: bin testFramework.o
 	ar r libunittest.a testFramework.o

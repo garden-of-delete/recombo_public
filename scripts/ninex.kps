@@ -1,0 +1,125 @@
+sftp:alias mirror "reflect y"
+alias relax "ago 10000"
+
+sformat = 7
+
+gauss open ninex
+
+% 3_1 # 3_1 # 3_1
+load 3_1
+load sum 3_1
+load sum 3_1
+relax
+save "9c_1"
+gauss
+
+% 3_1s # 3_1s # 3_1s
+mirror
+save "9c_1s"
+gauss
+
+% 3_1 # 3_1 # 3_1s
+load 3_1
+mirror
+load sum 3_1
+load sum 3_1
+relax
+save "9c_2"
+gauss
+
+% 3_1s # 3_1s # 3_1
+mirror
+save "9c_2s"
+gauss
+
+% 3_1 # 6_1
+load 3_1
+load sum 6_1
+relax
+save "9c_3"
+gauss
+
+% 3_1s # 6_1s
+mirror
+save "9c_3s"
+gauss
+
+% 3_1 # 6_1s
+load 6_1
+mirror
+load sum 3_1
+relax
+save "9c_4"
+gauss
+
+% 3_1s # 6_1
+mirror
+save "9c_4s"
+gauss
+
+% 3_1 # 6_2
+load 3_1
+load sum 6_2
+relax
+save "9c_5"
+gauss
+
+% 3_1s # 6_2s
+mirror
+save "9c_5s"
+gauss
+
+% 3_1 # 6_2s
+load 6_2
+mirror
+load sum 3_1
+relax
+save "9c_6"
+gauss
+
+% 3_1s # 6_2
+mirror
+save "9c_6s"
+gauss
+
+% 3_1 # 6_3
+load 3_1
+mirror
+load sum 6_3
+relax
+save "9c_7"
+gauss
+
+% 3_1s # 6_3
+mirror
+save "9c_7s"
+gauss
+
+% 4_1 # 5_1
+load 4_1
+mirror
+load sum 5_1
+relax
+save "9c_8"
+gauss
+
+% 4_1 # 5_1s
+mirror
+save "9c_8s"
+gauss
+
+% 4_1 # 5_2
+load 4_1
+mirror
+load sum 5_2
+relax
+save "9c_9"
+gauss
+
+% 4_1 # 5_2s
+mirror
+save "9c_9s"
+gauss
+
+gauss close
+

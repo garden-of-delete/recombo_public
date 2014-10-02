@@ -1,18 +1,22 @@
-CC = g++ -g
 CC = g++ 
+CR = gcc
 
 CFLAGS = -g -fpermissive
+CRFLAGS = 
 
 .SUFFIXES: .cpp
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
+.c.o:
+	$(CR) $(CRFLAGS) -c $*.c -o $*.o
+
 OBJS = argprocessor.o autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o bfacfProbabilitiesFromZFixed.o clk.o clkCigar.o clkConformationAsList.o clkConformationBfacf3.o clkConformationSeqconvert.o conformationAsList.o conformationWlc.o conformation.o legacyBfacf.o legacy.o mmchain.o pseudorandom.o recomboArgprocessor.o recomboFromFile.o regularNgon.o runRecombo.o zAnalyzer.o id.o
 
 all: programs librecombo libunittest test 
 
-programs: mmc recomboFromFile zAnalyzer idknot
+programs: mmc recomboFromFile zAnalyzer idknot homfly
 
 bin:
 	mkdir -p bin
@@ -34,7 +38,11 @@ zAnalyzer: bin $(OBJS) zAnalyzerMain.o
 
 idknot: bin $(OBJS) idknot.o
 	@echo Build idknot
-	$(CC) -o bin/idknot $(CFLAGS) $(OBJS) idknot.o
+	$(CC) -o bin/idknot $(CRFLAGS) $(OBJS) idknot.o
+
+homfly: bin cross.o polynomesAZ.o homfly1_21.o 
+	@echo Build homfly
+	$(CR) -o bin/homfly $(CRFLAGS) cross.o polynomesAZ.o homfly1_21.o
 
 libunittest: bin testFramework.o
 	ar r libunittest.a testFramework.o

@@ -44,6 +44,10 @@ homfly: bin cross.o polynomesAZ.o homfly1_21.o
 	@echo Build homfly
 	$(CR) -o bin/homfly $(CRFLAGS) cross.o polynomesAZ.o homfly1_21.o
 
+xinger: bin
+	@echo Build unit tests.
+	(cd xinger; $(MAKE))
+
 libunittest: bin testFramework.o
 	ar r libunittest.a testFramework.o
 
@@ -61,7 +65,7 @@ sampleTest: unitTests
 
 clean: 
 	@echo Clean.
-	rm -f *.o *.a tests/*.o
+	rm -f *.o *.a tests/*.o xinger/*.o
 
 clobber: clean
 	@echo Clobber.

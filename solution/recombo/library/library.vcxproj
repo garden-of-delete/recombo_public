@@ -25,6 +25,7 @@
     <ClInclude Include="..\..\..\src\conformationAsList.h" />
     <ClInclude Include="..\..\..\src\conformationWlc.h" />
     <ClInclude Include="..\..\..\src\genericConformation.h" />
+    <ClInclude Include="..\..\..\src\id.h" />
     <ClInclude Include="..\..\..\src\legacy.h" />
     <ClInclude Include="..\..\..\src\legacyBfacf.h" />
     <ClInclude Include="..\..\..\src\mmchain.h" />
@@ -51,6 +52,7 @@
     <ClCompile Include="..\..\..\src\conformation.cpp" />
     <ClCompile Include="..\..\..\src\conformationAsList.cpp" />
     <ClCompile Include="..\..\..\src\conformationWlc.cpp" />
+    <ClCompile Include="..\..\..\src\id.cpp" />
     <ClCompile Include="..\..\..\src\legacy.cpp" />
     <ClCompile Include="..\..\..\src\legacyBfacf.cpp" />
     <ClCompile Include="..\..\..\src\mmchain.cpp" />

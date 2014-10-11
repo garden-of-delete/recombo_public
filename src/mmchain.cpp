@@ -227,7 +227,7 @@ void mmchain::run_mmc(){
 	
 	//main loop
 	i = 0;
-	while(i < n){
+	while(i < n || sample_mode == 'e'){
 		for(j = 0; j < c/swap_interval; j++){
 			for(k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
@@ -394,18 +394,18 @@ void mmchain::calibrate_chains(){
 
 int mmchain::sample(){
 	if (n_components == 1){
-		if(sample_mode == 's'){ //sample only
-			for(int i = 0; i < m; i++){
+		if (sample_mode == 's'){ //sample only
+			for (int i = 0; i < m; i++){
 				write_to_block_file(chains[i].member_knot);
 			}
 		}
-		else if(sample_mode == 'a'){ //analyze length statistics
-			for(int i = 0; i < m; i++){
+		else if (sample_mode == 'a'){ //analyze length statistics
+			for (int i = 0; i < m; i++){
 				chains[i].data.push_back(chains[i].member_knot->getComponent(0).size());
 			}
 		}
-		else if(sample_mode == 'b'){ //both
-			for(int i = 0; i < m; i++){
+		else if (sample_mode == 'b'){ //both
+			for (int i = 0; i < m; i++){
 				chains[i].data.push_back(chains[i].member_knot->getComponent(0).size());
 				write_to_block_file(chains[i].member_knot);
 			}
@@ -416,10 +416,15 @@ int mmchain::sample(){
 				write_to_block_file(chains[i].member_knot);
 				if (chains[i].member_knot->getComponent(0).size() == target_recombo_length &&
 					chains[i].member_knot->countRecomboSites(min_arc, max_arc) > 0){
-						samples++;
+					samples++;
 				}
 			}
 			return samples;
+		}
+		else if (sample_mode == 'e'){ //eternal sampling mode
+			for (int i = 0; i < m; i++){
+				write_to_block_file(chains[i].member_knot);
+			}
 		}
 	}
 	else if (n_components == 2){
@@ -450,6 +455,11 @@ int mmchain::sample(){
 				}
 			}
 			return samples;
+		}
+		else if (sample_mode == 'e'){ //eternal sampling mode
+			for (int i = 0; i < m; i++){
+				write_to_block_file(chains[i].member_knot);
+			}
 		}
 	}
 	return 0;

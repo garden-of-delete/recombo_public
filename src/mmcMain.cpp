@@ -16,7 +16,7 @@ void print_usage(){
 	cout << "-c\tnumber of BFACF steps between samples" << endl;
 	cout << "-m\tinitial number of CMC chains" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
-	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['f' Filter Samples]" << endl;
+	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['f' Filter Samples] ['e' Eternal Sampling]" << endl;
 	cout << "['f' mode ONLY] -minarc\tsample filtering criteria" << endl;
 	cout << "['f' mode ONLY] -maxarc\tsample filtering criteria" << endl;
 	cout << "['f' mode ONLY] -targetlength\tsample filtering criteria" << endl;

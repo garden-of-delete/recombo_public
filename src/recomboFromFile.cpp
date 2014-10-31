@@ -90,7 +90,7 @@ void recomboFromFile::do_recombo_knots(){
 	for (int i=0; i < lengths.size(); i++){
         sum += lengths[i];
 	}
-	cout << "Length 100 conformations: " << length_counter << endl;
+	cout << "Length " << min_arc + max_arc << " conformations: " << length_counter << endl;
 	cout << "Average Length: " << sum / lengths.size() << endl;
 }
 
@@ -135,7 +135,7 @@ void recomboFromFile::do_recombo_links(){
 	for (int i=0; i < lengths.size(); i++){
         sum += lengths[i];
 	}
-	cout << "Length 50/50 conformations: " << length_counter << endl;
+	cout << "Length " << min_arc + max_arc << " conformations: " << length_counter << endl;
 	cout << "Average Length: " << sum / lengths.size() << endl;
 }
 

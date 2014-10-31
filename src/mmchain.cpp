@@ -221,9 +221,7 @@ void mmchain::run_mmc(){
 
 	//calibrate chains
 	calibrate_chains();
-	if (!supress_output){
-		cout << endl << "Starting sampling with " << m << " chains..." << endl;
-	}
+	cout << endl << "Starting sampling with " << m << " chains..." << endl;
 	
 	//main loop
 	i = 0;

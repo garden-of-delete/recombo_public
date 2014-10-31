@@ -97,12 +97,12 @@ private:
 	string outfile_name;
 	bool supress_output;
 	char sample_mode;
-	double z_m, z_1, target_swap_ratio, seed;
+	double z_m, z_1, target_swap_ratio;
 	clkConformationAsList initialComp0, initialComp1;
 	ofstream logfile;
 	ofstream out;
 	//conformationAsList toPrint;
-	int m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number;
+	int seed, m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number;
 	long int w;
 
 	/**

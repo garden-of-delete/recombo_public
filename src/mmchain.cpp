@@ -57,10 +57,10 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	supress_output = Supress_output;
 }
 
-void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed,
+void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int Seed,
 	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, bool Supress_output){
 	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
-		initialize(in, Outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, bfs, Supress_output);
+		initialize(in, Outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, Seed, bfs, Supress_output);
 		return;
 	}
 	string infile;
@@ -69,6 +69,7 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	target_recombo_length = Target_recombo_length;
 	infile.append(in);
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
+	seed = Seed;
 	srand(seed);
 	add_initial_conformation_from_file(infile);
 	block_file_size = bfs;

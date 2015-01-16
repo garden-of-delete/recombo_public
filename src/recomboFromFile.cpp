@@ -2,19 +2,58 @@
 
 using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode){
+	//set operating variables
 	min_arc = Min_arc;
 	max_arc = Max_arc;
 	read_mode = Read_mode;
 	sampling_mode = Sampling_mode;
-	in = new ifstream(Infile, ios::in | ios::binary);
-	out = new ofstream(Outfile, ios::out | ios::binary);
-	//mode = Mode;
+	block_file_mode = Block_file_mode;
+	//initialize infile_name and current_block_file_number, for use with block_file_mode == 1
+	infile_name = new string(Infile);
+	current_block_file_number = 0;
+	//allocate uninitialized ifstream
+	in = new ifstream;
+	if (block_file_mode == 1){
+		//incriment infile_name 
+		inc_filename();
+	}
+	else{
+		//open infile and allocate/open outfile
+		in->open(Infile, ios::in | ios::binary);
+		out = new ofstream(Outfile, ios::out | ios::binary);
+	}
 	n_components = N_components;
 	if (!in->good())
 		{cout << "Error reading input file" << endl; exit(3);}
 	if (!out->good())
 		{cout << "Error creating output file" << endl; exit(3);}
+}
+
+bool recomboFromFile::inc_filename(){
+	//close current file if open
+	in->close();
+	//incriment block file counter
+	current_block_file_number++;
+	//put the new filename together with a string stream
+	stringstream ss;
+	ss << infile_name << '%' << current_block_file_number << ".b";
+	//try to open new filename
+	in->open(ss.str().c_str(), ios::out | ios::binary);
+	//check if succesful, return based on result
+	if (in->good()){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+string recomboFromFile::get_current_filename(){
+	//put the new filename together with a string stream
+	stringstream ss;
+	ss << infile_name << '%' << current_block_file_number << ".b";
+	return ss.str();
 }
 
 bool recomboFromFile::read_comp_knots(ifstream* in){
@@ -53,7 +92,9 @@ void recomboFromFile::do_recombo(){
 
 void recomboFromFile::do_recombo_knots(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
+	long int total_attempts = 0, total_count = 0, 
 	vector<int> lengths;
+	TOP:
 	while (read_comp_knots(in) && sampling_mode != 0){
 	    sites = 0;
 		cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
@@ -85,19 +126,38 @@ void recomboFromFile::do_recombo_knots(){
 		}
 		delete knot;
 	}
-	cout << "\nPerformed "<<count<<" recombinations on "<<attempts << " conformations."<< endl;
+	//report on current file
+	cout << "\nPerformed "<<count<<" recombinations on "<<attempts<< " conformations in file "<< get_current_filename() << endl;
 	double sum = 0;
 	for (int i=0; i < lengths.size(); i++){
         sum += lengths[i];
 	}
-	cout << "Length " << min_arc + max_arc << " conformations: " << length_counter << endl;
-	cout << "Average Length: " << sum / lengths.size() << endl;
+	cout << "Length " << min_arc + max_arc << " conformations so far: " << length_counter << endl;
+	cout << "Average length so far: " << sum / lengths.size() << endl;
+	if (block_file_mode == 1){
+		//copy current file statistics into totals
+		total_attempts += attempts;
+		total_count += count;
+		attempts = 0;
+		count = 0;
+		//if bfm == 1, see if next block file exists
+		if (inc_filename()){
+			//next block file exists and is now open, return to TOP to process next file
+			goto TOP;
+		}
+		else{
+			//next block file does not exist, report statistics for all blocks
+			cout << "\nPerformed " << total_count << " recombinations on " << total_attempts << " conformations." << endl;
+		}
+	}
 }
 
 
 void recomboFromFile::do_recombo_links(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
+	long int total_attempts = 0, total_count = 0,
 	vector<int> lengths;
+	TOP:
 	while (read_comp_links(in) && sampling_mode != 0){
 	    sites = 0;
 		cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
@@ -130,16 +190,34 @@ void recomboFromFile::do_recombo_links(){
 		}
 		delete knot;
 	}
-	cout << "\nPerformed "<<count<<" recombinations on "<<attempts << " conformations."<< endl;
+	//report on current file
+	cout << "\nPerformed " << count << " recombinations on " << attempts << " conformations in file " << get_current_filename() << endl;
 	double sum = 0;
 	for (int i=0; i < lengths.size(); i++){
         sum += lengths[i];
 	}
-	cout << "Length " << min_arc + max_arc << " conformations: " << length_counter << endl;
-	cout << "Average Length: " << sum / lengths.size() << endl;
+	cout << "Length " << min_arc + max_arc << " conformations so far: " << length_counter << endl;
+	cout << "Average length so far: " << sum / lengths.size() << endl;
+	if (block_file_mode == 1){
+		//copy current file statistics into totals
+		total_attempts += attempts;
+		total_count += count;
+		attempts = 0;
+		count = 0;
+		//if bfm == 1, see if next block file exists
+		if (inc_filename()){
+			//next block file exists and is now open, return to TOP to process next file
+			goto TOP;
+		}
+		else{
+			//next block file does not exist, report statistics for all blocks
+			cout << "\nPerformed " << total_count << " recombinations on " << total_attempts << " conformations." << endl;
+		}
+	}
 }
 
 recomboFromFile::~recomboFromFile(){
 	delete in;
 	delete out;
+	delete infile_name;
 }

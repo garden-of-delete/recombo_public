@@ -17,6 +17,8 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 	if (block_file_mode == 1){
 		//incriment infile_name 
 		inc_filename();
+		//allocate and open output file
+		out = new ofstream(Outfile, ios::out | ios::binary);
 	}
 	else{
 		//open infile and allocate/open outfile
@@ -37,7 +39,7 @@ bool recomboFromFile::inc_filename(){
 	current_block_file_number++;
 	//put the new filename together with a string stream
 	stringstream ss;
-	ss << infile_name << '%' << current_block_file_number << ".b";
+	ss << *infile_name << '%' << current_block_file_number << ".b";
 	//try to open new filename
 	in->open(ss.str().c_str(), ios::out | ios::binary);
 	//check if succesful, return based on result

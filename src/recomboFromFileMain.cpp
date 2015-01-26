@@ -11,7 +11,6 @@ void print_usage(){
 	cout << "-min\tminimum arclength" << endl;
 	cout << "-max\tmaximum arclength" << endl;
 	cout << "-ncomp\tnumber of components" << endl;
-	cout << "--mode\tEnter an integer n > 0 to make a uniform selection of n samples from the file." << endl;
 	cout << "--m\tinput file format. use --m b for binary (default). use --m t for plain text." << endl;
 	cout << "--bfm\tblock file mode. use --bfm 0 for single file mode (default)." << endl 
 		<< "\tuse --bfm 1 and enter input file without .b extension for block file mode." << endl;

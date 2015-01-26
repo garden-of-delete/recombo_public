@@ -92,7 +92,7 @@ void recomboFromFile::do_recombo(){
 
 void recomboFromFile::do_recombo_knots(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
-	long int total_attempts = 0, total_count = 0, 
+	long int total_attempts = 0, total_count = 0;
 	vector<int> lengths;
 	TOP:
 	while (read_comp_knots(in) && sampling_mode != 0){
@@ -155,7 +155,7 @@ void recomboFromFile::do_recombo_knots(){
 
 void recomboFromFile::do_recombo_links(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
-	long int total_attempts = 0, total_count = 0,
+	long int total_attempts = 0, total_count = 0;
 	vector<int> lengths;
 	TOP:
 	while (read_comp_links(in) && sampling_mode != 0){

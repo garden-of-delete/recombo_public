@@ -8,6 +8,7 @@ class recomboFromFile{
 private:
 	int min_arc, max_arc, n_components, sampling_mode, block_file_mode, current_block_file_number;
 	char read_mode;
+	bool supress_output;
 	string* infile_name;
 	clkConformationAsList initialComp0, initialComp1;
 	clkConformationBfacf3* knot;
@@ -21,7 +22,7 @@ private:
 	bool inc_filename();
 	string get_current_filename();
 public:
-	recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int n_components, char read_mode, int sampling_mode, int block_file_mode);
+	recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int n_components, char read_mode, int sampling_mode, int block_file_mode, bool supress_output);
 	void do_recombo();
 	~recomboFromFile();
 };

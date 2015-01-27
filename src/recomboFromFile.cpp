@@ -2,8 +2,9 @@
 
 using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output){
 	//set operating variables
+	supress_output = Supress_output;
 	min_arc = Min_arc;
 	max_arc = Max_arc;
 	read_mode = Read_mode;
@@ -98,8 +99,10 @@ void recomboFromFile::do_recombo_knots(){
 	vector<int> lengths;
 	TOP:
 	while (read_comp_knots(in) && sampling_mode != 0){
-	    sites = 0;
-		cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
+		sites = 0;
+		if (!supress_output){
+			cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
+		}
 		knot = new clkConformationBfacf3(initialComp0);
 		//need to create new countRecomboSites function that is ideal for use with mmc
 		int length = knot->getComponent(0).size();
@@ -162,7 +165,9 @@ void recomboFromFile::do_recombo_links(){
 	TOP:
 	while (read_comp_links(in) && sampling_mode != 0){
 	    sites = 0;
-		cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
+		if (!supress_output){
+			cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
+		}
 		knot = new clkConformationBfacf3(initialComp0, initialComp1);
 		//need to create new countRecomboSites function that is ideal for use with mmc
 		int short_length = min(knot->getComponent(0).size(),knot->getComponent(1).size());

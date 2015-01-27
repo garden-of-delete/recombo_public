@@ -54,7 +54,7 @@ bool recomboFromFile::inc_filename(){
 string recomboFromFile::get_current_filename(){
 	//put the new filename together with a string stream
 	stringstream ss;
-	ss << infile_name << '%' << current_block_file_number << ".b";
+	ss << *infile_name << '%' << current_block_file_number << ".b";
 	return ss.str();
 }
 

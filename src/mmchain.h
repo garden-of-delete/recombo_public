@@ -100,10 +100,14 @@ private:
 	double z_m, z_1, target_swap_ratio;
 	clkConformationAsList initialComp0, initialComp1;
 	ofstream logfile;
-	ofstream out;
+	//when in filtering mode, out2 is for the after recombo conformations
+	ofstream* out, *out2;
 	//conformationAsList toPrint;
 	int seed, m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number;
 	long int w;
+
+	//variables for filter mode only
+	long int sample_attempts;
 
 	/**
 	* Randomly selects two adjacent chains and attempts a swap using orlandini's swap criteria.
@@ -136,12 +140,12 @@ private:
 	void set_mmc(double Z_m, double Z_1, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int n, int c, int m, long int w);
 
 	/**
-	* records operating parameters and filenames to log.txt
-	* @param logname log filename
-	* @param buff string buffer containing time information used to create output file
+	* old purpose: records operating parameters and filenames to log.txt
+	* new purpose: records operating parameters to stdout
+	* @param buff string buffer containing time information to be printed to cout
 	* @return false if logfile could not be created or opened, else returns true
 	*/
-	bool stamp_log(string logname, string buff);
+	void stamp_log(string buff);
 
 	/**
 	* called by insert_new_chain(...)
@@ -202,6 +206,10 @@ private:
 	* writes conformations to block files of size block_file_size binary clks
 	*/
 	void write_to_block_file(clkConformationBfacf3* clk);
+	void write_to_block_file(clkConformationBfacf3* clk, clkConformationBfacf3* clk_after);
+
+	bool do_recombo_knots(int current_chain);
+	bool do_recombo_links(int current_chain);
 
 	//private member objects
 	vector<interval_data> intervals;

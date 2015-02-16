@@ -1,4 +1,6 @@
 #include "mmchain.h"
+
+
 using namespace std;
 
 void mmchain::initialize(){
@@ -55,6 +57,7 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	outfile_name = Outfile_name;
 	current_block_file_number = 0;
 	supress_output = Supress_output;
+	sample_attempts = 0;
 }
 
 void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int Seed,
@@ -77,6 +80,7 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	outfile_name = Outfile_name;
 	current_block_file_number = 0;
 	supress_output = Supress_output;
+	sample_attempts = 0;
 }
 
 void mmchain::create_config_file(){
@@ -139,30 +143,22 @@ void mmchain::set_mmc(double Z_1, double Z_m, int Q, double Target_swap_ratio, i
 	w = W;
 }
 
-bool mmchain::stamp_log(string logname, string buff){
-	logfile.open(logname.c_str(), std::ofstream::out | std::ofstream::app); //open file for appending
-	if (logfile.fail()){
-		cout << "Unable to create or open log.txt";
-		return false;
-	}
-	logfile << buff << endl;
-	//logfile << filename;
-	logfile <<"zmin = "<< z_1 << endl;
-	logfile <<"zmax= "<< z_m << endl;
-	logfile <<"q= "<< q << endl;
-	logfile <<"target_swap_ratio= " << target_swap_ratio << endl;
-	logfile <<"swap_interval :"<<  swap_interval << endl;
-	logfile <<"n_samples= " << n << endl;
-	logfile <<"steps_between_samples :" << c << endl;
-	logfile << "initial_n_chains: " << m << endl;
-	logfile << "warmup= " << w << endl;
-	logfile << "sample_mode= " << sample_mode << endl;
-	logfile << "seed= " << seed << endl;
-	logfile << "block_file_size= " << block_file_size << endl;
+void mmchain::stamp_log(string buff){
+	
+	cout << "start_time= " << buff << endl;
+	cout <<"zmin= "<< z_1 << endl;
+	cout <<"zmax= "<< z_m << endl;
+	cout <<"q= "<< q << endl;
+	cout <<"target_swap_ratio= " << target_swap_ratio << endl;
+	cout <<"swap_interval :"<<  swap_interval << endl;
+	cout <<"n_samples= " << n << endl;
+	cout <<"steps_between_samples :" << c << endl;
+	cout << "initial_n_chains: " << m << endl;
+	cout << "warmup= " << w << endl;
+	cout << "sample_mode= " << sample_mode << endl;
+	cout << "seed= " << seed << endl;
+	cout << "block_file_size= " << block_file_size << endl;
 	cout << endl;
-	logfile.close();
-
-	return true;
 }
 
 void mmchain::run_mmc(){
@@ -183,10 +179,10 @@ void mmchain::run_mmc(){
 
     std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
     std::puts(buffer);
-	stamp_log("log.txt", buffer);
+	stamp_log(buffer);
 
 	/*
-	//open chronological block file
+	//open chronological block file (legacy code, here for reference)
 	char* buff = strcat(buffer, ".b");
 	out.open(buff, std::ios::out | std::iostream::binary);
 	*/
@@ -234,6 +230,7 @@ void mmchain::run_mmc(){
 			swap();
 		}
 		i += sample();
+		sample_attempts++;
 		if (sample_mode != 'f'){
 			i++;
 		}
@@ -242,7 +239,11 @@ void mmchain::run_mmc(){
 		}
 	}
 	cout << endl;
-	out.close();
+	if (sample_mode == 'f'){
+		cout << "Sampled " << i << " times from " << sample_attempts << " attempts." << endl;
+		cout << "Ratio: " << float(i) / float(sample_attempts) << endl;
+	}
+	out->close();
 	if ((sample_mode == 'b') || (sample_mode == 'a')){
 		display_results();
 	}
@@ -412,14 +413,11 @@ int mmchain::sample(){
 		else if (sample_mode == 'f'){ //filter sampling
 			int samples = 0;
 			for (int i = 0; i < m; i++){
-				write_to_block_file(chains[i].member_knot);
-				if (chains[i].member_knot->getComponent(0).size() == target_recombo_length &&
-					chains[i].member_knot->countRecomboSites(min_arc, max_arc) > 0){
+				if (do_recombo_knots(i))
 					samples++;
 				}
-			}
 			return samples;
-		}
+			}
 		else if (sample_mode == 'e'){ //eternal sampling mode
 			for (int i = 0; i < m; i++){
 				write_to_block_file(chains[i].member_knot);
@@ -464,6 +462,48 @@ int mmchain::sample(){
 	return 0;
 }
 
+bool mmchain::do_recombo_knots(int current_chain){
+	//setup recombo environment
+	int sites = 0, choice = 0;
+	pseudorandom siteSelector;
+
+	//perform recombination
+		//check length and count recombo sites
+	int length = chains[current_chain].member_knot->getComponent(0).size();
+	if (length == (min_arc + max_arc)){
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc - 1, max_arc + 1);
+	}
+	if (sites > 0){
+		clkConformationBfacf3 transfer(chains[current_chain].member_knot->getComponent(0));
+		choice = siteSelector.rand_integer(0, sites-1);
+		transfer.performRecombination(choice);
+		write_to_block_file(chains[current_chain].member_knot, &transfer);
+		return true;
+	}
+	return false;
+}
+
+bool mmchain::do_recombo_links(int current_chain){
+	//setup recombo environment
+	int sites = 0, choice = 0;
+	pseudorandom siteSelector;
+
+	//perform recombination
+	//check length and count recombo sites
+	int length = chains[current_chain].member_knot->getComponent(0).size();
+	if (length == (min_arc + max_arc)){
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc - 1, max_arc + 1);
+	}
+	if (sites > 0){
+		clkConformationBfacf3 transfer(chains[current_chain].member_knot->getComponent(0), chains[current_chain].member_knot->getComponent(1));
+		choice = siteSelector.rand_integer(0, sites - 1);
+		transfer.performRecombination(choice);
+		write_to_block_file(chains[current_chain].member_knot, &transfer);
+		return true;
+	}
+	return false;
+}
+
 void mmchain::display_results(){
 	autocorr ac;
 	autocorrInfo info;
@@ -492,13 +532,13 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		//write conformation to file
 		if (n_components == 1){
 			clkConformationAsList toPrint(clk->getComponent(0));
-			toPrint.writeAsCube(out);
+			toPrint.writeAsCube(*out);
 		}
 		else if (n_components == 2){
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
-			toPrint.writeAsCube(out);
-			toPrint2.writeAsCube(out);
+			toPrint.writeAsCube(*out);
+			toPrint2.writeAsCube(*out);
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
@@ -509,7 +549,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	else 
 	{
 		//close current file if open
-		out.close();
+		out->close();
 		//incriment file name
 		current_block_file_number++;
 		//reset block file index
@@ -517,18 +557,92 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		stringstream ss;
 		ss << outfile_name << '%' << current_block_file_number << ".b";
 		//open new file
-		out.open(ss.str().c_str(), ios::out | ios::binary);
+		out->open(ss.str().c_str(), ios::out | ios::binary);
 		
 		//write conformation to file
 		if (n_components == 1){
 			clkConformationAsList toPrint(clk->getComponent(0));
-			toPrint.writeAsCube(out);
+			toPrint.writeAsCube(*out);
 		}
 		else if (n_components == 2){
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
-			toPrint.writeAsCube(out);
-			toPrint2.writeAsCube(out);
+			toPrint.writeAsCube(*out);
+			toPrint2.writeAsCube(*out);
+		}
+		else{
+			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
+			exit(1);
+		}
+		block_file_index++;
+	}
+}
+
+void mmchain::write_to_block_file(clkConformationBfacf3* clk, clkConformationBfacf3* clk_after){
+	if ((block_file_index < block_file_size) && (block_file_index != 0)){
+		//write conformation to file
+		if (n_components == 1){
+			clkConformationAsList toPrint(clk->getComponent(0));
+			toPrint.writeAsCube(*out);
+			//write clk_after to second output file
+			clkConformationAsList toPrint2(clk->getComponent(0));
+			toPrint.writeAsCube(*out2);
+		}
+		else if (n_components == 2){
+			clkConformationAsList toPrint(clk->getComponent(0));
+			clkConformationAsList toPrint2(clk->getComponent(1));
+			toPrint.writeAsCube(*out);
+			toPrint2.writeAsCube(*out);
+			//write clk_after to second output file
+			clkConformationAsList toPrint3(clk->getComponent(0));
+			clkConformationAsList toPrint4(clk->getComponent(1));
+			toPrint3.writeAsCube(*out2);
+			toPrint4.writeAsCube(*out2);
+		}
+		else{
+			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
+			exit(1);
+		}
+		block_file_index++;
+	}
+	else
+	{
+		//close current file if open
+		out->close();
+		//incriment file name
+		current_block_file_number++;
+		//reset block file index
+		block_file_index = 0;
+		stringstream ss;
+		ss << outfile_name << '%' << current_block_file_number << ".b";
+		//open new file
+		out->open(ss.str().c_str(), ios::out | ios::binary);
+
+		//if in filter mode, open second output file
+		if (sample_mode == 'f'){
+			stringstream tt;
+			tt << outfile_name << "_after%" << current_block_file_number << ".b";
+			out2->open(ss.str().c_str(), ios::out | ios::binary);
+		}
+
+		//write conformation to file
+		if (n_components == 1){
+			clkConformationAsList toPrint(clk->getComponent(0));
+			toPrint.writeAsCube(*out);
+			//write clk_after to second output file
+			clkConformationAsList toPrint2(clk->getComponent(0));
+			toPrint.writeAsCube(*out2);
+		}
+		else if (n_components == 2){
+			clkConformationAsList toPrint(clk->getComponent(0));
+			clkConformationAsList toPrint2(clk->getComponent(1));
+			toPrint.writeAsCube(*out);
+			toPrint2.writeAsCube(*out);
+			//write clk_after to second output file
+			clkConformationAsList toPrint3(clk->getComponent(0));
+			clkConformationAsList toPrint4(clk->getComponent(1));
+			toPrint3.writeAsCube(*out2);
+			toPrint4.writeAsCube(*out2);
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;

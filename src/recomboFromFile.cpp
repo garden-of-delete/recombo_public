@@ -108,16 +108,14 @@ void recomboFromFile::do_recombo_knots(){
 		int length = knot->getComponent(0).size();
 		lengths.push_back(length);
 		if (length == (min_arc + max_arc)){
-		    length_counter ++;
+		    length_counter++;
             sites = knot->countRecomboSites(min_arc-1, max_arc+1);
         }
-	//}
-		//sites = knot->countRecomboSitesknot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);
 
 		if(sites > 0){
 			list<clkConformationAsList> components;
-			choice = siteSelector.rand_integer(0, sites);
-			knot->performRecombination();
+			choice = siteSelector.rand_integer(0, sites-1);
+			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;
 			for (i = components.begin(); i != components.end(); i++)
@@ -174,7 +172,7 @@ void recomboFromFile::do_recombo_links(){
 		int long_length = max(knot->getComponent(0).size(), knot->getComponent(1).size());
 		lengths.push_back(short_length + long_length);
 		if ((short_length >= min_arc) && (long_length <= max_arc)){
-		    length_counter ++;
+		    length_counter++;
             sites = knot->countRecomboSites(min_arc-1, max_arc+1);
             }
 	//}
@@ -182,8 +180,8 @@ void recomboFromFile::do_recombo_links(){
 
 		if(sites > 0){
 			list<clkConformationAsList> components;
-			choice = siteSelector.rand_integer(0, sites);
-			knot->performRecombination();
+			choice = siteSelector.rand_integer(0, sites-1);
+			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;
 			for (i = components.begin(); i != components.end(); i++)

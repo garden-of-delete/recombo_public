@@ -178,7 +178,7 @@ void mmchain::run_mmc(){
     timeinfo = std::localtime(&rawtime);
 
     std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
-    std::puts(buffer);
+    //std::puts(buffer); moved inside stamp_log(...)
 	stamp_log(buffer);
 
 	/*
@@ -223,6 +223,7 @@ void mmchain::run_mmc(){
 	//main loop
 	i = 0;
 	while(i < n || sample_mode == 'e'){
+		cout << i << endl;
 		for(j = 0; j < c/swap_interval; j++){
 			for(k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
@@ -243,7 +244,7 @@ void mmchain::run_mmc(){
 		cout << "Sampled " << i << " times from " << sample_attempts << " attempts." << endl;
 		cout << "Ratio: " << float(i) / float(sample_attempts) << endl;
 	}
-	out->close();
+	out.close();
 	if ((sample_mode == 'b') || (sample_mode == 'a')){
 		display_results();
 	}
@@ -474,10 +475,12 @@ bool mmchain::do_recombo_knots(int current_chain){
 		sites = chains[current_chain].member_knot->countRecomboSites(min_arc - 1, max_arc + 1);
 	}
 	if (sites > 0){
-		clkConformationBfacf3 transfer(chains[current_chain].member_knot->getComponent(0));
 		choice = siteSelector.rand_integer(0, sites-1);
-		transfer.performRecombination(choice);
+		chains[current_chain].member_knot->performRecombination(choice);
+		clkConformationAsList temp(chains[current_chain].member_knot->getComponent(0));
+		clkConformationBfacf3 transfer(temp);
 		write_to_block_file(chains[current_chain].member_knot, &transfer);
+		chains[current_chain].member_knot->undoRecombination();
 		return true;
 	}
 	return false;
@@ -532,13 +535,13 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		//write conformation to file
 		if (n_components == 1){
 			clkConformationAsList toPrint(clk->getComponent(0));
-			toPrint.writeAsCube(*out);
+			toPrint.writeAsCube(out);
 		}
 		else if (n_components == 2){
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
-			toPrint.writeAsCube(*out);
-			toPrint2.writeAsCube(*out);
+			toPrint.writeAsCube(out);
+			toPrint2.writeAsCube(out);
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
@@ -549,7 +552,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	else 
 	{
 		//close current file if open
-		out->close();
+		out.close();
 		//incriment file name
 		current_block_file_number++;
 		//reset block file index
@@ -557,18 +560,18 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		stringstream ss;
 		ss << outfile_name << '%' << current_block_file_number << ".b";
 		//open new file
-		out->open(ss.str().c_str(), ios::out | ios::binary);
+		out.open(ss.str().c_str(), ios::out | ios::binary);
 		
 		//write conformation to file
 		if (n_components == 1){
 			clkConformationAsList toPrint(clk->getComponent(0));
-			toPrint.writeAsCube(*out);
+			toPrint.writeAsCube(out);
 		}
 		else if (n_components == 2){
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
-			toPrint.writeAsCube(*out);
-			toPrint2.writeAsCube(*out);
+			toPrint.writeAsCube(out);
+			toPrint2.writeAsCube(out);
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
@@ -583,21 +586,21 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk, clkConformationBfa
 		//write conformation to file
 		if (n_components == 1){
 			clkConformationAsList toPrint(clk->getComponent(0));
-			toPrint.writeAsCube(*out);
+			toPrint.writeAsCube(out);
 			//write clk_after to second output file
 			clkConformationAsList toPrint2(clk->getComponent(0));
-			toPrint.writeAsCube(*out2);
+			toPrint.writeAsCube(out2);
 		}
 		else if (n_components == 2){
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
-			toPrint.writeAsCube(*out);
-			toPrint2.writeAsCube(*out);
+			toPrint.writeAsCube(out);
+			toPrint2.writeAsCube(out);
 			//write clk_after to second output file
 			clkConformationAsList toPrint3(clk->getComponent(0));
 			clkConformationAsList toPrint4(clk->getComponent(1));
-			toPrint3.writeAsCube(*out2);
-			toPrint4.writeAsCube(*out2);
+			toPrint3.writeAsCube(out2);
+			toPrint4.writeAsCube(out2);
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
@@ -608,7 +611,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk, clkConformationBfa
 	else
 	{
 		//close current file if open
-		out->close();
+		out.close();
 		//incriment file name
 		current_block_file_number++;
 		//reset block file index
@@ -616,33 +619,33 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk, clkConformationBfa
 		stringstream ss;
 		ss << outfile_name << '%' << current_block_file_number << ".b";
 		//open new file
-		out->open(ss.str().c_str(), ios::out | ios::binary);
+		out.open(ss.str().c_str(), ios::out | ios::binary);
 
 		//if in filter mode, open second output file
-		if (sample_mode == 'f'){
+		if (sample_mode == 'f'){ //this conditional statement is probably not neccisary 
 			stringstream tt;
 			tt << outfile_name << "_after%" << current_block_file_number << ".b";
-			out2->open(tt.str().c_str(), ios::out | ios::binary);
+			out2.open(tt.str().c_str(), ios::out | ios::binary);
 		}
 
 		//write conformation to file
 		if (n_components == 1){
 			clkConformationAsList toPrint(clk->getComponent(0));
-			toPrint.writeAsCube(*out);
+			toPrint.writeAsCube(out);
 			//write clk_after to second output file
 			clkConformationAsList toPrint2(clk->getComponent(0));
-			toPrint.writeAsCube(*out2);
+			toPrint.writeAsCube(out2);
 		}
 		else if (n_components == 2){
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
-			toPrint.writeAsCube(*out);
-			toPrint2.writeAsCube(*out);
+			toPrint.writeAsCube(out);
+			toPrint2.writeAsCube(out);
 			//write clk_after to second output file
 			clkConformationAsList toPrint3(clk->getComponent(0));
 			clkConformationAsList toPrint4(clk->getComponent(1));
-			toPrint3.writeAsCube(*out2);
-			toPrint4.writeAsCube(*out2);
+			toPrint3.writeAsCube(out2);
+			toPrint4.writeAsCube(out2);
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;

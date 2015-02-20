@@ -101,7 +101,7 @@ private:
 	clkConformationAsList initialComp0, initialComp1;
 	ofstream logfile;
 	//when in filtering mode, out2 is for the after recombo conformations
-	ofstream* out, *out2;
+	ofstream out, out2;
 	//conformationAsList toPrint;
 	int seed, m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number;
 	long int w;

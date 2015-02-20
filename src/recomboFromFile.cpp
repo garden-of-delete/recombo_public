@@ -114,7 +114,7 @@ void recomboFromFile::do_recombo_knots(){
 
 		if(sites > 0){
 			list<clkConformationAsList> components;
-			choice = siteSelector.rand_integer(0, sites-1);
+			choice = siteSelector.rand_integer(0, sites-1); //sites or sites-1?
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;

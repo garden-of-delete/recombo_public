@@ -622,7 +622,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk, clkConformationBfa
 		if (sample_mode == 'f'){
 			stringstream tt;
 			tt << outfile_name << "_after%" << current_block_file_number << ".b";
-			out2->open(ss.str().c_str(), ios::out | ios::binary);
+			out2->open(tt.str().c_str(), ios::out | ios::binary);
 		}
 
 		//write conformation to file

@@ -476,17 +476,16 @@ bool mmchain::do_recombo_knots(int current_chain){
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites-1);
-		chains[current_chain].member_knot->performRecombination(choice);
-		clkConformationAsList temp(chains[current_chain].member_knot->getComponent(0));
-		clkConformationBfacf3 transfer(temp);
-		write_to_block_file(chains[current_chain].member_knot, &transfer);
-		chains[current_chain].member_knot->undoRecombination();
+		//chains[current_chain].member_knot->performRecombination(choice);
+			//perform recombination and write both conformations to respective block files
+		write_recombination_to_block_file(chains[current_chain].member_knot, choice);
+		//chains[current_chain].member_knot->undoRecombination();
 		return true;
 	}
 	return false;
 }
 
-bool mmchain::do_recombo_links(int current_chain){
+bool mmchain::do_recombo_links(int current_chain){ 
 	//setup recombo environment
 	int sites = 0, choice = 0;
 	pseudorandom siteSelector;
@@ -498,10 +497,8 @@ bool mmchain::do_recombo_links(int current_chain){
 		sites = chains[current_chain].member_knot->countRecomboSites(min_arc - 1, max_arc + 1);
 	}
 	if (sites > 0){
-		clkConformationBfacf3 transfer(chains[current_chain].member_knot->getComponent(0), chains[current_chain].member_knot->getComponent(1));
 		choice = siteSelector.rand_integer(0, sites - 1);
-		transfer.performRecombination(choice);
-		write_to_block_file(chains[current_chain].member_knot, &transfer);
+		write_recombination_to_block_file(chains[current_chain].member_knot, choice);
 		return true;
 	}
 	return false;
@@ -581,26 +578,35 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	}
 }
 
-void mmchain::write_to_block_file(clkConformationBfacf3* clk, clkConformationBfacf3* clk_after){
+void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice){
 	if ((block_file_index < block_file_size) && (block_file_index != 0)){
-		//write conformation to file
 		if (n_components == 1){
+			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
 			toPrint.writeAsCube(out);
+			//perform recombination
+			clk->performRecombination(site_choice);
 			//write clk_after to second output file
 			clkConformationAsList toPrint2(clk->getComponent(0));
 			toPrint.writeAsCube(out2);
+			//undo recombination
+			clk->undoRecombination();
 		}
 		else if (n_components == 2){
+			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
 			toPrint.writeAsCube(out);
 			toPrint2.writeAsCube(out);
+			//perform recombination
+			clk->performRecombination(site_choice);
 			//write clk_after to second output file
 			clkConformationAsList toPrint3(clk->getComponent(0));
 			clkConformationAsList toPrint4(clk->getComponent(1));
 			toPrint3.writeAsCube(out2);
 			toPrint4.writeAsCube(out2);
+			//undo recombination
+			clk->undoRecombination();
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
@@ -622,30 +628,39 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk, clkConformationBfa
 		out.open(ss.str().c_str(), ios::out | ios::binary);
 
 		//if in filter mode, open second output file
-		if (sample_mode == 'f'){ //this conditional statement is probably not neccisary 
+		if (sample_mode == 'f'){ //this conditional block is probably not neccisary 
 			stringstream tt;
 			tt << outfile_name << "_after%" << current_block_file_number << ".b";
 			out2.open(tt.str().c_str(), ios::out | ios::binary);
 		}
 
-		//write conformation to file
 		if (n_components == 1){
+			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
 			toPrint.writeAsCube(out);
+			//perform recombination
+			clk->performRecombination(site_choice);
 			//write clk_after to second output file
 			clkConformationAsList toPrint2(clk->getComponent(0));
 			toPrint.writeAsCube(out2);
+			//undo recombination
+			clk->undoRecombination();
 		}
 		else if (n_components == 2){
+			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
 			toPrint.writeAsCube(out);
 			toPrint2.writeAsCube(out);
+			//perform recombination
+			clk->performRecombination(site_choice);
 			//write clk_after to second output file
 			clkConformationAsList toPrint3(clk->getComponent(0));
 			clkConformationAsList toPrint4(clk->getComponent(1));
 			toPrint3.writeAsCube(out2);
 			toPrint4.writeAsCube(out2);
+			//undo recombination
+			clk->undoRecombination();
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;

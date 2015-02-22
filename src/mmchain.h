@@ -206,7 +206,14 @@ private:
 	* writes conformations to block files of size block_file_size binary clks
 	*/
 	void write_to_block_file(clkConformationBfacf3* clk);
-	void write_to_block_file(clkConformationBfacf3* clk, clkConformationBfacf3* clk_after);
+
+	/**
+	* writes current conformation to block file, performs recombination and writes result to _after blockfile, undoes recombination
+	* @param clk a pointer to the clkconformationBfacf3 object on which to perform recombination
+	* @param site_choice an integer value from 0 to number of sites -1 representing the site to perform 
+	*
+	*/
+	void write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice);
 
 	bool do_recombo_knots(int current_chain);
 	bool do_recombo_links(int current_chain);

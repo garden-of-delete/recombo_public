@@ -446,11 +446,8 @@ int mmchain::sample(){
 		else if (sample_mode == 'f'){ //filter sampling
 			int samples = 0;
 			for (int i = 0; i < m; i++){
-				write_to_block_file(chains[i].member_knot);
-				if (chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size() == target_recombo_length &&
-					chains[i].member_knot->countRecomboSites(min_arc, max_arc) > 0){
+				if (do_recombo_links(i))
 					samples++;
-				}
 			}
 			return samples;
 		}

@@ -223,7 +223,6 @@ void mmchain::run_mmc(){
 	//main loop
 	i = 0;
 	while(i < n || sample_mode == 'e'){
-		cout << i << endl;
 		for(j = 0; j < c/swap_interval; j++){
 			for(k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);

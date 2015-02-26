@@ -219,8 +219,8 @@ void mmchain::run_mmc(){
 	calibrate_chains();
 	cout << endl << "Starting sampling with " << m << " chains..." << endl;
 	
+	//compute and report average length for each chain with swapping if in 'analyze' or 'both' mode. 
 	if (sample_mode == 'a' || sample_mode == 'b'){
-		//compute and report average length for each chain with swapping
 			//clear length vectors for each chain
 		for (int i = 0; i < chains.size(); i++){
 			chains[i].data.clear();
@@ -246,6 +246,10 @@ void mmchain::run_mmc(){
 		if (sample_mode == 'a'){
 			return;
 		}
+	}
+	//clear length vectors for each chain
+	for (int i = 0; i < chains.size(); i++){
+		chains[i].data.clear();
 	}
 	
 	//main loop
@@ -410,7 +414,7 @@ void mmchain::calibrate_chains(){
 			intervals[i].sucessful_swaps = 0;
 		}
 		//run chains for the same # of steps as a warmup
-		cout << "\rTesting chains... " << endl;
+		cout << "Testing chains... " << endl;
 		for(int i = 0; i < w; i++){ 
 			for(int j = 0; j < m; j++){
 				chains[j].member_knot->stepQ(swap_interval, q, chains[j].z);

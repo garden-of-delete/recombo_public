@@ -163,7 +163,6 @@ void mmchain::stamp_log(string buff){
 
 void mmchain::run_mmc(){
 	interval_data temp_interval;
-	int i, j, k;
 	double init_delta_b, b_1, b_m;
 	//objects used only for testing lengths
 	autocorr ac;
@@ -193,12 +192,12 @@ void mmchain::run_mmc(){
 
 	//initialize chains and interval data
 	chains[0].member_knot->setZ(z_m);
-	for (i = 0; i < m; i++){
+	for (int i = 0; i < m; i++){
 		chains[i].member_knot->setZ(exp((log(chains[0].member_knot->getZ()) - i*init_delta_b))); 
 		chains[i].z = chains[i].member_knot->getZ();
 		chains[i].data.resize(n);
 	}
-	for (i = 0; i < m-1; i++){
+	for (int i = 0; i < m-1; i++){
 		temp_interval.delta_b = abs(log(chains[i].member_knot->getZ()) - log(chains[i+1].member_knot->getZ()));
 		intervals.push_back(temp_interval);
 	}
@@ -206,7 +205,7 @@ void mmchain::run_mmc(){
 	//warmup with swapping
 	cout << "Warming up " << m << " chains: (" << w << " steps)" << endl;
 	//update_size(); 
-	for(int i = 0; i < w; i++){ 
+	for(int i = 0; i < w; i+=swap_interval){ 
 		if (!supress_output){
 			cout << "\rCurrent Progress: " << i + 1 << '/' << w;
 		}
@@ -220,11 +219,40 @@ void mmchain::run_mmc(){
 	calibrate_chains();
 	cout << endl << "Starting sampling with " << m << " chains..." << endl;
 	
+	if (sample_mode == 'a' || sample_mode == 'b'){
+		//compute and report average length for each chain with swapping
+			//clear length vectors for each chain
+		for (int i = 0; i < chains.size(); i++){
+			chains[i].data.clear();
+		}
+		cout << endl << "Estimating average lengths with swapping... (crude estimate)" << endl;
+		
+		for (int i = 0; i < 1000; i++){ //1000 samples of length
+			for (int j = 0; j < c/swap_interval; j++){
+				for (int k = 0; k < m; k++){
+					chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
+				}
+				swap();
+			}
+			for (int k = 0; k < m; k++){
+				if (n_components == 1)
+					chains[k].data.push_back(chains[k].member_knot->getComponent(0).size());
+				else if (n_components == 2)
+					chains[k].data.push_back(chains[k].member_knot->getComponent(0).size() + chains[k].member_knot->getComponent(1).size());
+			}
+		}
+		display_results();
+		//if analyze only mode, end program
+		if (sample_mode == 'a'){
+			return;
+		}
+	}
+	
 	//main loop
-	i = 0;
+	int i = 0;
 	while(i < n || sample_mode == 'e'){
-		for(j = 0; j < c/swap_interval; j++){
-			for(k = 0; k < m; k++){
+		for(int j = 0; j < c/swap_interval; j++){
+			for(int k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
 			}
 			swap();
@@ -399,12 +427,12 @@ int mmchain::sample(){
 				write_to_block_file(chains[i].member_knot);
 			}
 		}
-		else if (sample_mode == 'a'){ //analyze length statistics
+		/*else if (sample_mode == 'a'){ //analyze length statistics
 			for (int i = 0; i < m; i++){
 				chains[i].data.push_back(chains[i].member_knot->getComponent(0).size());
 			}
-		}
-		else if (sample_mode == 'b'){ //both
+		}*/
+		else if (sample_mode == 'b'){ //sample and analyze
 			for (int i = 0; i < m; i++){
 				chains[i].data.push_back(chains[i].member_knot->getComponent(0).size());
 				write_to_block_file(chains[i].member_knot);
@@ -431,12 +459,12 @@ int mmchain::sample(){
 				write_to_block_file(chains[i].member_knot);
 			}
 		}
-		else if(sample_mode == 'a'){ //analyze length statistics
+		/*else if(sample_mode == 'a'){ //analyze length statistics
 			for(int i = 0; i < m; i++){
 				chains[i].data.push_back(chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size());
 			}
-		}
-		else if(sample_mode == 'b'){ //both
+		}*/
+		else if(sample_mode == 'b'){ //sample and analyze
 			for(int i = 0; i < m; i++){
 				chains[i].data.push_back(chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size());
 				write_to_block_file(chains[i].member_knot);
@@ -472,10 +500,8 @@ bool mmchain::do_recombo_knots(int current_chain){
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites-1);
-		//chains[current_chain].member_knot->performRecombination(choice);
 			//perform recombination and write both conformations to respective block files
 		write_recombination_to_block_file(chains[current_chain].member_knot, choice);
-		//chains[current_chain].member_knot->undoRecombination();
 		return true;
 	}
 	return false;
@@ -504,14 +530,12 @@ void mmchain::display_results(){
 	autocorr ac;
 	autocorrInfo info;
 	ofstream results;
-	results.open("autocorr_data.txt", std::ofstream::out); //need to change the naming scheme to associate this log with the output file
 	cout << endl;
-	if ((sample_mode == 'b') || (sample_mode == 'a')){
 	for (int i = 0; i < m; i++){
 		info = ac.autocorrelation(chains[i].data,false);
 		cout << chains[i].z << " " << info << endl;
-		results << chains[i].z << " " << info << endl;	
-	}}
+	}
+
 	results.close();
 }
 

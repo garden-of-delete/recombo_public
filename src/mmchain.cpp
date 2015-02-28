@@ -145,15 +145,16 @@ void mmchain::set_mmc(double Z_1, double Z_m, int Q, double Target_swap_ratio, i
 
 void mmchain::stamp_log(string buff){
 	
+	cout << "filename= " << outfile_name << endl;
 	cout << "start_time= " << buff << endl;
 	cout <<"zmin= "<< z_1 << endl;
 	cout <<"zmax= "<< z_m << endl;
 	cout <<"q= "<< q << endl;
 	cout <<"target_swap_ratio= " << target_swap_ratio << endl;
-	cout <<"swap_interval :"<<  swap_interval << endl;
+	cout <<"swap_interval= "<<  swap_interval << endl;
 	cout <<"n_samples= " << n << endl;
-	cout <<"steps_between_samples :" << c << endl;
-	cout << "initial_n_chains: " << m << endl;
+	cout <<"steps_between_samples= " << c << endl;
+	cout << "initial_n_chains= " << m << endl;
 	cout << "warmup= " << w << endl;
 	cout << "sample_mode= " << sample_mode << endl;
 	cout << "seed= " << seed << endl;

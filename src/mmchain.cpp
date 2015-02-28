@@ -534,14 +534,12 @@ bool mmchain::do_recombo_links(int current_chain){
 void mmchain::display_results(){
 	autocorr ac;
 	autocorrInfo info;
-	ofstream results;
 	cout << endl;
 	for (int i = 0; i < m; i++){
 		info = ac.autocorrelation(chains[i].data,false);
 		cout << chains[i].z << " " << info << endl;
 	}
-
-	results.close();
+	cout << endl << endl;
 }
 
 void mmchain::update_size(){

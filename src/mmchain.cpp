@@ -501,10 +501,10 @@ bool mmchain::do_recombo_knots(int current_chain){
 		//check length and count recombo sites
 	int length = chains[current_chain].member_knot->getComponent(0).size();
 	if (length == (min_arc + max_arc)){
-		sites = chains[current_chain].member_knot->countRecomboSites(min_arc - 1, max_arc + 1);
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc);
 	}
 	if (sites > 0){
-		choice = siteSelector.rand_integer(0, sites-1);
+		choice = siteSelector.rand_integer(0, sites);
 			//perform recombination and write both conformations to respective block files
 		write_recombination_to_block_file(chains[current_chain].member_knot, choice);
 		return true;
@@ -519,12 +519,12 @@ bool mmchain::do_recombo_links(int current_chain){
 
 	//perform recombination
 	//check length and count recombo sites
-	int length = chains[current_chain].member_knot->getComponent(0).size();
-	if (length == (min_arc + max_arc)){
+	if (chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() == target_recombo_length 
+		&& chains[current_chain].member_knot->getComponent(0).size() == chains[current_chain].member_knot->getComponent(1).size()){
 		sites = chains[current_chain].member_knot->countRecomboSites(min_arc - 1, max_arc + 1);
 	}
 	if (sites > 0){
-		choice = siteSelector.rand_integer(0, sites - 1);
+		choice = siteSelector.rand_integer(0, sites);
 		write_recombination_to_block_file(chains[current_chain].member_knot, choice);
 		return true;
 	}
@@ -641,6 +641,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 	{
 		//close current file if open
 		out.close();
+		out2.close();
 		//incriment file name
 		current_block_file_number++;
 		//reset block file index

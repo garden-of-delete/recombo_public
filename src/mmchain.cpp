@@ -500,7 +500,7 @@ bool mmchain::do_recombo_knots(int current_chain){
 	//perform recombination
 		//check length and count recombo sites
 	int length = chains[current_chain].member_knot->getComponent(0).size();
-	if (length == (min_arc + max_arc)){
+	if (length == (target_recombo_length)){
 		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc);
 	}
 	if (sites > 0){
@@ -519,9 +519,10 @@ bool mmchain::do_recombo_links(int current_chain){
 
 	//perform recombination
 	//check length and count recombo sites
+	cout << chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() << ' ';
 	if (chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() == target_recombo_length 
-		&& chains[current_chain].member_knot->getComponent(0).size() == chains[current_chain].member_knot->getComponent(1).size()){
-		sites = chains[current_chain].member_knot->countRecomboSites(min_arc - 1, max_arc + 1);
+		/*&& chains[current_chain].member_knot->getComponent(0).size() == chains[current_chain].member_knot->getComponent(1).size()*/){
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc);
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);

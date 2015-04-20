@@ -109,12 +109,12 @@ void recomboFromFile::do_recombo_knots(){
 		lengths.push_back(length);
 		if (length == (min_arc + max_arc)){
 		    length_counter++;
-            sites = knot->countRecomboSites(min_arc-1, max_arc+1);
+            sites = knot->countRecomboSites(min_arc, max_arc);
         }
 
 		if(sites > 0){
 			list<clkConformationAsList> components;
-			choice = siteSelector.rand_integer(0, sites-1); //sites or sites-1?
+			choice = siteSelector.rand_integer(0, sites); //sites, NOT sites-1
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;
@@ -173,7 +173,7 @@ void recomboFromFile::do_recombo_links(){
 		lengths.push_back(short_length + long_length);
 		if ((short_length >= min_arc) && (long_length <= max_arc)){
 		    length_counter++;
-            sites = knot->countRecomboSites(min_arc-1, max_arc+1);
+            sites = knot->countRecomboSites(min_arc, max_arc);
             }
 	//}
 		//sites = knot->countRecomboSites(knot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);

@@ -208,7 +208,7 @@ void mmchain::run_mmc(){
 	//update_size(); 
 	for(int i = 0; i < w; i+=swap_interval){ 
 		if (!supress_output){
-			cout << "\rCurrent Progress: " << i + 1 << '/' << w;
+			cout << "\rCurrent Progress: " << i + swap_interval << '/' << w;
 		}
 		for(int j = 0; j < m; j++){
 			chains[j].member_knot->stepQ(swap_interval, q, chains[j].z);

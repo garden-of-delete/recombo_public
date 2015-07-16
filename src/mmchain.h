@@ -102,6 +102,8 @@ private:
 	ofstream logfile;
 	//when in filtering mode, out2 is for the after recombo conformations
 	ofstream out, out2;
+	//when in block mean sampling mode, info_file is used to store state information when sampling
+	ofstream info_file;
 	//conformationAsList toPrint;
 	int seed, m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number;
 	long int w;
@@ -209,6 +211,7 @@ private:
 
 	/**
 	* writes current conformation to block file, performs recombination and writes result to _after blockfile, undoes recombination
+	* NOTE: Has a problem with the post-recombination conformations. Needs looking into at some future date. -Stolz
 	* @param clk a pointer to the clkconformationBfacf3 object on which to perform recombination
 	* @param site_choice an integer value from 0 to number of sites -1 representing the site to perform 
 	*
@@ -218,6 +221,13 @@ private:
 	bool do_recombo_knots(int current_chain);
 	bool do_recombo_links(int current_chain);
 
+	/**
+	*checks recombination criteria and writes qualifying conformations to file. Also records length and recombo satisfaction for every attempted sample.
+	* 
+	*/
+	void write_reci_files();
+
+	void block_mean_sample();
 	//private member objects
 	vector<interval_data> intervals;
 	vector<chain> chains;

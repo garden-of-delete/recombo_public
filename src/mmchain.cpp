@@ -32,7 +32,7 @@ void mmchain::initialize(){
 	
 	config.close();
 
-	//set seed directly, then cal set_mmc for other parameters
+	//set seed directly, then call set_mmc for other parameters
 	if (seed)
 		srand(seed);
 	else{
@@ -384,11 +384,14 @@ bool mmchain::test_intervals(){
 		double p = intervals[i].sucessful_swaps/intervals[i].attempted_swaps;
 		double z = 1.96; //95% confidence
 		double cw = z*sqrt((1/intervals[i].attempted_swaps)*p*(1-p));
-		cout << "Interval: " << i << ": " << p - cw << ' ';
+		cout << "Interval " << i << ": " << p - cw << ' ';
 		if ((p - cw) < target_swap_ratio){
 			insert_new_chain(i);
 			i++;
 			test = 0; //false when new chain needs to be allocated
+		}
+		else{
+			cout << endl;
 		}
 		/*
 		if (target_swap_ratio > p + cw){ //test confidence intervals
@@ -488,6 +491,9 @@ int mmchain::sample(){
 				write_to_block_file(chains[i].member_knot);
 			}
 		}
+		else if (sample_mode == 'm'){ //block mean sampling mode
+			block_mean_sample();
+		}
 	}
 	return 0;
 }
@@ -582,7 +588,16 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		ss << outfile_name << '%' << current_block_file_number << ".b";
 		//open new file
 		out.open(ss.str().c_str(), ios::out | ios::binary);
-		
+
+		//if in block mean sampling mode, keep .info file synchronized 
+		info_file.close();
+		if (sample_mode == 'm'){
+			stringstream ss;
+			ss << outfile_name << '%' << current_block_file_number << ".info";
+			//open new file
+			out.open(ss.str().c_str(), ios::out);
+		}
+
 		//write conformation to file
 		if (n_components == 1){
 			clkConformationAsList toPrint(clk->getComponent(0));
@@ -602,6 +617,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	}
 }
 
+//function has issues, do not use for now.
 void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice){
 	if ((block_file_index < block_file_size) && (block_file_index != 0)){
 		if (n_components == 1){
@@ -693,4 +709,29 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		}
 		block_file_index++;
 	}
+}
+
+void mmchain::block_mean_sample(){
+	
+	for (int i = 0; i < m; i++){
+		//check recombination criteria
+		int length = 0, sites = 0, recombination = 0;
+		sites = chains[i].member_knot->countRecomboSites(min_arc, max_arc);
+		if (n_components == 1){
+			length = chains[i].member_knot->getComponent(0).size();
+		}
+		else if (n_components == 2){
+			length = chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size();
+		}
+		if (length == target_recombo_length && sites > 0){
+			recombination = 1;
+		}
+		//record clk if recombination criteria are met
+		if (recombination){
+			write_to_block_file(chains[i].member_knot);
+		}
+		//record chain data to .info file
+		info_file << length << ' ' << recombination << ' ';
+	}
+	info_file << '\n';
 }

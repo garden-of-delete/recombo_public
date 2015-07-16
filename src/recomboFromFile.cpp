@@ -2,7 +2,7 @@
 
 using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode){
 	//set operating variables
 	supress_output = Supress_output;
 	min_arc = Min_arc;
@@ -25,6 +25,12 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 		//open infile and allocate/open outfile
 		in->open(Infile, ios::in | ios::binary);
 		out = new ofstream(Outfile, ios::out | ios::binary);
+	}
+	//open info file if in info mode
+	if (info_mode){
+		stringstream ss;
+		ss << Outfile << ".info";
+		info_file = new ofstream(ss.str().c_str(), ios::out);
 	}
 	n_components = N_components;
 	if (!in->good())
@@ -225,4 +231,7 @@ recomboFromFile::~recomboFromFile(){
 	delete in;
 	delete out;
 	delete infile_name;
+	if (info_mode){
+		delete info_file;
+	}
 }

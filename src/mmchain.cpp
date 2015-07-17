@@ -277,9 +277,6 @@ void mmchain::run_mmc(){
 		cout << "Ratio: " << float(i) / float(sample_attempts) << endl;
 	}
 	out.close();
-	if ((sample_mode == 'b') || (sample_mode == 'a')){
-		display_results();
-	}
 }
 
 void mmchain::swap(){ 

@@ -203,19 +203,22 @@ void mmchain::run_mmc(){
 		intervals.push_back(temp_interval);
 	}
 
-	//warmup with swapping
+	//warmup with swapping, sampling if in 'm' mode
 	cout << "Warming up " << m << " chains: (" << w << " steps)" << endl;
-	//update_size(); 
-	for(int i = 0; i < w; i+=swap_interval){ 
+	int i = 0;
+	while (i < w){
+		for (int k = 0; k < m; k++){
+			chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
+			i += swap_interval;
+			swap();
+		}
+		if (sample_mode == 'm'){
+			sample();
+		}
 		if (!supress_output){
-			cout << "\rCurrent Progress: " << i + swap_interval << '/' << w;
+			cout << "\rCurrent Progress: " << i << '/' << w;
 		}
-		for(int j = 0; j < m; j++){
-			chains[j].member_knot->stepQ(swap_interval, q, chains[j].z);
-		}
-		swap();
 	}
-
 	//calibrate chains
 	calibrate_chains();
 	cout << endl << "Starting sampling with " << m << " chains..." << endl;
@@ -228,7 +231,7 @@ void mmchain::run_mmc(){
 		}
 		cout << endl << "Estimating average lengths with swapping... (crude estimate)" << endl;
 		
-		for (int i = 0; i < 1000; i++){ //1000 samples of length
+		for (int i = 0; i < 5000; i++){ //5000 samples of length
 			for (int j = 0; j < c/swap_interval; j++){
 				for (int k = 0; k < m; k++){
 					chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
@@ -254,7 +257,7 @@ void mmchain::run_mmc(){
 	}
 	
 	//main loop
-	int i = 0;
+	i = 0;
 	while(i < n || sample_mode == 'e'){
 		for(int j = 0; j < c/swap_interval; j++){
 			for(int k = 0; k < m; k++){
@@ -273,7 +276,7 @@ void mmchain::run_mmc(){
 	}
 	cout << endl;
 	if (sample_mode == 'f'){
-		cout << "Sampled " << i << " times from " << sample_attempts << " attempts." << endl;
+		cout << "Sampled " << i << " times from " << float(sample_attempts) << " attempts." << endl;
 		cout << "Ratio: " << float(i) / float(sample_attempts) << endl;
 	}
 	out.close();

@@ -16,12 +16,12 @@ void print_usage(){
 	cout << "-c\tnumber of BFACF steps between samples" << endl;
 	cout << "-m\tinitial number of CMC chains" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
-	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['f' Filter Samples] ['e' Eternal Sampling] ['m' Block-Mean Sampling]" << endl;
-	cout << "['f' mode ONLY] -minarc\tsample filtering criteria" << endl;
-	cout << "['f' mode ONLY] -maxarc\tsample filtering criteria" << endl;
-	cout << "['f' mode ONLY] -targetlength\tsample filtering criteria" << endl;
+	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['e' Eternal Sampling], ['m' Block-Mean Sampling]" << endl;
+	cout << "[OPTIONAL] -minarc\tsample filtering criteria" << endl;
+	cout << "[OPTIONAL] -maxarc\tsample filtering criteria" << endl;
+	cout << "[PREREQUISITE: minarc > 3 and maxarc > minarc] -targetlength\tsample filtering criteria" << endl;
 	cout << "-seed\tset seed for random number generator" << endl;
-	cout << "-bfs\tnumber of conformations to save per .b file" << endl;
+	cout << "-bfs\tnumber of conformations to save per binary block file" << endl;
 	cout << "+s\tsupress status output. For use with shell scripts." << endl;
 }
 

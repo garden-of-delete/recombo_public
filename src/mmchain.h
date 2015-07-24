@@ -216,18 +216,20 @@ private:
 	* @param site_choice an integer value from 0 to number of sites -1 representing the site to perform 
 	*
 	*/
-	void write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice);
+	
+	//deprecated
+	//void write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice);
 
-	bool do_recombo_knots(int current_chain);
-	bool do_recombo_links(int current_chain);
+	//deprecated
+	//bool do_recombo_knots(int current_chain);
+	//bool do_recombo_links(int current_chain);
 
-	/**
-	*checks recombination criteria and writes qualifying conformations to file. Also records length and recombo satisfaction for every attempted sample.
-	* 
-	*/
-	void write_reci_files();
+	//deprecated
+	/*void write_reci_files();*/
 
-	void block_mean_sample();
+	int count_recombo_sites(clkConformationBfacf3* clk);
+	int block_mean_sample();
+
 	//private member objects
 	vector<interval_data> intervals;
 	vector<chain> chains;

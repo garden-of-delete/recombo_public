@@ -189,9 +189,10 @@ TOP:
 		}*/
 		sites = knot->countRecomboSites(min_arc, max_arc);
 		//write sites to sites_file
-		stringstream ss;
+		/*stringstream ss;
 		ss << sites << '\n';
-		sites_file->write(ss.str().c_str(),5);
+		sites_file->write(ss.str().c_str(),5);*/
+		cout << sites << '\n';
 		for (int i=0; i < sites; i++){
 			list<clkConformationAsList> components;
 			knot->performRecombination(i);

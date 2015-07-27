@@ -1,4 +1,6 @@
 #include "recomboFromFile.h"
+#include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -32,6 +34,11 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 		ss << Outfile << ".info";
 		info_file = new ofstream(ss.str().c_str(), ios::out);
 	}
+	//open n_sites file (EXPERIMENTAL)
+	stringstream tt;
+	tt << Outfile << "_sites.txt";
+	sites_file = new ofstream(tt.str().c_str(), ios::out);
+
 	n_components = N_components;
 	if (!in->good())
 		{cout << "Error reading input file" << endl; exit(3);}
@@ -90,11 +97,12 @@ void recomboFromFile::do_recombo(){
 		sampling_mode = -1;
 	}
 	if (n_components == 1)
-		do_recombo_knots();
+		//EXPERIMENTAL
+		do_recombo_knots_all();
 	else if (n_components == 2)
 		do_recombo_links();
 	else{
-	cout <<endl << "error: Links with > 2 components are not currently supported by this software" << endl;
+	cout << endl << "error: Links with > 2 components are not currently supported by this software" << endl;
 	exit(2);
 	}
 }
@@ -143,6 +151,69 @@ void recomboFromFile::do_recombo_knots(){
 	}
 	cout << "Length " << min_arc + max_arc << " conformations so far: " << length_counter << endl;
 	cout << "Average length so far: " << sum / lengths.size() << endl;
+	if (block_file_mode == 1){
+		//copy current file statistics into totals
+		total_attempts += attempts;
+		total_count += count;
+		attempts = 0;
+		count = 0;
+		//if bfm == 1, see if next block file exists
+		if (inc_filename()){
+			//next block file exists and is now open, return to TOP to process next file
+			goto TOP;
+		}
+		else{
+			//next block file does not exist, report statistics for all blocks
+			cout << "\nPerformed " << total_count << " recombinations on " << total_attempts << " conformations." << endl;
+		}
+	}
+}
+
+void recomboFromFile::do_recombo_knots_all(){
+	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
+	long int total_attempts = 0, total_count = 0;
+	vector<int> lengths;
+TOP:
+	while (read_comp_knots(in) && sampling_mode != 0){
+		sites = 0;
+		if (!supress_output){
+			cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
+		}
+		knot = new clkConformationBfacf3(initialComp0);
+		//need to create new countRecomboSites function that is ideal for use with mmc
+		/*int length = knot->getComponent(0).size();
+		lengths.push_back(length);
+		if (length == (min_arc + max_arc)){
+			length_counter++;
+			sites = knot->countRecomboSites(min_arc, max_arc);
+		}*/
+		sites = knot->countRecomboSites(min_arc, max_arc);
+		//write sites to sites_file
+		stringstream ss;
+		ss << sites << '\n';
+		sites_file->write(ss.str().c_str(),5);
+		for (int i=0; i < sites; i++){
+			list<clkConformationAsList> components;
+			knot->performRecombination(i);
+			knot->getComponents(components);
+			list<clkConformationAsList>::const_iterator j;
+			for (j = components.begin(); j != components.end(); j++)
+			{
+				j->writeAsCube(*out);
+			}
+			count++;
+			knot->undoRecombination();
+		}
+		delete knot;
+	}
+	//report on current file
+	cout << "\nPerformed " << count << " recombinations on " << attempts << " conformations in file " << get_current_filename() << endl;
+	double sum = 0;
+	for (int i = 0; i < lengths.size(); i++){
+		sum += lengths[i];
+	}
+	//cout << "Length " << min_arc + max_arc << " conformations so far: " << length_counter << endl;
+	//cout << "Average length so far: " << sum / lengths.size() << endl;
 	if (block_file_mode == 1){
 		//copy current file statistics into totals
 		total_attempts += attempts;
@@ -234,4 +305,5 @@ recomboFromFile::~recomboFromFile(){
 	if (info_mode){
 		delete info_file;
 	}
+	delete sites_file;
 }

@@ -14,9 +14,11 @@ private:
 	clkConformationBfacf3* knot;
 	pseudorandom siteSelector;
 	ifstream* in;
-	ofstream* out, *info_file;
+	ofstream* out, *info_file, *sites_file;
 	void do_recombo_knots();
+	void do_recombo_knots_all();
 	void do_recombo_links();
+	void do_recombo_links_all();
 	bool read_comp_knots(ifstream* in);
 	bool read_comp_links(ifstream* in);
 	bool inc_filename();

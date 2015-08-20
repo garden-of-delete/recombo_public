@@ -276,15 +276,9 @@ void mmchain::run_mmc(){
 	
 	//main loop
 	i = 0;
-	bool eternal = false;
 
-	//check if eternal sampling is enabled
-	if (sample_mode == 'e'){
-		sample_mode = 's';
-		eternal = true;
-	}
 	//main program loop
-	while(i < n || eternal == true){
+	while(i < n || n == 0){
 		for(int j = 0; j < c/swap_interval; j++){
 			for(int k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);

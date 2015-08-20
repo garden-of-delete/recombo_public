@@ -12,11 +12,11 @@ void print_usage(){
 	cout << "-q\tq-value" << endl;
 	cout << "-sr\tlower bound for swap ratio" << endl;
 	cout << "-s\tnumber of BFACF steps between swaps" << endl;
-	cout << "-n\tnumber of samples per chain before completion" << endl;
+	cout << "[OPTIONAL] -n\tnumber of samples per chain before completion" << endl;
 	cout << "-c\tnumber of BFACF steps between samples" << endl;
 	cout << "-m\tinitial number of CMC chains" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
-	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['e' Eternal Sampling], ['m' Block-Mean Sampling]" << endl;
+	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['m' Block-Mean Sampling]" << endl;
 	cout << "[OPTIONAL] -minarc\tsample filtering criteria" << endl;
 	cout << "[OPTIONAL] -maxarc\tsample filtering criteria" << endl;
 	cout << "[PREREQUISITE: minarc > 3 and maxarc > minarc] -targetlength\tsample filtering criteria" << endl;

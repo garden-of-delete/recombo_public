@@ -63,7 +63,7 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	supress_output = Supress_output;
 	sample_attempts = 0;
 	if (mode == 'm'){
-		info_file.open(outfile_name.append(".info", 'w'));
+		info_file.open(outfile_name.append(".info", ios::out));
 	}
 }
 

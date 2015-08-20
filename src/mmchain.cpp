@@ -50,7 +50,11 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	target_recombo_length = 0;
 	infile.append(in);
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
-	srand(seed);
+	if (seed)
+		srand(seed);
+	else{
+		seed = time(NULL);
+	}
 	add_initial_conformation_from_file(infile);
 	block_file_size = bfs;
 	block_file_index = 0;
@@ -76,7 +80,11 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	infile.append(in);
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
 	seed = Seed;
-	srand(seed);
+	if (seed)
+		srand(seed);
+	else{
+		seed = time(NULL);
+	};
 	add_initial_conformation_from_file(infile);
 	block_file_size = bfs;
 	block_file_index = 0;

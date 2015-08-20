@@ -103,6 +103,7 @@ private:
 	//when in filtering mode, out2 is for the after recombo conformations
 	ofstream out, out2;
 	//when in block mean sampling mode, info_file is used to store state information when sampling
+	stringstream info_file_stream;
 	ofstream info_file;
 	//conformationAsList toPrint;
 	int seed, m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number;

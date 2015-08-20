@@ -58,6 +58,9 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 	supress_output = Supress_output;
 	sample_attempts = 0;
+	if (mode == 'm'){
+		info_file.open(outfile_name.append(".info", 'w'));
+	}
 }
 
 void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int Seed,
@@ -81,6 +84,9 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 	supress_output = Supress_output;
 	sample_attempts = 0;
+	if (mode == 'm'){
+		info_file.open(outfile_name.append(".info", 'w'));
+	}
 }
 
 void mmchain::create_config_file(){
@@ -212,9 +218,10 @@ void mmchain::run_mmc(){
 			i += swap_interval;
 			swap();
 		}
+		/*
 		if (sample_mode == 'm'){
 			sample();
-		}
+		}*/
 		if (!supress_output){
 			cout << "\rCurrent Progress: " << i << '/' << w;
 		}
@@ -722,7 +729,6 @@ int mmchain::block_mean_sample(){
 				//sites = chains[i].member_knot->countRecomboSites(min_arc, max_arc);
 				recombination = count_recombo_sites(chains[i].member_knot);
 			}
-
 		}
 		//record clk if recombination criteria are met
 		if (recombination){

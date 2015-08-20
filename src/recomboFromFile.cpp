@@ -97,8 +97,7 @@ void recomboFromFile::do_recombo(){
 		sampling_mode = -1;
 	}
 	if (n_components == 1)
-		//EXPERIMENTAL
-		do_recombo_knots_all();
+		do_recombo_knots();
 	else if (n_components == 2)
 		do_recombo_links();
 	else{

@@ -62,9 +62,9 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 	supress_output = Supress_output;
 	sample_attempts = 0;
-	/*if (mode == 'm'){
-		info_file.open(outfile_name.append(".info", ios::out));
-	}*/
+	if (mode == 'm'){
+		info_file.open(outfile_name.append(".info"), ios::out);
+	}
 }
 
 void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int Seed,
@@ -92,9 +92,9 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 	supress_output = Supress_output;
 	sample_attempts = 0;
-	/*if (mode == 'm'){
-		info_file.open(outfile_name.append(".info", 'w'));
-	}*/
+	if (mode == 'm'){
+		info_file.open(outfile_name.append(".info"), ios::out);
+	}
 }
 
 void mmchain::create_config_file(){
@@ -576,7 +576,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 			stringstream ss;
 			ss << outfile_name << '%' << current_block_file_number << ".info";
 			//open new file
-			out.open(ss.str().c_str(), ios::out);
+			info_file.open(ss.str().c_str(), ios::out);
 		}
 
 		//write conformation to file

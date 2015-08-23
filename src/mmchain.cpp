@@ -63,7 +63,9 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	supress_output = Supress_output;
 	sample_attempts = 0;
 	if (mode == 'm'){
-		info_file.open(outfile_name.append(".info"), ios::out);
+		stringstream ss;
+		ss << outfile_name << ".info";
+		info_file.open(ss.str().c_str(), ios::out);
 	}
 }
 
@@ -93,7 +95,9 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	supress_output = Supress_output;
 	sample_attempts = 0;
 	if (mode == 'm'){
-		info_file.open(outfile_name.append(".info"), ios::out);
+		stringstream ss;
+		ss << outfile_name << ".info";
+		info_file.open(ss.str().c_str(), ios::out);
 	}
 }
 

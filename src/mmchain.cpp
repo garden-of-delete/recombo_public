@@ -230,7 +230,7 @@ void mmchain::run_mmc(){
 			i += swap_interval;
 			swap();
 		}
-		/*
+		/* //disable sampling during warmup
 		if (sample_mode == 'm'){
 			sample();
 		}*/

@@ -19,7 +19,7 @@ void print_usage(){
 	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['m' Block-Mean Sampling]" << endl;
 	cout << "[OPTIONAL] -minarc\tsample filtering criteria" << endl;
 	cout << "[OPTIONAL] -maxarc\tsample filtering criteria" << endl;
-	cout << "[PREREQUISITE: minarc > 3 and maxarc > minarc] -targetlength\tsample filtering criteria" << endl;
+	cout << "[PREREQ: minarc > 3 and maxarc > minarc] -targetlength\tsample filtering criteria" << endl;
 	cout << "-seed\tset seed for random number generator" << endl;
 	cout << "-bfs\tnumber of conformations to save per binary block file" << endl;
 	cout << "+s\tsupress status output. For use with shell scripts." << endl;

@@ -210,7 +210,7 @@ void mmchain::run_mmc(){
 	init_delta_b = abs(b_1 - b_m)/m;
 
 	//initialize chains and interval data
-	chains[0].member_knot->setZ(z_m);
+	chains[0].member_knot->setZ(z_m); //possible bug on this line. Where am i initializing q?
 	for (int i = 0; i < m; i++){
 		chains[i].member_knot->setZ(exp((log(chains[0].member_knot->getZ()) - i*init_delta_b))); 
 		chains[i].z = chains[i].member_knot->getZ();

@@ -735,7 +735,7 @@ void clkConformationBfacf3::stepQ(int current_q, double z)
 		setZ(z);
 	}
 	if (n < MAX_PRECOMPUTE_LENGTH){
-		bfacf_set_probabilities(comp, probMap[4].p_minus2, probMap[4].p_0, probMap[4].p_plus2);
+		bfacf_set_probabilities(comp, probMap[n].p_minus2, probMap[n].p_0, probMap[n].p_plus2); //changed from [4] to [n]
 	}
 	else{
 		double p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);

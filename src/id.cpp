@@ -3,7 +3,8 @@
 #include <stdio.h>
 #include "id.h"
 
-char poly [NUM_KNOTS][1024] = {
+char poly [NUM_KNOTS][1025] = {
+	"|" //unlink
 	"1", // 0_1
 	"( -a^-4 + 2.a^-2 ) + z^2.a^-2", // 3_1
 	"(  2.a^2-a^4 ) + z^2.a^2", // 3_1s
@@ -994,7 +995,8 @@ char poly [NUM_KNOTS][1024] = {
 	"z^-1.( a^-5 -3.a^-3 + 2.a^-1 ) + z.( a^-5 -5.a^-3 + 6.a^-1 -2.a ) + z^3.(  -2.a^-3 + 4.a^-1-a ) + z^5.a^-1" // o3_1sd
 };
 
-char knot [NUM_KNOTS][1024] = {
+char knot [NUM_KNOTS][1025] = {
+	"unlink"
 	"0_1",
 	"3_1",
 	"3_1s",

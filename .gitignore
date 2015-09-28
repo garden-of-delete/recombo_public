@@ -159,3 +159,21 @@ $RECYCLE.BIN/
 *.o
 *.a
 
+# autotools
+.deps
+Makefile
+config.h
+config.status
+.dirstamp
+stamp-h1
+autom4te.cache
+
+# executables and libraries
+idknot
+homfly
+config.txt
+mmc
+recomboFromFile
+testrecombo
+xinger
+zAnalyzer

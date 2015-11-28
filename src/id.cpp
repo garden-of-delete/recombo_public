@@ -4,7 +4,6 @@
 #include "id.h"
 
 char poly [NUM_KNOTS][1024] = {
-	"|" //unlink
 	"1", // 0_1
 	"( -a^-4 + 2.a^-2 ) + z^2.a^-2", // 3_1
 	"(  2.a^2-a^4 ) + z^2.a^2", // 3_1s
@@ -996,7 +995,6 @@ char poly [NUM_KNOTS][1024] = {
 };
 
 char knot [NUM_KNOTS][1024] = {
-	"unlink"
 	"0_1",
 	"3_1",
 	"3_1s",

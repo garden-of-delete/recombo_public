@@ -89,9 +89,9 @@ public:
 	void run_mmc();
 
 	/**
-	* shows the autocoorelation time for the sampled statistic across all chains. Will be called by run_mmc() if sample mode is 'a'nalyze or 'b'oth. Public for debugging purposes. 
+	* shows a summary for sampled statistic across all chains. Will be called by run_mmc() if sample mode is 'a'nalyze or 'b'oth. Public for debugging purposes. 
 	*/
-	void display_results();
+	void display_statistics();
 
 private:
 	string outfile_name;

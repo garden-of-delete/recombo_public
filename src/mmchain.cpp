@@ -211,7 +211,7 @@ void mmchain::run_mmc(){
 
 	//initialize chains and interval data
 	chains[0].member_knot->setZ(z_m); //possible bug on this line. Where am i initializing q?
-	for (int i = 0; i < m; i++){
+	for (int i = 1; i < m; i++){
 		chains[i].member_knot->setZ(exp((log(chains[0].member_knot->getZ()) - i*init_delta_b))); 
 		chains[i].z = chains[i].member_knot->getZ();
 		chains[i].data.resize(n);
@@ -250,7 +250,7 @@ void mmchain::run_mmc(){
 		}
 		cout << endl << "Estimating average lengths with swapping... (crude estimate)" << endl;
 		
-		for (int i = 0; i < 5000; i++){ //5000 samples of length
+		for (int i = 0; i < 50000; i++){ //50000 samples of length
 			for (int j = 0; j < c/swap_interval; j++){
 				for (int k = 0; k < m; k++){
 					chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
@@ -264,7 +264,7 @@ void mmchain::run_mmc(){
 					chains[k].data.push_back(chains[k].member_knot->getComponent(0).size() + chains[k].member_knot->getComponent(1).size());
 			}
 		}
-		display_results();
+		display_statistics();
 		//if analyze only mode, end program
 		if (sample_mode == 'a'){
 			return;
@@ -523,24 +523,43 @@ bool mmchain::do_recombo_links(int current_chain){
 	return false;
 }*/
 
-void mmchain::display_results(){
-	autocorr ac;
+void mmchain::display_statistics(){
+	/*autocorr ac;
 	autocorrInfo info;
 	cout << endl;
 	for (int i = 0; i < m; i++){
-		info = ac.autocorrelation(chains[i].data,false);
-		cout << chains[i].z << " " << info << endl;
+	info = ac.autocorrelation(chains[i].data,false);
+	cout << chains[i].z << " " << info << endl;
 	}
-	cout << endl << endl;
-}
+	cout << endl << endl;*/
+	//compute and report average lengths w/ variance
+		//print header
+	for (int i = 0; i < m; i++){
+		int mean = 0;
+		int var = 0;
+		//expected value
+		for (int j = 0; j < chains[i].data.size(); j++){
+			mean += chains[i].data[j];
+		}
+		mean /= chains[i].data.size();
+		//var
+		for (int j = 0; j < chains[i].data.size(); j++){
+			var += pow(chains[i].data[j] - mean, 2);
+		}
+		var /= (chains[i].data.size() - 1);
+		//display results
+		cout << chains[i].z << mean << ' ' << var << endl;
 
+	}
+}
+/* //DELETE
 void mmchain::update_size(){
 		for (int i = 0; i < m; i++){
 			chains[i].size = chains[i].member_knot->getComponent(0).size();
 			cout << chains[i].size <<" ";
 	}
 		cout << endl;
-}
+}*/
 
 void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	if ((block_file_index < block_file_size) && (block_file_index != 0)){

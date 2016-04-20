@@ -211,10 +211,10 @@ void mmchain::run_mmc(){
 
 	//initialize chains and interval data
 	chains[0].member_knot->setZ(z_m); //possible bug on this line. Where am i initializing q?
-	for (int i = 1; i < m; i++){
+	for (int i = 0; i < m; i++){
 		chains[i].member_knot->setZ(exp((log(chains[0].member_knot->getZ()) - i*init_delta_b))); 
+		cout << chains[i].member_knot->getZ() << endl;
 		chains[i].z = chains[i].member_knot->getZ();
-		chains[i].data.resize(n);
 	}
 	for (int i = 0; i < m-1; i++){
 		temp_interval.delta_b = abs(log(chains[i].member_knot->getZ()) - log(chains[i+1].member_knot->getZ()));
@@ -267,7 +267,7 @@ void mmchain::run_mmc(){
 		display_statistics();
 		//if analyze only mode, end program
 		if (sample_mode == 'a'){
-			return;
+				return;
 		}
 		else{ //sample mode == 'b'
 			sample_mode = 's';

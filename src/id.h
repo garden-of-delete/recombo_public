@@ -5,7 +5,7 @@
 #define UNKNOWN -1
 #define NOTHING -2
 
-#define NUM_KNOTS 988
+#define NUM_KNOTS 996
 #define NUM_PRIME_KNOTS 480
 
 extern char knot [NUM_KNOTS][1024];

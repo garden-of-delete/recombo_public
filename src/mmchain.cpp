@@ -213,7 +213,6 @@ void mmchain::run_mmc(){
 	chains[0].member_knot->setZ(z_m); //possible bug on this line. Where am i initializing q?
 	for (int i = 0; i < m; i++){
 		chains[i].member_knot->setZ(exp((log(chains[0].member_knot->getZ()) - i*init_delta_b))); 
-		cout << chains[i].member_knot->getZ() << endl;
 		chains[i].z = chains[i].member_knot->getZ();
 	}
 	for (int i = 0; i < m-1; i++){

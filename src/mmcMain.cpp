@@ -1,5 +1,4 @@
 #include "mmchain.h"
-
 using namespace std;
 
 void print_usage(){

@@ -9,6 +9,7 @@
 #define NUM_PRIME_KNOTS 480
 
 extern char knot [NUM_KNOTS][1024];
+int id_test();
 int id_knot (char *, char *, int);
 void same_polys ();
 

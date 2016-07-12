@@ -167,15 +167,16 @@ public:
     * choices for of edge pairs for recombination.
     */
 
+   int countRecomboSites(int minarclength, int maxarclength, char orientation);
    int countRecomboSites(int minarclength, int maxarclength);
    
    /**
     * Perform a recombination between one of the edge pairs found by most 
-    * recent call of countRecomboSites(int, int). Results will be unpredicable
-    * if countRecomboSites(int, int) has not been called since the most recent
+    * recent call of countRecomboSites(int, int, char). Results will be unpredicable
+    * if countRecomboSites(int, int, char) has not been called since the most recent
     * call of step() or step(int). Results will also be unpredicable if n is
     * greater than the return value of the most recent call to 
-    * countRecomboSites(int, int).
+    * countRecomboSites(int, int, char).
     * @param n index of recombo site at which to perform recombination.
     */
    void performRecombination(int n = 0);

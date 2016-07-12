@@ -503,6 +503,31 @@ class clkConformationBfacf3::impl
       return directionString[direction];
    }
 
+   bool edgesUnitDistant(EdgePtr ep, EdgePtr eq)
+   {
+      // candidate edges may have opposite or same orientation
+
+      ivector displacement;
+      int dist;
+      // candidate edges must have beginning vertex distance one to ending vertex
+      sub_ivector(displacement, ep->start, eq->next->start);
+      dist = abs(displacement[0]) + abs(displacement[1]) + abs(displacement[2]);
+      return dist == 1;
+   } 
+
+   bool edgesParallelAndUnitDistant(EdgePtr ep, EdgePtr eq)
+   {
+      // candidate edges must NOT have opposite orientation
+      if (oppositeDirection(ep->dir, eq->dir)) return false;
+
+      ivector displacement;
+      int dist;
+      // candidate edges must have beginning vertex distance one to ending vertex
+      sub_ivector(displacement, ep->start, eq->next->start);
+      dist = abs(displacement[0]) + abs(displacement[1]) + abs(displacement[2]);
+      return dist == 1;
+   }
+
    bool edgesAntiParallelAndUnitDistant(EdgePtr ep, EdgePtr eq)
    {
       // candidate edges must have opposite orientation
@@ -617,8 +642,82 @@ class clkConformationBfacf3::impl
       //         cout << "Number of sites recorded was " << count << endl;
    }
 
+
+
+   void searchForRecomboSitesOneComp(//CubicLatticeKnotPtr clkp, 
+           int minarclength, int maxarclength, char orientation) //, recomboSites& sites)
+   {
+      //This version for use with orientation parameter	
+
+      sites.clear();
+      int n = clkp->fcomp->nedges;
+
+      // Sanity check.
+      if (maxarclength < minarclength)
+      {
+         cerr << "It does not make sense that maximum arc length should be less than minimum." << endl;
+         return;
+      }
+      // There must be at least three edges between edges of recombo site
+      if (minarclength < 3)
+      {
+         cerr << "No possible recombo sites for minimum arc less than 3." << endl;
+         return;
+      }
+      // We must have 2 * minarclength <= n-2 <= 2 * maxarclength
+      if (2 * minarclength > n - 2 || 2 * maxarclength < n - 2)
+      {
+         //      printf("Length %d is not enough for minimum arclength %d and max %d.\n", n, minarclength, maxarclength);
+         return;
+      }
+
+      ComponentCLK* c = clkp->fcomp;
+      EdgePtr ep, eq;
+      ep = c->first_edge;
+      for (int i = 0; i < n; i++)
+      {
+         eq = ep->next;
+         for (int j = i + 1; j < n; j++)
+         {
+            int arc1 = ARC1(i, j);
+            int arc2 = ARC2(i, j, n);
+            if (MIN(arc1, arc2) >= minarclength && MAX(arc1, arc2) <= maxarclength)
+            {
+               // candidate edges must have opposite orientation
+	       switch (orientation)
+	       {
+	          case 'a': {
+                     if (edgesAntiParallelAndUnitDistant(ep, eq))
+                     {
+                        //                  count++;
+                        sites.push_back(site(ep, eq));
+                     }
+		  } break;
+		 case 'p': {
+		     if (edgesParallelAndUnitDistant(ep,eq))
+		     {
+			sites.push_back(site(ep,eq));
+		     }
+		  } break;
+		 case 'u': {
+		     if (edgesUnitDistant(ep,eq))
+		     {
+			sites.push_back(site(ep,eq));
+		     }
+		  } break;
+	       }
+            }
+            eq = eq->next;
+         }
+         ep = ep->next;
+      }
+      //      if (count > 0)
+      //         cout << "Number of sites recorded was " << count << endl;
+   }
+
    friend class clkConformationBfacf3;
 };
+
 
 clkConformationBfacf3::clkConformationBfacf3(const clk & firstComponent) :
 implementation(new clkConformationBfacf3::impl(firstComponent)) {
@@ -752,6 +851,29 @@ void clkConformationBfacf3::stepQ(long int c, int q, double z)
 	for (long int i = 0; i < c; i++)
 		stepQ(q, z);
 		//perform_move_q(implementation->clkp); //see above
+}
+
+
+int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength, char orientation)
+{
+   //This version for use with orientation parameter
+   if (size() == 1)
+   {
+      implementation->searchForRecomboSitesOneComp(minarclength, maxarclength, orientation);
+      return implementation->sites.size();
+   }
+   // here we assume that conformation is a two component link
+   int sizeComp0, sizeComp1;
+   sizeComp0 = getComponent(0).size();
+   sizeComp1 = getComponent(1).size();
+   if (sizeComp0 >= minarclength + 1 && sizeComp0 <= maxarclength + 1
+          && sizeComp1 >= minarclength + 1 && sizeComp1 <= maxarclength + 1)
+   {
+      implementation->searchForRecomboSitesBetweenComps(); //minarclength, maxarclength);
+      return implementation->sites.size();
+   }
+   
+   return 0;
 }
 
 int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength)

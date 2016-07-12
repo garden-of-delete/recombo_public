@@ -15,12 +15,14 @@ void print_usage(){
 	cout << "--bfm\tblock file mode. use --bfm 0 for single file mode (default)." << endl 
 		<< "\tuse --bfm 1 and enter input file without .b extension for block file mode." << endl;
 	cout << "+s\tsupress status output. For use with shell scripts." << endl;
+	cout << "--orientation ['p' parallel],['a' antiparallel],['u' a or p]" << endl;
 }
 
 int main(int argc, char* argv[]){
 	int min_arc = 0, max_arc = 0, ncomp = 0, sampling_mode = 0, block_file_mode = 0;
 	char* infile = NULL, *outfile = NULL;
 	char read_mode = 0;
+	char recombo_orientation = 0;
 	bool supress_output = false, info_mode = false;
 	
 	if (argc < 6){
@@ -36,6 +38,10 @@ int main(int argc, char* argv[]){
 			min_arc = atoi(argv[i+1]);
 			i++;
 		}
+		else if (!strcmp(argv[i], "--orientation")){
+                        recombo_orientation = *(argv[i+1]);
+                        i++;
+                }
 		else if (!strcmp(argv[i], "-max")){
 			max_arc = atoi(argv[i+1]);
 			i++;
@@ -75,11 +81,14 @@ int main(int argc, char* argv[]){
 		cout << "mininum arclength must be strictly <= maximum arclength. Terminating program...";
 		return 0;
 	}
-	//set defauly read mode if none specified
+	//set defauly read mode, orientation if none specified
 	if (read_mode == 0){
 		read_mode = 'b';
 	}
-	recomboFromFile recombo(min_arc, max_arc, infile, outfile, ncomp, read_mode, sampling_mode, block_file_mode, supress_output, info_mode);
+	if (recombo_orientation == 0){
+		recombo_orientation = 'a';
+	}
+	recomboFromFile recombo(min_arc, max_arc, infile, outfile, ncomp, read_mode, sampling_mode, block_file_mode, supress_output, info_mode, recombo_orientation);
 	recombo.do_recombo();
 	return 0;
 }

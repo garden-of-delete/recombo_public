@@ -4,12 +4,13 @@
 
 using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode, char orientation){
 	//set operating variables
 	supress_output = Supress_output;
 	min_arc = Min_arc;
 	max_arc = Max_arc;
 	read_mode = Read_mode;
+	recombo_orientation = orientation;
 	sampling_mode = Sampling_mode;
 	block_file_mode = Block_file_mode;
 	//initialize infile_name and current_block_file_number, for use with block_file_mode == 1
@@ -122,7 +123,7 @@ void recomboFromFile::do_recombo_knots(){
 		lengths.push_back(length);
 		if (length == (min_arc + max_arc)){
 		    length_counter++;
-            sites = knot->countRecomboSites(min_arc, max_arc);
+            sites = knot->countRecomboSites(min_arc, max_arc,recombo_orientation);
         }
 
 		if(sites > 0){
@@ -186,7 +187,7 @@ TOP:
 			length_counter++;
 			sites = knot->countRecomboSites(min_arc, max_arc);
 		}*/
-		sites = knot->countRecomboSites(min_arc, max_arc);
+		sites = knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
 		//write sites to sites_file
 		/*stringstream ss;
 		ss << sites << '\n';
@@ -250,7 +251,7 @@ void recomboFromFile::do_recombo_links(){
 		lengths.push_back(short_length + long_length);
 		if ((short_length >= min_arc) && (long_length <= max_arc)){
 		    length_counter++;
-            sites = knot->countRecomboSites(min_arc, max_arc);
+            sites = knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
             }
 	//}
 		//sites = knot->countRecomboSites(knot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);

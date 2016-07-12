@@ -4,10 +4,15 @@
 using namespace std;
 
 void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int Q, double sr, int s, int N, int C, long int W, int M, char mode, int Seed,
-	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int T, bool Supress_output){
+	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int T, char orientation, bool Supress_output){
 	string infile;
 	min_arc = Min_arc;
 	max_arc = Max_arc;
+	recombo_orientation=orientation;
+	//set orientation to default (anti-parallel) if not set
+	if (recombo_orientation == 0){
+		recombo_orientation = 'a';
+	}
 	target_recombo_length = Target_recombo_length;
 	infile.append(in);
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
@@ -119,6 +124,7 @@ void mmchain::stamp_log(string buff){
 	cout << "seed= " << seed << endl;
 	cout << "block_file_size= " << block_file_size << endl;
 	cout << "time_limit= " << time_limit << endl;
+	cout << "orientation = " << recombo_orientation << endl;
 	cout << endl;
 }
 
@@ -666,7 +672,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 
 int mmchain::count_recombo_sites(clkConformationBfacf3* clk){
 	int length = 0, sites = 0, recombination = 0;
-	sites = clk->countRecomboSites(min_arc, max_arc);
+	sites = clk->countRecomboSites(min_arc, max_arc, recombo_orientation);
 	if (n_components == 1){
 		length = clk->getComponent(0).size();
 	}

@@ -23,11 +23,12 @@ void print_usage(){
 	cout << "-seed\tset seed for random number generator" << endl;
 	cout << "-bfs\tnumber of conformations to save per binary block file" << endl;
 	cout << "+s\tsupress status output. For use with shell scripts." << endl;
+	cout << "[OPTIONAL] -orientation: ['p' parallel],['a' anti-parallel],['u' p or a]" << endl;
 }
 
 int main(int argc, char* argv[]){
 	bool supress_output = false;
-	char* infile, *outfile, mode = 0;
+	char* infile, *outfile, mode, recombo_orientation = 0;
 	double zmin = 0, zmax = 0, sr=0;
 	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0, bfs = 0, t=0;
 	long int w = 0;
@@ -45,6 +46,10 @@ int main(int argc, char* argv[]){
 				zmin = atof(argv[i + 1]);
 				i++;
 			}
+			else if (!strcmp(argv[i], "-orientation")){
+                                recombo_orientation = *argv[i + 1];
+                                i++;
+                        }
 			else if (!strcmp(argv[i], "-zmax")){
 				zmax = atof(argv[i + 1]);
 				i++;
@@ -115,7 +120,7 @@ int main(int argc, char* argv[]){
 		}
 		//need to write checks for invalid operating parameters
 		mmchain mmc;
-		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, t, supress_output);
+		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, t, recombo_orientation, supress_output);
 		mmc.run_mmc();
 	}
 

@@ -227,7 +227,7 @@ void mmchain::run_mmc(){
 	while(i < n || n == 0){
 		//check the time based halt-condition
 		std::time(&current_time);
-		if (((start_time - current_time)/3600 >= time_limit) && (time_limit > 0)){
+		if (((current_time - start_time)/3600 >= time_limit) && (time_limit > 0)){
 			cout << "Time-limit exceeded, Terminating program.";
 			return;
 		}

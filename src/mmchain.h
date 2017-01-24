@@ -52,21 +52,11 @@ public:
 
 class mmchain{
 public:
-	/**
-	* Opens and reads an existing config.txt file. Sets the random number generator's seed directly and calls set_mmc(...).
-	*/
-	void initialize();
-
 	/*
-	* Alternate constructor for use with command line argument processor
+	* Initializer for use with command line argument processor
 	*/
-	void initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs, bool Supress_output);
-
-	/*
-	* Constructor for filtering samples to ones that meet recombination criteria
-	*/
-	void initialize(char* in, char* outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs,
-		int Min_arc, int Max_arc, int Target_recombo_length, bool Supress_output);
+	void initialize(char* in, char* Outfile_name, double zmin, double zmax, int Q, double sr, int s, int N, int C, long int W, int M, char mode, int Seed,
+		int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int time_limit, bool Supress_output);
 
 	/**
 	* adds an initial conformation from the given istream. practically speaking, will only be called from outside add_initial_conformation_From_file(...)
@@ -105,7 +95,7 @@ private:
 	//when in block mean sampling mode, info_file is used to store state information when sampling
 	ofstream info_file;
 	//conformationAsList toPrint;
-	int seed, m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number;
+	int seed, m, n_components, swap_interval, n, c, q, min_arc, max_arc, target_recombo_length, block_file_size, block_file_index, current_block_file_number, time_limit;
 	long int w;
 
 	//variables for filter mode only

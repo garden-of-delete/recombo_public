@@ -110,6 +110,7 @@ void recomboFromFile::do_recombo_knots(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
 	long int total_attempts = 0, total_count = 0;
 	vector<int> lengths;
+
 	TOP:
 	while (read_comp_knots(in) && sampling_mode != 0){
 		sites = 0;
@@ -168,7 +169,7 @@ void recomboFromFile::do_recombo_knots(){
 	}
 }
 
-void recomboFromFile::do_recombo_knots_all(){
+void recomboFromFile::do_recombo_knots_all(){ //experimental
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
 	long int total_attempts = 0, total_count = 0;
 	vector<int> lengths;
@@ -178,6 +179,7 @@ TOP:
 		if (!supress_output){
 			cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
 		}
+		//knot.
 		knot = new clkConformationBfacf3(initialComp0);
 		//need to create new countRecomboSites function that is ideal for use with mmc
 		/*int length = knot->getComponent(0).size();

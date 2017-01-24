@@ -11,7 +11,8 @@ void print_usage(){
 	cout << "-q\tq-value" << endl;
 	cout << "-sr\tlower bound for swap ratio" << endl;
 	cout << "-s\tnumber of BFACF steps between swaps" << endl;
-	cout << "[OPTIONAL] -n\tnumber of samples per chain before completion" << endl;
+	cout << "[HALTING CRITERIA] -n\tnumber of samples per chain before completion" << endl;
+	cout << "[HALTING CRITERIA] -t\tInteger number of hours to run before completion" << endl;
 	cout << "-c\tnumber of BFACF steps between samples" << endl;
 	cout << "-m\tinitial number of CMC chains" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
@@ -28,14 +29,12 @@ int main(int argc, char* argv[]){
 	bool supress_output = false;
 	char* infile, *outfile, mode = 0;
 	double zmin = 0, zmax = 0, sr=0;
-	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0, bfs = 0;
+	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0, bfs = 0, t=0;
 	long int w = 0;
 
 	if (argc <= 1){
 		print_usage();
-		mmchain mmc;
-		mmc.initialize();
-		mmc.run_mmc();
+		exit(0);
 	}
 	else{
 		infile = argv[1];
@@ -102,6 +101,10 @@ int main(int argc, char* argv[]){
 				bfs = atoi(argv[i + 1]);
 				i++;
 			}
+			else if (!strcmp(argv[i], "-t")){
+				t = atoi(argv[i + 1]);
+				i++;
+			}
 			else if (!strcmp(argv[i], "+s")){
 				supress_output = true;
 			}
@@ -112,7 +115,7 @@ int main(int argc, char* argv[]){
 		}
 		//need to write checks for invalid operating parameters
 		mmchain mmc;
-		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, supress_output);
+		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, t, supress_output);
 		mmc.run_mmc();
 	}
 

@@ -3,89 +3,30 @@
 
 using namespace std;
 
-void mmchain::initialize(){
-	//check if config file exists
-	ifstream config("config.txt", ios::in);
-	if (config.fail()){
-		create_config_file();
-		cout << "config.txt not found. It has been created. Enter operational parameters and relaunch mmc.";
-		exit(1);
-	}
-	//read data from config file
-	string filename, buff;
-	buff.resize(10000000);
-	double zmin, zmax, target_swap_ratio, warmup;
-	int q, swap_interval, n_samples, steps_between_samples, initial_n_chains;
-	char sample_mode;
-	config >> buff >> filename;
-	config >> buff >> zmin;
-	config >> buff >> zmax;
-	config >> buff >> q;
-	config >> buff >> target_swap_ratio;
-	config >> buff >> swap_interval;
-	config >> buff >> n_samples;
-	config >> buff >> steps_between_samples;
-	config >> buff >> initial_n_chains;
-	config >> buff >> warmup;
-	config >> buff >> sample_mode;
-	config >> buff >> seed; 
-	
-	config.close();
-
-	//set seed directly, then call set_mmc for other parameters
-	if (seed)
-		srand(seed);
-	else{
-		seed = time(NULL);
-	}
-	set_mmc(zmin, zmax, q, target_swap_ratio, swap_interval, sample_mode, n_samples, steps_between_samples, initial_n_chains, warmup);
-	add_initial_conformation_from_file(filename);
-	return;
-}
-
-void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int seed, int bfs, bool Supress_output){
-	string infile;
-	min_arc = 0;
-	max_arc = 0;
-	target_recombo_length = 0;
-	infile.append(in);
-	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
-	if (seed)
-		srand(seed);
-	else{
-		seed = time(NULL);
-	}
-	add_initial_conformation_from_file(infile);
-	block_file_size = bfs;
-	block_file_index = 0;
-	outfile_name = Outfile_name;
-	current_block_file_number = 0;
-	supress_output = Supress_output;
-	sample_attempts = 0;
-	if (mode == 'm'){
-		stringstream ss;
-		ss << outfile_name << "%0.info";
-		info_file.open(ss.str().c_str(), ios::out);
-	}
-}
-
-void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int q, double sr, int s, int n, int c, long int w, int m, char mode, int Seed,
-	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, bool Supress_output){
-	if (Min_arc == 0 && Max_arc == 0 && Target_recombo_length == 0){ //if not in filtering mode, use simpler constructor
-		initialize(in, Outfile_name, zmin, zmax, q, sr, s, n, c, w, m, mode, Seed, bfs, Supress_output);
-		return;
-	}
+void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int Q, double sr, int s, int N, int C, long int W, int M, char mode, int Seed,
+	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int T, bool Supress_output){
 	string infile;
 	min_arc = Min_arc;
 	max_arc = Max_arc;
 	target_recombo_length = Target_recombo_length;
 	infile.append(in);
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
+	z_m = zmax; 
+	z_1 = zmin;
+	q = Q;
+	target_swap_ratio = sr;
+	swap_interval = s;
+	sample_mode = mode;
+	n = N;
+	time_limit = T;
+	c = C;
+	m = M;
+	w = W;
 	seed = Seed;
 	if (seed)
 		srand(seed);
 	else{
-		seed = time(NULL);
+		seed = time(NULL); //set seed to current system time if unspecified
 	};
 	add_initial_conformation_from_file(infile);
 	block_file_size = bfs;
@@ -177,6 +118,7 @@ void mmchain::stamp_log(string buff){
 	cout << "sample_mode= " << sample_mode << endl;
 	cout << "seed= " << seed << endl;
 	cout << "block_file_size= " << block_file_size << endl;
+	cout << "time_limit= " << time_limit << endl;
 	cout << endl;
 }
 
@@ -188,14 +130,14 @@ void mmchain::run_mmc(){
 	autocorrInfo info;
 
 	//add entry to log file
-	std::time_t rawtime;
+	std::time_t start_time, current_time;
     std::tm* timeinfo;
     char buffer [80];
 
-    std::time(&rawtime);
-    timeinfo = std::localtime(&rawtime);
+    std::time(&start_time);
+    timeinfo = std::localtime(&start_time);
 
-    std::strftime(buffer,80,"%Y-%m-%d-%H-%M-%S",timeinfo);
+    std::strftime(buffer,80,"%Y-%m-%d-%H-%M",timeinfo);
     //std::puts(buffer); moved inside stamp_log(...)
 	stamp_log(buffer);
 
@@ -281,7 +223,14 @@ void mmchain::run_mmc(){
 	i = 0;
 
 	//main program loop
+	std::time(&start_time);// record start time
 	while(i < n || n == 0){
+		//check the time based halt-condition
+		std::time(&current_time);
+		if (((start_time - current_time)/3600 >= time_limit) && (time_limit > 0)){
+			cout << "Time-limit exceeded, Terminating program.";
+			return;
+		}
 		for(int j = 0; j < c/swap_interval; j++){
 			for(int k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);

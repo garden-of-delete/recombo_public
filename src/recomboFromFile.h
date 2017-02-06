@@ -6,7 +6,7 @@
 
 class recomboFromFile{
 private:
-	int min_arc, max_arc, n_components, sampling_mode, block_file_mode, current_block_file_number;
+	int min_arc, max_arc, n_components, sampling_mode, block_file_mode, current_block_file_number, seed;
 	char read_mode;
 	bool supress_output, info_mode;
 	string* infile_name;
@@ -24,7 +24,7 @@ private:
 	bool inc_filename();
 	string get_current_filename();
 public:
-	recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int n_components, char read_mode, int sampling_mode, int block_file_mode, bool supress_output, bool info_mode);
+	recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int n_components, char read_mode, int sampling_mode, int block_file_mode, bool supress_output, bool info_mode, int seed);
 	void do_recombo();
 	~recomboFromFile();
 };

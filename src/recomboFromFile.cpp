@@ -4,7 +4,7 @@
 
 using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode, int Seed){
 	//set operating variables
 	supress_output = Supress_output;
 	min_arc = Min_arc;
@@ -12,6 +12,14 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 	read_mode = Read_mode;
 	sampling_mode = Sampling_mode;
 	block_file_mode = Block_file_mode;
+	seed = Seed;
+	if (seed != 0){
+		siteSelector.sRandSimple(seed);
+	}
+	else{
+		seed = time(NULL);
+		cout << "seed set to current system time: " << seed << endl;
+	}
 	//initialize infile_name and current_block_file_number, for use with block_file_mode == 1
 	infile_name = new string(Infile);
 	current_block_file_number = 0;

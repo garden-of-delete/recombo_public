@@ -1,11 +1,13 @@
 # RECOMBO 
 
 ## Synopsis
-RECOMBO is the working title of the recombination tool suite. The suite is made up of a number of different applications that share a common code base are designed to work well togethers. As a basic overview, these applications cover everything from generating SAPs of fixed topology (MMC), performing reconnection (recomboFromFile), computing homfly polynomials from extended gauss codes (homfly), identifying homfly polynomials with a topology (idknot). RECOMBO also includes an integrated unit testing suite, and a thoroughly experimental z-value finder (zAnalyzer). Each application in this suite is described in detail below.
+RECOMBO is the working title of the Topological Molecular Biology Recombination Tool Suite. The suite is made up of a number of different applications that share a common code base are designed to work well together. As a basic overview, these applications cover everything from generating SAPs of fixed topology (MMC), performing reconnection (recomboFromFile), computing homfly polynomials from extended gauss codes (homfly), identifying homfly polynomials with a topology (idknot). RECOMBO also includes an integrated unit testing suite, and a thoroughly experimental z-value finder (zAnalyzer). Each application in this suite is described in detail below.
 
 ##Installation
 This software suite is intended for use on Linux platforms and may be compatible with most OSX platforms. Install by following these steps:
+
 1. Download and extract this repository.
+
 2. In a shell command line, navigate inside the repository's containing folder. 
 3. execute `make all`.
 4. Assuming compilation is successful and all unit tests pass, navigate to the /src/bin subdirectory to find the executables. 
@@ -17,21 +19,22 @@ MMC is the largest and most complex piece of software in the RECOMBO suite. It u
 ### Usage
 Usage information goes here
 
-##recomboFromFile
-recomboFromFile
+## recomboFromFile
+recomboFromFile takes a file of CUBE binary formatted polygons, and attempts to perform reconnection on each one according to user-specified reconnection criteria. It is capable of performing reconnection in direct ~~and invertet~~ repeat. 
 
-##homfly
+## homfly
 homfly
 
-##idknot
+## idknot
 
-##zAnalyzer
+## zAnalyzer
 
-##Other Software
+## Other Software
 
-## Contributors
+## Contributors (ordered chronologically)
+Rob Schaerine, Reuben Brasher, Robert Stolz
 
-##License
-All rights reserved. 2015. 
+## License
+All rights reserved. 2017. 
 
 This repository is currently private, and this source code is for internal use during development. A stable branch will be made public at an appropriate time.  

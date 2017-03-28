@@ -30,23 +30,43 @@ For a more detailed explanation of the theory behind Composite Markov Chain Mont
 
 `-c` the sampling interval, or the number of BFACF moves between samples (or attempted samples)
 
-`-mode ` The sampling mode. dictates how BFACF samples conformations. Options include... (unfinished)
-
-`minarc` 
-
 `-m` initial number of chains initialized on the interval defined by the `-zmin` and `-zmax` arguments. 
 
+The sampling mode dictates how BFACF samples conformations. Basic options:
 
+`-mode a` Analyze only mode. Perform warmup and calibration, measuring and outputting statistics for each chain. 
+
+`-mode s` Sample mode. Sample conformations in at an interval specified by the `-c` option into a binary format file.
+
+`-mode b` Combination of `a` and `s` mode.
+
+Advanced operating modes work in conjunction with recombo to perform reconnection in mmc:
+
+`-mode r` Reconnection mode. Samples like `s` mode but saves a post reconnection version of each sampled conformation in a separate file. Requires reconnection criteria to also be specified.
+
+`-mode f` Filter sample mode. Samples like `r` mode but saves only conformations that have sites satisfying the defined reconnection criteria.
+
+`-minarc n` Mandatory when in one of the two advanced operating modes. Defines the minimum arclength to identify a reconnection site as the integer `n`.
+
+`-maxarc n` Mandatory when in one of the two advanced operating modes. Defines the maximum arclength to identify a reconnection site as the integer `n`.
+
+`-targetlength n` Optional when in one of the two advanced operating modes. Def
 
 ##### Optional Arguments
 `-q` (Optional) the q value used for all markov chains in the mmc process. If unspecified, defaults to q=1.
+
+`-seed` (Optional) Manually specify a seed for the random number generator. If unspecified, uses the system clock and records the seed to stdout (console output).
+
+`+s` (Optional) Supresses progress output. Should be used when running long term jobs on a server that are not being directly monitored during the run.
+
+`-info`(Optional) Outputs information needed to perform batch-mean analysis as described in George Fishman's "Monte Carlo: Concepts, Algorithms, and Applications" into a new file with the .info extension. 
 
 ##### Halting Conditions
 At least one of these must be specified for the program to terminate. If more than one is specified, mmc will sample conformations until any halting condition is met. 
 
 `-n` number of conformations to sample
 
-
+`-t` integer number of hours to run before safe termination. 
 
 #### Example Usage
 
@@ -85,7 +105,7 @@ Xinger attempts to remove reidermeister crossings at the extended gauss code lev
 
 Seqconvert is a generally useful application that efficiently converts files filled with self-avoiding polygons between different formats. For example, it can be used to convert CUBE binary formatted polygons to ascii formatted files. It can also perform and output some useful computations for all polygons in a file, such as polygon length and writhe. It is also avaliable in limited circumstances upon request by emailing a request to: mariel@math.ucdavis.edu.
 
-Knotplot is a wonderful knot computation and visualization software developed and maintained by Rob Scharein. In the context of reconnection studies, it is useful for computing the extended gauss codes for each Polygon. Knotplot can be purchased for a small fee at http://knotplot.com/. 
+Knotplot is a wonderful knot computation and visualization software developed and maintained by Rob Scharein. In the context of reconnection studies, it is useful for computing the extended gauss codes for each Polygon. Knotplot can be purchased for a small fee at http://knotplot.com/.
 
 ## Contributors (ordered chronologically)
 Rob Schaerine, Reuben Brasher, Robert Stolz

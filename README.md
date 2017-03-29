@@ -69,6 +69,7 @@ At least one of these must be specified for the program to terminate. If more th
 `-t` integer number of hours to run before safe termination. 
 
 #### Example Usage
+`mmc initial/3_1 3_1 -zmin 0.20466 -zmax 0.20966 -q 1 -sr .8 -s 5 -n 800000 -c 20000 -m 5 -w 1000000 -mode m -minarc 57 -maxarc 63 -targetlength 120 -seed 42 +s > 3_1_log.txt &`
 
 ## recomboFromFile
 recomboFromFile takes an input file or stream of CUBE binary formatted polygons, and attempts to perform reconnection on each one according to user-specified reconnection criteria. It is capable of performing reconnection in direct ~~and inverted~~ repeat. 

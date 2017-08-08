@@ -648,7 +648,7 @@ class clkConformationBfacf3::impl
            int minarclength, int maxarclength, char orientation) //, recomboSites& sites)
    {
       //This version for use with orientation parameter	
-
+      
       sites.clear();
       int n = clkp->fcomp->nedges;
 
@@ -681,9 +681,11 @@ class clkConformationBfacf3::impl
          {
             int arc1 = ARC1(i, j);
             int arc2 = ARC2(i, j, n);
+            cout << orientation << endl;
             if (MIN(arc1, arc2) >= minarclength && MAX(arc1, arc2) <= maxarclength)
             {
                // candidate edges must have opposite orientation
+               
 	       switch (orientation)
 	       {
 	          case 'a': {

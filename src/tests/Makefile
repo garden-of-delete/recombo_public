@@ -8,7 +8,7 @@ CFLAGS = -g -fpermissive -I..
 .cpp.o:
 	$(CC) $(CFLAGS) -c $*.cpp -o $*.o
 
-OBJS = argprocessorTests.o autocorrTests.o basicTests.o clkTests.o randomTests.o unitTestMain.o
+OBJS = argprocessorTests.o autocorrTests.o basicTests.o clkTests.o randomTests.o unitTestMain.o recomboCriteriaTests.o
 
 unitTests: $(OBJS)
 	@echo Build unit tests.

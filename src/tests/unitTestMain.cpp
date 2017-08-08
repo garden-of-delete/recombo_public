@@ -5,6 +5,7 @@
 #include "basicTests.h"
 #include "clkTests.h"
 #include "randomTests.h"
+#include "recomboCriteriaTests.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ int main(void)
 		"Random number generator fails to produce expected sequence.");
 	suite.add_test(testRandomInteger, "pseudorandom integers");
 	suite.add_test(testPrecomputedBfacf3Probs, "Precomputed BFACF probabilities");
+	suite.add_test(testParallelRecombination, "Recombination between unknots");
 
 	suite.run_suite();
 }

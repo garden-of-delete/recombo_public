@@ -523,7 +523,7 @@ class clkConformationBfacf3::impl
       ivector displacement;
       int dist;
       // candidate edges must have beginning vertex distance one to ending vertex
-      sub_ivector(displacement, ep->start, eq->next->start);
+      sub_ivector(displacement, ep->start, eq->start);
       dist = abs(displacement[0]) + abs(displacement[1]) + abs(displacement[2]);
       return dist == 1;
    }

@@ -506,13 +506,18 @@ class clkConformationBfacf3::impl
    bool edgesUnitDistant(EdgePtr ep, EdgePtr eq)
    {
       // candidate edges may have opposite or same orientation
-
-      ivector displacement;
-      int dist;
+      //antiparallel distance   
+      ivector displacement_a;
+      int dist_a;
+      //parallel distance
+      ivector displacement_p;
+      int dist_p;
       // candidate edges must have beginning vertex distance one to ending vertex
-      sub_ivector(displacement, ep->start, eq->next->start);
-      dist = abs(displacement[0]) + abs(displacement[1]) + abs(displacement[2]);
-      return dist == 1;
+      sub_ivector(displacement_a, ep->start, eq->next->start);
+      sub_ivector(displacement_p, ep->start, eq->start);
+      dist_a = abs(displacement_a[0]) + abs(displacement_a[1]) + abs(displacement_a[2]);
+      dist_p = abs(displacement_p[0]) + abs(displacement_p[1]) + abs(displacement_p[2]);
+      return dist_a == 1 || dist_p == 1;
    } 
 
    bool edgesParallelAndUnitDistant(EdgePtr ep, EdgePtr eq)

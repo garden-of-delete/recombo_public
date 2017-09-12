@@ -11,13 +11,13 @@ typedef double real;
 typedef float  freal;   /* Always typedefed to `float'. */
 typedef double dreal;   /* Always typedefed to `double'. */
 
-typedef real vector [3];
+typedef real vector3 [3];
 typedef real point [3];
 typedef real vector2 [2];
 typedef real point2 [2];
 
 typedef struct {
-  vector v;
+  vector3 v;
   real w;
 } vector4;
 
@@ -43,7 +43,7 @@ typedef real Matrix [16];
 typedef char *TextString;
 typedef TextString *TextStringPtr;
 
-// From sequence convert project vector.h
+// From sequence convert project vector3.h
 
 #define PI           3.14159265358979323846
 #define THREEPIBY2   4.7123889803846898576
@@ -56,77 +56,77 @@ typedef TextString *TextStringPtr;
 
 #define normal_vector(a, b)  new_normal_vector(a, b, __LINE__, __FILE__)
 
-extern void get_sphere (vector centre, real &radius, vector *p);
-extern int is_orthonormal_triad (vector u, vector v, vector w);
-extern void output_triad (vector u, vector v, vector w);
-extern real length_segment (vector, vector);
-extern void horizon_point (vector hp, vector cent, vector eye, vector up, real radius);
-extern void negate_vector (vector, vector);
-extern void conv_to_xyz (vector, real, real, real);
-extern void abs_vector (vector, vector);
-extern void max_vector (vector, vector, vector);
-extern void min_vector (vector, vector, vector);
-extern void copy_vector (vector, vector);
-extern void set_vector (vector, real, real, real);
-extern void unit_vector (real, real, vector);
-extern int equal_vector (vector, vector);
-extern int equal_vector_within_epsilon (vector, vector);
-extern void random_unit_vector (vector);
-//extern void random_unit_vector2 (vector);
-extern void random_vector (vector, real);
-extern void zero_vector (vector);
-extern void cross (vector, vector, vector);
-extern void perp_vector (vector, vector);
-extern void add_vector (vector, vector, vector);
-extern void sub_vector (vector, vector, vector);
-extern void mult_vector (vector, vector, real);
-extern void midpoint (vector, vector, vector);
-extern real dot (vector, vector);
-extern real magnitude (vector);
-extern void normalize_vector (vector, vector);
-extern void interp_vector (vector, vector, vector, real);
+extern void get_sphere (vector3 centre, real &radius, vector3 *p);
+extern int is_orthonormal_triad (vector3 u, vector3 v, vector3 w);
+extern void output_triad (vector3 u, vector3 v, vector3 w);
+extern real length_segment (vector3, vector3);
+extern void horizon_point (vector3 hp, vector3 cent, vector3 eye, vector3 up, real radius);
+extern void negate_vector (vector3, vector3);
+extern void conv_to_xyz (vector3, real, real, real);
+extern void abs_vector (vector3, vector3);
+extern void max_vector (vector3, vector3, vector3);
+extern void min_vector (vector3, vector3, vector3);
+extern void copy_vector (vector3, vector3);
+extern void set_vector (vector3, real, real, real);
+extern void unit_vector (real, real, vector3);
+extern int equal_vector (vector3, vector3);
+extern int equal_vector_within_epsilon (vector3, vector3);
+extern void random_unit_vector (vector3);
+//extern void random_unit_vector2 (vector3);
+extern void random_vector (vector3, real);
+extern void zero_vector (vector3);
+extern void cross (vector3, vector3, vector3);
+extern void perp_vector (vector3, vector3);
+extern void add_vector (vector3, vector3, vector3);
+extern void sub_vector (vector3, vector3, vector3);
+extern void mult_vector (vector3, vector3, real);
+extern void midpoint (vector3, vector3, vector3);
+extern real dot (vector3, vector3);
+extern real magnitude (vector3);
+extern void normalize_vector (vector3, vector3);
+extern void interp_vector (vector3, vector3, vector3, real);
 extern real interp_real (real, real, real);
-extern void make_orthonormal_triad (vector, vector, vector);
-extern void random_orthonormal_triad (vector, vector, vector);
-extern void shift_vector (vector, int);
-extern void change_coord_system_inv (vector, vector, 
-				     vector, vector, vector);
-extern void change_coord_system (vector, vector, 
-				 vector, vector, vector);
+extern void make_orthonormal_triad (vector3, vector3, vector3);
+extern void random_orthonormal_triad (vector3, vector3, vector3);
+extern void shift_vector (vector3, int);
+extern void change_coord_system_inv (vector3, vector3, 
+				     vector3, vector3, vector3);
+extern void change_coord_system (vector3, vector3, 
+				 vector3, vector3, vector3);
 
-extern int is_a_zero_vector (vector);
-extern int is_a_unit_vector (vector);
+extern int is_a_zero_vector (vector3);
+extern int is_a_unit_vector (vector3);
 
-extern void new_normal_vector (vector, vector, int, char *);
-extern void random_unit_vector_cone (vector v, real angle);
+extern void new_normal_vector (vector3, vector3, int, char *);
+extern void random_unit_vector_cone (vector3 v, real angle);
 extern void test_random_unit_vector (int, int);
-extern void print_vector_a (FILE *, vector);
-extern void print_vector (vector);
-extern void put_vector (vector);
-extern void compute_normal (vector, vector, vector, vector);
-extern real diff_distance_SQ (vector, vector);
-extern void perp_vector_wqed (vector, vector);
+extern void print_vector_a (FILE *, vector3);
+extern void print_vector (vector3);
+extern void put_vector (vector3);
+extern void compute_normal (vector3, vector3, vector3, vector3);
+extern real diff_distance_SQ (vector3, vector3);
+extern void perp_vector_wqed (vector3, vector3);
 
-extern void conv_cylindrical_to_xyz (vector, real, real, real);
-extern void conv_to_cylindrical (vector, real *, real *, real *);
-extern void conv_to_polar (vector, real *, real *, real *);
+extern void conv_cylindrical_to_xyz (vector3, real, real, real);
+extern void conv_to_cylindrical (vector3, real *, real *, real *);
+extern void conv_to_polar (vector3, real *, real *, real *);
 
-extern void copy_from_fvector (vector v, fvector w)    ;
-extern void copy_to_fvector (fvector v, vector w);
+extern void copy_from_fvector (vector3 v, fvector w)    ;
+extern void copy_to_fvector (fvector v, vector3 w);
 extern void set_fvector (fvector, real, real, real);
 
-extern vector iHat, jHat, kHat, xHat, yHat, zHat, ZERO_vect;
+extern vector3 iHat, jHat, kHat, xHat, yHat, zHat, ZERO_vect;
 #define ORIGIN ZERO_vect
 
-extern void rotate_vector_2D (vector, vector, real);
+extern void rotate_vector_2D (vector3, vector3, real);
 extern void set_ivector2 (ivector2, int, int);
 extern void set_ivector4 (ivector4, int, int, int, int);
 extern void copy_ivector4 (ivector4, ivector4);
-extern void transform_point (vector, Matrix, vector);
+extern void transform_point (vector3, Matrix, vector3);
 
-extern int is_right_of (vector, vector, vector);
-extern int inside_rect (vector, vector, real, vector);
-extern void unit_vector_in_fan (vector, vector, point, real);
+extern int is_right_of (vector3, vector3, vector3);
+extern int inside_rect (vector3, vector3, real, vector3);
+extern void unit_vector_in_fan (vector3, vector3, point, real);
 
 bool equal_ivector (ivector a, ivector b);
 void sub_ivector (ivector v, ivector w, ivector z);

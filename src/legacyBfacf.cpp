@@ -5153,7 +5153,7 @@ EdgePtr is_parsite(CubicLatticeKnotPtr clkp, EdgePtr ep)
 
 /*
 void mark_tight_clasp (EdgePtr ep1, EdgePtr ep2) {
-  vector p1, p2;
+  vector3 p1, p2;
   
 }
  */
@@ -5826,7 +5826,7 @@ void bfacf_set_lattice_sphere(CubicLatticeKnotPtr clkp, int what, double radius,
    }
 
    ivector pos;
-   vector cen;
+   vector3 cen;
    set_vector(cen, xcen + (double) clkp->loffset [0], ycen + (double) clkp->loffset [1], zcen + (double) clkp->loffset [2]);
    double r2 = radius * radius;
 
@@ -5836,7 +5836,7 @@ void bfacf_set_lattice_sphere(CubicLatticeKnotPtr clkp, int what, double radius,
       {
          for (pos [0] = 1; pos [0] < LATTICE_SIZE - 1; pos [0]++)
          {
-            vector rpos;
+            vector3 rpos;
             copy_vector(rpos, pos);
             if (diff_distance_SQ(rpos, cen) < r2)
                clkp->lattice [lat(pos)] = what;
@@ -6330,7 +6330,7 @@ void showem_obsolete(CubicLatticeKnotPtr clkp, int kount)
    output_it(com);
    for (int i = 0; i < clkp->nfrozen + kount; i++)
    {
-      vector v;
+      vector3 v;
       EdgePtr ep = clkp->edgepool [i];
       ivector a, b;
       sub_ivector(a, ep->start, clkp->loffset);

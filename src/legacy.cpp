@@ -166,15 +166,15 @@ void copyRandomState(const pseudorandom& r)
 
 static char comment [108];
 
-vector iHat = {1.0, 0.0, 0.0};
-vector jHat = {0.0, 1.0, 0.0};
-vector kHat = {0.0, 0.0, 1.0};
+vector3 iHat = {1.0, 0.0, 0.0};
+vector3 jHat = {0.0, 1.0, 0.0};
+vector3 kHat = {0.0, 0.0, 1.0};
 
-vector xHat = {1.0, 0.0, 0.0};
-vector yHat = {0.0, 1.0, 0.0};
-vector zHat = {0.0, 0.0, 1.0};
+vector3 xHat = {1.0, 0.0, 0.0};
+vector3 yHat = {0.0, 1.0, 0.0};
+vector3 zHat = {0.0, 0.0, 1.0};
 
-vector ZERO_vect = {0.0, 0.0, 0.0};
+vector3 ZERO_vect = {0.0, 0.0, 0.0};
 
 #define EPSILON  0.00001
 
@@ -195,14 +195,14 @@ int round_to_long(real real_number)
    return (sign * ((int) (real_number + 0.5)));
 }
 
-void negate_vector(vector a, vector b)
+void negate_vector(vector3 a, vector3 b)
 { // a = -b
    a [0] = -b [0];
    a [1] = -b [1];
    a [2] = -b [2];
 }
 
-int is_a_unit_vector(vector v)
+int is_a_unit_vector(vector3 v)
 {
    real mag;
    mag = magnitude(v);
@@ -212,7 +212,7 @@ int is_a_unit_vector(vector v)
       return TRUE;
 }
 
-int is_a_zero_vector(vector v)
+int is_a_zero_vector(vector3 v)
 {
    if (v [0] > EPSILON) return FALSE;
    if (v [0] < -EPSILON) return FALSE;
@@ -223,10 +223,10 @@ int is_a_zero_vector(vector v)
    return TRUE;
 }
 
-int is_orthonormal_triad(vector u, vector v, vector w)
+int is_orthonormal_triad(vector3 u, vector3 v, vector3 w)
 {
    // return TRUE iff (u, v, w) form an orthonormal triad
-   vector x;
+   vector3 x;
 
    if (!is_a_unit_vector(u)) return FALSE;
    if (!is_a_unit_vector(v)) return FALSE;
@@ -240,9 +240,9 @@ int is_orthonormal_triad(vector u, vector v, vector w)
    return TRUE;
 }
 
-void output_triad(vector u, vector v, vector w)
+void output_triad(vector3 u, vector3 v, vector3 w)
 {
-   vector uXv, vXw, wXu;
+   vector3 uXv, vXw, wXu;
 
    sprintf(comment, "u = (%f, %f, %f) of length %f\n", u [0], u [1], u [2], magnitude(u));
    output_it(comment);
@@ -260,15 +260,15 @@ void output_triad(vector u, vector v, vector w)
    output_it(comment);
 }
 
-void unit_vector(real theta, real phi, vector v)
+void unit_vector(real theta, real phi, vector3 v)
 {
-   // creates a unit vector v from spherical coordinates theta, phi
+   // creates a unit vector3 v from spherical coordinates theta, phi
    v [0] = sin(theta) * cos(phi);
    v [1] = sin(theta) * sin(phi);
    v [2] = cos(theta);
 }
 
-int equal_vector(vector a, vector b)
+int equal_vector(vector3 a, vector3 b)
 {
    if (a [0] != b [0]) return FALSE;
    if (a [1] != b [1]) return FALSE;
@@ -276,9 +276,9 @@ int equal_vector(vector a, vector b)
    return TRUE;
 }
 
-int equal_vector_within_epsilon(vector a, vector b)
+int equal_vector_within_epsilon(vector3 a, vector3 b)
 {
-   vector hypergumby;
+   vector3 hypergumby;
    sub_vector(hypergumby, a, b);
    return is_a_zero_vector(hypergumby);
 }
@@ -295,7 +295,7 @@ void rand_sphere (real *theta, real *phi) {
 }
  */
 
-void random_unit_vector_cone(vector v, real alpha)
+void random_unit_vector_cone(vector3 v, real alpha)
 { // full angle of the cone
    real theta, phi;
 
@@ -305,9 +305,9 @@ void random_unit_vector_cone(vector v, real alpha)
    unit_vector(theta, phi, v);
 }
 
-void random_unit_vector(vector v)
+void random_unit_vector(vector3 v)
 {
-   // creates a unit vector in a random direction
+   // creates a unit vector3 in a random direction
    // this method is fine in 3D, don't use in higher dimensions
    real dist;
    do
@@ -320,41 +320,41 @@ void random_unit_vector(vector v)
    normal_vector(v, v);
 }
 
-void random_vector(vector v, real mag)
+void random_vector(vector3 v, real mag)
 {
    v [0] = rand_real(-mag, mag);
    v [1] = rand_real(-mag, mag);
    v [2] = rand_real(-mag, mag);
 }
 
-void zero_vector(vector v)
+void zero_vector(vector3 v)
 {
    v [0] = v [1] = v [2] = 0.0;
 }
 
-real dot(vector v, vector w)
+real dot(vector3 v, vector3 w)
 {
    return (v [0] * w [0] + v [1] * w [1] + v [2] * w [2]);
 }
 
-real magnitude(vector v)
+real magnitude(vector3 v)
 {
    return sqrt((v [0] * v [0] + v [1] * v [1] + v [2] * v [2]));
 }
 
-real magnitude_SQ(vector v)
+real magnitude_SQ(vector3 v)
 {
    return (v [0] * v [0] + v [1] * v [1] + v [2] * v [2]);
 }
 
-void cross(vector v, vector w, vector z)
+void cross(vector3 v, vector3 w, vector3 z)
 { // v = w X z
    v [0] = w [1] * z [2] - w [2] * z [1];
    v [1] = w [2] * z [0] - w [0] * z [2];
    v [2] = w [0] * z [1] - w [1] * z [0];
 }
 
-void set_vector(vector a, real x, real y, real z)
+void set_vector(vector3 a, real x, real y, real z)
 {
    a [0] = x;
    a [1] = y;
@@ -382,9 +382,9 @@ void set_ivector2(ivector2 a, int x, int y)
    a [1] = y;
 }
 
-void perp_vector(vector a, vector b)
+void perp_vector(vector3 a, vector3 b)
 {
-   // creates a vector a perpendicular to b
+   // creates a vector3 a perpendicular to b
    // because of `hairy ball theorem', this cannot be done
    // in a continuous fashion
    if (b [2] * b [2] > b [0] * b [0] + b [1] * b [1])
@@ -393,7 +393,7 @@ void perp_vector(vector a, vector b)
       cross(a, b, zHat);
 }
 
-void copy_vector(vector v, vector w)
+void copy_vector(vector3 v, vector3 w)
 { // v = w
    v [0] = w [0];
    v [1] = w [1];
@@ -485,41 +485,41 @@ void set_ivector(ivector a, int x, int y, int z)
    a [2] = z;
 }
 
-void copy_from_fvector(vector v, fvector w)
+void copy_from_fvector(vector3 v, fvector w)
 {
    v [0] = (real) w [0];
    v [1] = (real) w [1];
    v [2] = (real) w [2];
 }
 
-void copy_to_fvector(fvector v, vector w)
+void copy_to_fvector(fvector v, vector3 w)
 {
    v [0] = (freal) w [0];
    v [1] = (freal) w [1];
    v [2] = (freal) w [2];
 }
 
-void add_vector(vector v, vector w, vector z)
+void add_vector(vector3 v, vector3 w, vector3 z)
 {
    v [0] = w [0] + z [0];
    v [1] = w [1] + z [1];
    v [2] = w [2] + z [2];
 }
 
-void midpoint(vector mid, vector a, vector b)
+void midpoint(vector3 mid, vector3 a, vector3 b)
 {
    add_vector(mid, a, b);
    mult_vector(mid, mid, 0.5);
 }
 
-void sub_vector(vector v, vector w, vector z)
+void sub_vector(vector3 v, vector3 w, vector3 z)
 {
    v [0] = w [0] - z [0];
    v [1] = w [1] - z [1];
    v [2] = w [2] - z [2];
 }
 
-void normalize_vector(vector v, vector w)
+void normalize_vector(vector3 v, vector3 w)
 {
    real length;
 
@@ -531,14 +531,14 @@ void normalize_vector(vector v, vector w)
    }
 }
 
-real length_segment(vector a, vector b)
+real length_segment(vector3 a, vector3 b)
 {
-   vector diff;
+   vector3 diff;
    sub_vector(diff, a, b);
    return magnitude(diff);
 }
 
-void rotate_vector_2D(vector a, vector b, real angle)
+void rotate_vector_2D(vector3 a, vector3 b, real angle)
 {
    real x, y;
 
@@ -550,37 +550,37 @@ void rotate_vector_2D(vector a, vector b, real angle)
    a [1] = y;
 }
 
-void max_vector(vector v, vector w, vector z)
+void max_vector(vector3 v, vector3 w, vector3 z)
 {
    v [0] = MAX(w [0], z [0]);
    v [1] = MAX(w [1], z [1]);
    v [2] = MAX(w [2], z [2]);
 }
 
-void min_vector(vector v, vector w, vector z)
+void min_vector(vector3 v, vector3 w, vector3 z)
 {
    v [0] = MIN(w [0], z [0]);
    v [1] = MIN(w [1], z [1]);
    v [2] = MIN(w [2], z [2]);
 }
 
-void abs_vector(vector a, vector b)
+void abs_vector(vector3 a, vector3 b)
 {
    a [0] = ABS(b [0]);
    a [1] = ABS(b [1]);
    a [2] = ABS(b [2]);
 }
 
-void mult_vector(vector v, vector w, real con)
+void mult_vector(vector3 v, vector3 w, real con)
 {
    v [0] = w [0] * con;
    v [1] = w [1] * con;
    v [2] = w [2] * con;
 }
 
-void interp_vector(vector a, vector b, vector c, real t)
+void interp_vector(vector3 a, vector3 b, vector3 c, real t)
 {
-   vector v;
+   vector3 v;
    mult_vector(a, b, 1.0 - t);
    mult_vector(v, c, t);
    add_vector(a, a, v);
@@ -591,7 +591,7 @@ real interp_real(real b, real c, real t)
    return b * (1.0 - t) + t * c;
 }
 
-void transform_point(vector out, Matrix m, vector in)
+void transform_point(vector3 out, Matrix m, vector3 in)
 {
    // out and in are column vectors, m is a matrix (usually a rotation matrix)
    // out = m in
@@ -602,16 +602,16 @@ void transform_point(vector out, Matrix m, vector in)
 #undef M
 }
 
-void change_coord_system(vector new_a, vector a,
-        vector xhat, vector yhat, vector zhat)
+void change_coord_system(vector3 new_a, vector3 a,
+        vector3 xhat, vector3 yhat, vector3 zhat)
 {
-   vector dum;
+   vector3 dum;
 
    /* Two coordinate systems S and R,
       xhat yhat zhat are vectors expressed in S frame,
       xhat yhat zhat are orthonormal triad defining R frame,
-      a is a vector expressed in the R frame,
-      new_a is the same vector expressed in the S frame. */
+      a is a vector3 expressed in the R frame,
+      new_a is the same vector3 expressed in the S frame. */
 
    mult_vector(new_a, xhat, a [0]);
    mult_vector(dum, yhat, a [1]);
@@ -620,22 +620,22 @@ void change_coord_system(vector new_a, vector a,
    add_vector(new_a, new_a, dum);
 }
 
-void change_coord_system_inv(vector new_a, vector a,
-        vector xhat, vector yhat, vector zhat)
+void change_coord_system_inv(vector3 new_a, vector3 a,
+        vector3 xhat, vector3 yhat, vector3 zhat)
 {
 
    /* Two coordinate systems S and R,
       xhat yhat zhat are vectors expressed in S frame,
       xhat yhat zhat are orthonormal triad defining R frame,
-      a is a vector expressed in the S frame,
-      new_a is the same vector expressed in the R frame. */
+      a is a vector3 expressed in the S frame,
+      new_a is the same vector3 expressed in the R frame. */
 
    new_a [0] = dot(a, xhat);
    new_a [1] = dot(a, yhat);
    new_a [2] = dot(a, zhat);
 }
 
-void new_normal_vector(vector v, vector w, int l, char *f)
+void new_normal_vector(vector3 v, vector3 w, int l, char *f)
 {
    real length;
 
@@ -647,27 +647,27 @@ void new_normal_vector(vector v, vector w, int l, char *f)
    }
 }
 
-void make_orthonormal_triad(vector u, vector v, vector w)
+void make_orthonormal_triad(vector3 u, vector3 v, vector3 w)
 {
-   /* Makes an orthonormal right-handed triad given vector w. */
+   /* Makes an orthonormal right-handed triad given vector3 w. */
 
    perp_vector(u, w);
    new_normal_vector(u, u, __LINE__, __FILE__);
    cross(v, w, u);
 }
 
-void conv_to_xyz(vector vert, real radius, real theta, real phi)
+void conv_to_xyz(vector3 vert, real radius, real theta, real phi)
 {
-   // vector `vert' is (radius, theta, phi) in spherical coordinates
+   // vector3 `vert' is (radius, theta, phi) in spherical coordinates
    vert [0] = radius * sin(theta) * cos(phi);
    vert [1] = radius * sin(theta) * sin(phi);
    vert [2] = radius * cos(theta);
 }
 
-void random_orthonormal_triad(vector uhat, vector vhat, vector what)
+void random_orthonormal_triad(vector3 uhat, vector3 vhat, vector3 what)
 {
    // creates a randomly oriented orthonormal triad
-   vector u, v;
+   vector3 u, v;
    real theta;
    random_unit_vector(what);
    make_orthonormal_triad(u, v, what);
@@ -678,35 +678,35 @@ void random_orthonormal_triad(vector uhat, vector vhat, vector what)
    cross(vhat, what, uhat);
 }
 
-void shift_vector(vector v, int s)
+void shift_vector(vector3 v, int s)
 {
-   // component-wise shift of vector
-   vector a;
+   // component-wise shift of vector3
+   vector3 a;
    copy_vector(a, v);
    v [0] = a [s % 3];
    v [1] = a [(s + 1) % 3];
    v [2] = a [(s + 2) % 3];
 }
 
-void compute_normal(vector n, vector v0, vector v1, vector v2)
+void compute_normal(vector3 n, vector3 v0, vector3 v1, vector3 v2)
 {
-   vector a, b;
+   vector3 a, b;
    sub_vector(a, v2, v0);
    sub_vector(b, v1, v0);
    cross(n, b, a);
    new_normal_vector(n, n, __LINE__, __FILE__);
 }
 
-real diff_distance_SQ(vector a, vector b)
+real diff_distance_SQ(vector3 a, vector3 b)
 {
    // use this function if the magnitude of the difference is not needed
    // avoids taking an unnecessary square root
-   vector diff;
+   vector3 diff;
    sub_vector(diff, a, b);
    return diff [0] * diff [0] + diff [1] * diff [1] + diff [2] * diff [2];
 }
 
-void perp_vector_wqed(vector a, vector b)
+void perp_vector_wqed(vector3 a, vector3 b)
 {
    // special function needed only in the animation done for WQED
    if (b [2] * b [2] > 20.0 * (b [0] * b [0] + b [1] * b [1]))
@@ -720,7 +720,7 @@ void perp_vector_wqed(vector a, vector b)
    fflush(stdout);
 }
 
-void conv_cylindrical_to_xyz(vector vert,
+void conv_cylindrical_to_xyz(vector3 vert,
         real radius, real theta, real z)
 {
    vert [0] = radius * cos(theta);
@@ -728,7 +728,7 @@ void conv_cylindrical_to_xyz(vector vert,
    vert [2] = z;
 }
 
-void conv_to_cylindrical(vector vert, real *radius, real *theta, real *z)
+void conv_to_cylindrical(vector3 vert, real *radius, real *theta, real *z)
 {
    *radius = sqrt(vert [0] * vert [0] +
            vert [1] * vert [1]);
@@ -736,7 +736,7 @@ void conv_to_cylindrical(vector vert, real *radius, real *theta, real *z)
    *z = vert [2];
 }
 
-void conv_to_polar(vector vert, real *radius, real *theta, real *phi)
+void conv_to_polar(vector3 vert, real *radius, real *theta, real *phi)
 {
    *radius = sqrt(vert [0] * vert [0] +
            vert [1] * vert [1] +
@@ -748,13 +748,13 @@ void conv_to_polar(vector vert, real *radius, real *theta, real *phi)
       *theta = acos(vert [2] / *radius);
 }
 
-int is_right_of(vector p, vector base, vector dir)
+int is_right_of(vector3 p, vector3 base, vector3 dir)
 {
    // assumes all vectors / points lie in xy-plane
    // given a ray with base point `base' and direction `dir',
    // returns TRUE iff point `p' is on the right hand side of the ray
 
-   vector a, b;
+   vector3 a, b;
    sub_vector(a, p, base);
    cross(b, a, dir);
    if (b [2] > 0.0)
@@ -763,16 +763,16 @@ int is_right_of(vector p, vector base, vector dir)
       return FALSE;
 }
 
-int inside_rect(vector a, vector b, real d, vector loc)
+int inside_rect(vector3 a, vector3 b, real d, vector3 loc)
 {
    // test point at location loc to see if it is
    // inside rectangle from a to b of width 2d
 
    // assumes vectors lie in xy-plane
 
-   vector u; // axis of box
-   vector v;
-   vector v0, v1, v2, v3; // corners of box
+   vector3 u; // axis of box
+   vector3 v;
+   vector3 v0, v1, v2, v3; // corners of box
 
    sub_vector(u, b, a);
    normal_vector(u, u);
@@ -791,18 +791,18 @@ int inside_rect(vector a, vector b, real d, vector loc)
    return TRUE;
 }
 
-void unit_vector_in_fan(vector f, vector g, point base, real angle)
+void unit_vector_in_fan(vector3 f, vector3 g, point base, real angle)
 {
-   // create a new vector f which is perpendicular to g
-   // if angle is zero, vector f is perpenicular to both g and the vector from the origin to the point base
+   // create a new vector3 f which is perpendicular to g
+   // if angle is zero, vector3 f is perpenicular to both g and the vector3 from the origin to the point base
 
    // first create a ugw coordinate system where g and (base - origin) lie in ug plane
 
    // base is a point on the unit sphere centered at the origin where the fan is anchored
 
-   vector u, w;
+   vector3 u, w;
 
-   cross(w, base, g); // treat base as a vector
+   cross(w, base, g); // treat base as a vector3
    normal_vector(w, w);
    cross(u, g, w);
 
@@ -811,25 +811,25 @@ void unit_vector_in_fan(vector f, vector g, point base, real angle)
    add_vector(f, u, w);
 }
 
-void horizon_point(vector hp, vector cent, vector eye, vector up, real radius)
+void horizon_point(vector3 hp, vector3 cent, vector3 eye, vector3 up, real radius)
 {
    // computes a horizon point
 
-   // assumes `up' is a unit vector
+   // assumes `up' is a unit vector3
 
    real d, beta;
-   vector a;
+   vector3 a;
 
    sub_vector(a, cent, eye);
    d = magnitude(a);
-   mult_vector(a, a, 1.0 / d); // make `a' a unit vector
+   mult_vector(a, a, 1.0 / d); // make `a' a unit vector3
    beta = PI - acos(radius / d);
    mult_vector(hp, a, radius * cos(beta));
    mult_vector(a, up, radius * sin(beta));
    add_vector(hp, hp, a);
 }
 
-void get_sphere(vector centre, real &radius, vector *p)
+void get_sphere(vector3 centre, real &radius, vector3 *p)
 {
    // given points p [0], p [1], p [2], and p [3] in general position,
    // compute the centre and radius of the sphere containing them
@@ -1309,10 +1309,10 @@ bool write_increment(ivector incr, BitFilePtr bfp)
 
 double writhe(double &ACN, int nvert, ivector *vert, double jitter)
 {
-   vector V1, V2, V3, V4;
-   vector R13, R14, R24, R23, R34, R12;
-   vector N1, N2, N3, N4;
-   vector R34xR12;
+   vector3 V1, V2, V3, V4;
+   vector3 R13, R14, R24, R23, R34, R12;
+   vector3 N1, N2, N3, N4;
+   vector3 R34xR12;
 
    double gauss_xing_number_sum = 0.0;
    double space_writhe_sum = 0.0;
@@ -1390,7 +1390,7 @@ double writhe(double &ACN, int nvert, ivector *vert, double jitter)
 
 double radius_of_gyration(int nvert, ivector *vert)
 {
-   vector cofm, loc;
+   vector3 cofm, loc;
    zero_vector(cofm);
    for (int b = 0; b < nvert; b++)
    {

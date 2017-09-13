@@ -67,10 +67,11 @@ bool testParallelRecombination()
     //result.translate(v);
     //clkConformationBfacf3 postConformation(reclass.postConformationList);
     char orientation = 'p';
-    sites=rctc.preConformation.countRecomboSites(19,22,orientation);   
+    sites=rctc.preConformation.countRecomboSites(18,22,orientation);   
     rctc.preConformation.performRecombination(sitechoice);
-    ASSERT_DOUBLES_EQUAL(rctc.preConformation.size(),1,0);
-    clkConformationAsList result(rctc.preConformation.getComponent(0));
+    ASSERT_EQUAL(rctc.preConformation.size(),1);
+    ASSERT(rctc.preConformation.getComponent(0)==rctc.postConformation.getComponent(0));
+    //clkConformationAsList result(rctc.preConformation.getComponent(0));
     
     return true;
 }

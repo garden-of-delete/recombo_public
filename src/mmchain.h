@@ -214,12 +214,12 @@ private:
 	*
 	*/
 	
-	//deprecated
-	//void write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice);
+	
+	void write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice);
 
-	//deprecated
-	//bool do_recombo_knots(int current_chain);
-	//bool do_recombo_links(int current_chain);
+	
+	bool do_recombo_knots(int current_chain);
+	bool do_recombo_links(int current_chain);
 
 	//deprecated
 	/*void write_reci_files();*/

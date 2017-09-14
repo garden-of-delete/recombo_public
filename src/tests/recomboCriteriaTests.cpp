@@ -4,6 +4,7 @@
 #include <string>
 
 #include "recomboCriteriaTests.h"
+#include "mmchain.h"
 #include <threevector.h>
 #include <genericConformation.h>
 #include <clkCigar.h>
@@ -35,6 +36,7 @@ class recomboCriteriaTestClass
     public:
     clkConformationBfacf3 preConformation;
     clkConformationBfacf3 postConformation;
+    mmchain mmctest;
     recomboCriteriaTestClass(); 
     bool testParallelRecombination();
     

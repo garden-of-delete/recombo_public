@@ -434,8 +434,7 @@ int mmchain::sample(){
 	}
 }
 
-/*
-//deprecated
+
 bool mmchain::do_recombo_knots(int current_chain){
 	//setup recombo environment
 	int sites = 0, choice = 0;
@@ -454,9 +453,8 @@ bool mmchain::do_recombo_knots(int current_chain){
 		return true;
 	}
 	return false;
-}*/
-/*
-//deprecated
+}
+
 bool mmchain::do_recombo_links(int current_chain){ 
 	//setup recombo environment
 	int sites = 0, choice = 0;
@@ -466,7 +464,7 @@ bool mmchain::do_recombo_links(int current_chain){
 	//check length and count recombo sites
 	cout << chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() << ' ';
 	if (chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() == target_recombo_length 
-		/*&& chains[current_chain].member_knot->getComponent(0).size() == chains[current_chain].member_knot->getComponent(1).size()*//*){
+		&& chains[current_chain].member_knot->getComponent(0).size() == chains[current_chain].member_knot->getComponent(1).size()){
 		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc);
 	}
 	if (sites > 0){
@@ -475,7 +473,7 @@ bool mmchain::do_recombo_links(int current_chain){
 		return true;
 	}
 	return false;
-}*/
+}
 
 void mmchain::display_statistics(){
 	/*autocorr ac;
@@ -574,8 +572,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		block_file_index++;
 	}
 }
-/*
-//depricated
+
 //function has issues, do not use for now.
 void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice){
 	if ((block_file_index < block_file_size) && (block_file_index != 0)){
@@ -668,7 +665,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		}
 		block_file_index++;
 	}
-}*/
+}
 
 int mmchain::count_recombo_sites(clkConformationBfacf3* clk){
 	int length = 0, sites = 0, recombination = 0;

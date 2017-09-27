@@ -523,13 +523,14 @@ class clkConformationBfacf3::impl
    bool edgesParallelAndUnitDistant(EdgePtr ep, EdgePtr eq)
    {
       // candidate edges must NOT have opposite orientation
-      if (oppositeDirection(ep->dir, eq->dir)) return false;
-
+      if (ep->dir!=eq->dir) return false;       
+      
       ivector displacement;
       int dist;
       // candidate edges must have beginning vertex distance one to ending vertex
       sub_ivector(displacement, ep->start, eq->start);
       dist = abs(displacement[0]) + abs(displacement[1]) + abs(displacement[2]);
+      if (dist ==1) cout << ep->dir << eq->dir << dist;
       return dist == 1;
    }
 
@@ -686,7 +687,6 @@ class clkConformationBfacf3::impl
          {
             int arc1 = ARC1(i, j);
             int arc2 = ARC2(i, j, n);
-            cout << orientation << endl;
             if (MIN(arc1, arc2) >= minarclength && MAX(arc1, arc2) <= maxarclength)
             {
                // candidate edges must have opposite orientation

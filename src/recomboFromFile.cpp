@@ -14,6 +14,7 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 	sampling_mode = Sampling_mode;
 	block_file_mode = Block_file_mode;
 	seed = Seed;
+	cout << "\r" << "test" << endl;
 	if (seed != 0){
 		siteSelector.sRandSimple(seed);
 	}
@@ -105,10 +106,12 @@ void recomboFromFile::do_recombo(){
 	if (sampling_mode == 0){
 		sampling_mode = -1;
 	}
-	if (n_components == 1)
-		do_recombo_knots();
-	else if (n_components == 2)
-		do_recombo_links();
+	if (n_components == 1){
+		cout << "doing recombo knots" << endl; 
+		do_recombo_knots();}
+	else if (n_components == 2){
+		cout << "doing recombo links" << endl;
+		do_recombo_links();}
 	else{
 	cout << endl << "error: Links with > 2 components are not currently supported by this software" << endl;
 	exit(2);
@@ -123,8 +126,9 @@ void recomboFromFile::do_recombo_knots(){
 	TOP:
 	while (read_comp_knots(in) && sampling_mode != 0){
 		sites = 0;
+		cout <<"test" << endl;
 		if (!supress_output){
-			cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
+			cout << '\r' << "test Attempting Recombination: " << ++attempts << " Performed: " << count;
 		}
 		knot = new clkConformationBfacf3(initialComp0);
 		//need to create new countRecomboSites function that is ideal for use with mmc
@@ -133,6 +137,7 @@ void recomboFromFile::do_recombo_knots(){
 		if (length == (min_arc + max_arc)){
 		    length_counter++;
             sites = knot->countRecomboSites(min_arc, max_arc,recombo_orientation);
+			cout <<sites;
         }
 
 		if(sites > 0){
@@ -185,8 +190,9 @@ void recomboFromFile::do_recombo_knots_all(){ //experimental
 TOP:
 	while (read_comp_knots(in) && sampling_mode != 0){
 		sites = 0;
+		cout <<"test" << endl;
 		if (!supress_output){
-			cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
+			cout << '\r' << "test Attempting Recombination: " << ++attempts << " Performed: " << count;
 		}
 		//knot.
 		knot = new clkConformationBfacf3(initialComp0);
@@ -251,8 +257,9 @@ void recomboFromFile::do_recombo_links(){
 	TOP:
 	while (read_comp_links(in) && sampling_mode != 0){
 	    sites = 0;
+		cout <<"test" << endl;
 		if (!supress_output){
-			cout << '\r' << "Attempting Recombination: " << ++attempts << " Performed: " << count;
+			cout << '\r' << "test Attempting Recombination: " << ++attempts << " Performed: " << count;
 		}
 		knot = new clkConformationBfacf3(initialComp0, initialComp1);
 		//need to create new countRecomboSites function that is ideal for use with mmc

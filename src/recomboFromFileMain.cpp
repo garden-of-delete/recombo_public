@@ -2,7 +2,7 @@
 #include <string.h>
 
 void print_usage(){
-	cout << "Usage:" << endl;
+	cout << "Test Usage:" << endl;
 	cout << "recomboFromFile input_file output_file [operators/options]" << endl;
 	cout << "recomboFromFile takes an input file of cubic lattice conformations " << 
 		"written in Rob Schaerin's CUBE format and outputs a file of conformations " << 

@@ -40,7 +40,7 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 	supress_output = Supress_output;
 	sample_attempts = 0;
-	if (mode == 'm'){
+	if (mode == 'm' or mode == 'f'){
 		stringstream ss;
 		ss << outfile_name << "%0.info";
 		info_file.open(ss.str().c_str(), ios::out);
@@ -429,7 +429,7 @@ int mmchain::sample(){
 		}
 		return samples;
 	}
-	else if (sample_mode == 'm'){ //block mean sampling mode
+	else if (sample_mode == 'm' or sample_mode == 'f'){ //block mean sampling mode
 		return block_mean_sample();
 	}
 }
@@ -462,7 +462,7 @@ bool mmchain::do_recombo_links(int current_chain){
 
 	//perform recombination
 	//check length and count recombo sites
-	cout << chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() << ' ';
+	//cout << chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() << ' ';
 	if (chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() == target_recombo_length 
 		&& chains[current_chain].member_knot->getComponent(0).size() == chains[current_chain].member_knot->getComponent(1).size()){
 		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc);
@@ -629,6 +629,11 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			stringstream tt;
 			tt << outfile_name << "_after%" << current_block_file_number << ".b";
 			out2.open(tt.str().c_str(), ios::out | ios::binary);
+
+			stringstream ss;
+			ss << outfile_name << '%' << current_block_file_number << ".info";
+			//open new file
+			info_file.open(ss.str().c_str(), ios::out);
 		}
 
 		if (n_components == 1){
@@ -693,23 +698,38 @@ int mmchain::block_mean_sample(){
 		//check recombination criteria
 		int length = 0, sites = 0, recombination = 0;
 		//retrieve lengths (DONT WANT TO COMPUTE LENGTHS TWICE WHEN CALLING count_recombo_sites
-		if (n_components == 1){
-			length = chains[i].member_knot->getComponent(0).size();
-		}
-		else if (n_components == 2){
-			length = chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size();
-		}
-		//if in block sampling mode 
-		if (target_recombo_length > 0){
-			if (length == target_recombo_length){
-				//sites = chains[i].member_knot->countRecomboSites(min_arc, max_arc);
-				recombination = count_recombo_sites(chains[i].member_knot);
+
+		if (sample_mode=='f'){
+			if (n_components == 1){
+				recombination=do_recombo_knots(i);
+			}	
+			else if (n_components == 2){
+				recombination=do_recombo_links(i);
+			}
+			if (recombination){
+				samples++;
 			}
 		}
-		//record clk if recombination criteria are met
-		if (recombination){
-			write_to_block_file(chains[i].member_knot);
-			samples++;
+		else if (sample_mode=='m'){
+			if (n_components == 1){
+				length = chains[i].member_knot->getComponent(0).size();
+			}
+			else if (n_components == 2){
+				length = chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size();
+			}
+			//if in block sampling mode 
+			if (target_recombo_length > 0){
+				if (length == target_recombo_length){
+					//sites = chains[i].member_knot->countRecomboSites(min_arc, max_arc);
+					recombination = count_recombo_sites(chains[i].member_knot);
+				}
+			}
+			//record clk if recombination criteria are met
+			if (recombination){
+				
+				write_to_block_file(chains[i].member_knot);
+				samples++;
+			}
 		}
 		info_file << length << ' ' << recombination << ' ';
 	}

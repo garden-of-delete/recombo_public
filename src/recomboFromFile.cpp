@@ -14,7 +14,6 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 	sampling_mode = Sampling_mode;
 	block_file_mode = Block_file_mode;
 	seed = Seed;
-	cout << "\r" << "test" << endl;
 	if (seed != 0){
 		siteSelector.sRandSimple(seed);
 	}
@@ -126,7 +125,6 @@ void recomboFromFile::do_recombo_knots(){
 	TOP:
 	while (read_comp_knots(in) && sampling_mode != 0){
 		sites = 0;
-		cout <<"test" << endl;
 		if (!supress_output){
 			cout << '\r' << "test Attempting Recombination: " << ++attempts << " Performed: " << count;
 		}
@@ -137,7 +135,6 @@ void recomboFromFile::do_recombo_knots(){
 		if (length == (min_arc + max_arc)){
 		    length_counter++;
             sites = knot->countRecomboSites(min_arc, max_arc,recombo_orientation);
-			cout <<sites;
         }
 
 		if(sites > 0){
@@ -190,7 +187,6 @@ void recomboFromFile::do_recombo_knots_all(){ //experimental
 TOP:
 	while (read_comp_knots(in) && sampling_mode != 0){
 		sites = 0;
-		cout <<"test" << endl;
 		if (!supress_output){
 			cout << '\r' << "test Attempting Recombination: " << ++attempts << " Performed: " << count;
 		}
@@ -257,7 +253,6 @@ void recomboFromFile::do_recombo_links(){
 	TOP:
 	while (read_comp_links(in) && sampling_mode != 0){
 	    sites = 0;
-		cout <<"test" << endl;
 		if (!supress_output){
 			cout << '\r' << "test Attempting Recombination: " << ++attempts << " Performed: " << count;
 		}

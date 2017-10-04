@@ -4945,7 +4945,7 @@ EdgePtr is_tight_clasp(CubicLatticeKnotPtr clkp, EdgePtr ep)
    if (!anti [ep->prev->prev->dir][ep->next->dir]) return (EdgePtr) NULL;
    ivector loc;
    add_ivector(loc, ep->start, ep->next->increment);
-   if (clkp->lattice [lat(loc)] == EMPTY) return false;
+   if (clkp->lattice [lat(loc)] == EMPTY) return (EdgePtr) NULL;
    ivector incr;
    copy_ivector(incr, increment_NEWSUD [kross [ep->dir][ep->next->dir]]);
 

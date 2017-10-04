@@ -1,6 +1,6 @@
-#include <testFramework.h>
+#include "testFramework.h"
 
-#include <autocorr.h>
+#include "autocorr.h"
 
 #include <cmath>
 

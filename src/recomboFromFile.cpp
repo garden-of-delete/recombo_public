@@ -132,10 +132,10 @@ void recomboFromFile::do_recombo_knots(){
 		//need to create new countRecomboSites function that is ideal for use with mmc
 		int length = knot->getComponent(0).size();
 		lengths.push_back(length);
-		if (length == (min_arc + max_arc)){
+		//if (length == (min_arc + max_arc)){
 		    length_counter++;
             sites = knot->countRecomboSites(min_arc, max_arc,recombo_orientation);
-        }
+        //}
 
 		if(sites > 0){
 			list<clkConformationAsList> components;

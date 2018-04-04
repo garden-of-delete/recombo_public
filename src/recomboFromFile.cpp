@@ -135,7 +135,7 @@ void recomboFromFile::do_recombo_knots(){
 		if (length == (min_arc + max_arc)){
 		    length_counter++;
             sites = knot->countRecomboSites(min_arc, max_arc,recombo_orientation);
-        //}
+        }
 
 		if(sites > 0){
 			list<clkConformationAsList> components;

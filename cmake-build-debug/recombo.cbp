@@ -1,0 +1,902 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="recombo"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/michi/GitHub/recombo/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/michi/GitHub/recombo/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/michi/GitHub/recombo/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="idknot">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/idknot" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 idknot"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="idknot/fast">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/idknot" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 idknot/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="homfly">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/homfly" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 homfly"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="homfly/fast">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/homfly" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 homfly/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mmc">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/mmc" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 mmc"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mmc/fast">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/mmc" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 mmc/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="recomboFromFile">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/recomboFromFile" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 recomboFromFile"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="recomboFromFile/fast">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/recomboFromFile" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 recomboFromFile/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="zAnalyzer">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/zAnalyzer" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 zAnalyzer"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="zAnalyzer/fast">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/zAnalyzer" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 zAnalyzer/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="xinger">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/xinger" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 xinger"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="xinger/fast">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/xinger" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 xinger/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="unitTest">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/unitTest" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 unitTest"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="unitTest/fast">
+				<Option output="/Users/michi/GitHub/recombo/cmake-build-debug/src/bin/unitTest" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="src/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/michi/GitHub/recombo/src"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 unitTest/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/michi/GitHub/recombo/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/michi/GitHub/recombo/config.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/argprocessor.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/argprocessor.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/autocorr.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/autocorr.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/bfacfProbabilities.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/bfacfProbabilities.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/bfacfProbabilitiesFromZ.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/bfacfProbabilitiesFromZ.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/bfacfProbabilitiesFromZFixed.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/bfacfProbabilitiesFromZFixed.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clk.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clk.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clkCigar.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clkCigar.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clkConformationAsList.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clkConformationAsList.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clkConformationBfacf3.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clkConformationBfacf3.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clkConformationSeqconvert.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/clkConformationSeqconvert.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/conformation.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/conformation.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/conformationAsList.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/conformationAsList.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/conformationWlc.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/conformationWlc.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/cross.c">
+			<Option target="homfly"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/cross.h">
+			<Option target="homfly"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/genericConformation.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/homfly1_21.c">
+			<Option target="homfly"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/id.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/id.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/idknot.cpp">
+			<Option target="idknot"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/legacy.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/legacy.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/legacyBfacf.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/legacyBfacf.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/main.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/mmcMain.cpp">
+			<Option target="mmc"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/mmchain.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/mmchain.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/polynomesAZ.c">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/polynomesAZ.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/pseudorandom.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/pseudorandom.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/recomboArgprocessor.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/recomboArgprocessor.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/recomboFromFile.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/recomboFromFile.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/recomboFromFileMain.cpp">
+			<Option target="recomboFromFile"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/regularNgon.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/regularNgon.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/runRecombo.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/runRecombo.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/argprocessorTests.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/argprocessorTests.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/autocorrTests.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/autocorrTests.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/basicTests.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/basicTests.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/clkTests.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/clkTests.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/randomTests.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/randomTests.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/recomboCriteriaTests.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/recomboCriteriaTests.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/sampleUnitTests.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/sampleUnitTests.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/testFramework.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/testFramework.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/unitTestMain.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/wangLandauTests.cpp">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/tests/wangLandauTests.h">
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/threevector.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/xinger/main.cpp">
+			<Option target="xinger"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/zAnalyzer.cpp">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/zAnalyzer.h">
+			<Option target="idknot"/>
+			<Option target="homfly"/>
+			<Option target="mmc"/>
+			<Option target="recomboFromFile"/>
+			<Option target="zAnalyzer"/>
+			<Option target="xinger"/>
+			<Option target="unitTest"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/src/zAnalyzerMain.cpp">
+			<Option target="zAnalyzer"/>
+		</Unit>
+		<Unit filename="/Users/michi/GitHub/recombo/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

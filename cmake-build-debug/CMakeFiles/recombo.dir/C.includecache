@@ -1,0 +1,42 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/michi/GitHub/recombo/src/cross.c
+cross.h
+/Users/michi/GitHub/recombo/src/cross.h
+
+/Users/michi/GitHub/recombo/src/cross.h
+stdlib.h
+-
+stdio.h
+-
+
+/Users/michi/GitHub/recombo/src/homfly1_21.c
+stdlib.h
+-
+stdio.h
+-
+math.h
+-
+string.h
+-
+polynomesAZ.h
+/Users/michi/GitHub/recombo/src/polynomesAZ.h
+cross.h
+/Users/michi/GitHub/recombo/src/cross.h
+
+/Users/michi/GitHub/recombo/src/polynomesAZ.c
+stdlib.h
+-
+stdio.h
+-
+polynomesAZ.h
+/Users/michi/GitHub/recombo/src/polynomesAZ.h
+
+/Users/michi/GitHub/recombo/src/polynomesAZ.h
+

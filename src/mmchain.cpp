@@ -172,11 +172,15 @@ void mmchain::run_mmc(){
 	cout << "Warming up " << m << " chains: (" << w << " steps)" << endl;
 	int i = 0;
 	while (i < w){
-		for (int k = 0; k < m; k++){
-			chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
-			i += swap_interval;
-			swap();
-		}
+		if (m != 1){
+			for (int k = 0; k < m; k++ && m!=1){
+				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
+				i += swap_interval;
+				swap();
+			}
+		}else{
+            i += swap_interval;
+        }
 		/* //disable sampling during warmup
 		if (sample_mode == 'm'){
 			sample();
@@ -202,7 +206,9 @@ void mmchain::run_mmc(){
 				for (int k = 0; k < m; k++){
 					chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
 				}
-				swap();
+				if (m != 1){
+					swap();
+				}
 			}
 			for (int k = 0; k < m; k++){
 				if (n_components == 1)
@@ -241,7 +247,9 @@ void mmchain::run_mmc(){
 			for(int k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
 			}
-			swap();
+            if (m!=1){
+                swap();
+            }
 		}
 		i += sample();
 		sample_attempts++;
@@ -402,7 +410,9 @@ void mmchain::calibrate_chains(){
 			for(int j = 0; j < m; j++){
 				chains[j].member_knot->stepQ(swap_interval, q, chains[j].z);
 			}
-			swap();
+			if (m!=1){
+				swap();
+			}
 		}
 	}  while (!test_intervals()); //Compute and Check confidence intervals, add more chains as needed
 }

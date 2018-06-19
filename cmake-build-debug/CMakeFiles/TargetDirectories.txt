@@ -1,9 +1,0 @@
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/idknot.dir
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/homfly.dir
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/mmc.dir
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/recomboFromFile.dir
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/zAnalyzer.dir
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/xinger.dir
-/Users/michi/GitHub/recombo/cmake-build-debug/CMakeFiles/unitTest.dir

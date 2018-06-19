@@ -16,8 +16,6 @@ set(TEST_SOURCE_FILES
         src/tests/randomTests.h
         src/tests/recomboCriteriaTests.cpp
         src/tests/recomboCriteriaTests.h
-        src/tests/wangLandauTests.cpp
-        src/tests/wangLandauTests.h
         src/tests/sampleUnitTests.cpp
         src/tests/sampleUnitTests.h
         src/tests/testFramework.cpp
@@ -84,7 +82,7 @@ set(XINGER_SOURCE_FILES
         src/xinger/xinger.h)
 
 add_executable(recomboFromFile ${SHARED_SOURCE_FILES} src/recomboFromFileMain.cpp)
-add_executable(xinger ${SHARED_SOURCE_FILES} src/xinger/main.cpp)
+add_executable(xinger ${XINGER_SOURCE_FILES} src/xinger/main.cpp)
 add_executable(zAnalyzer ${SHARED_SOURCE_FILES} src/zAnalyzerMain.cpp)
 add_executable(unitTest ${SHARED_SOURCE_FILES} ${TEST_SOURCE_FILES} src/tests/unitTestMain.cpp)
 add_executable(mmc ${SHARED_SOURCE_FILES} src/mmcMain.cpp)

@@ -14,9 +14,8 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 	sampling_mode = Sampling_mode;
 	block_file_mode = Block_file_mode;
 	seed = Seed;
-    //create a instance for recombo site
-    clkConformationAsList recomboSite;
-	if (seed != 0){
+
+    if (seed != 0){
 		siteSelector.sRandSimple(seed);
 	}
 	else{
@@ -147,7 +146,8 @@ void recomboFromFile::do_recombo_knots(){
             cout << "try to print out the coordinate";
             cout << knot->getChosenSite(choice) << endl;
             //read vertices of recombo sites
-
+            int *alist = knot->getChosenSiteToL(choice);
+            //clkConformationAsList recomboFromFile::recomboSites(alist,4);
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;
@@ -281,13 +281,17 @@ void recomboFromFile::do_recombo_links(){
 			choice = siteSelector.rand_integer(0, sites-1);
             cout << "try to print out the coordinate";
             cout << knot->getChosenSite(choice) << endl;
+            const int *siteList = knot->getChosenSiteToL(choice);
+            clkConformationAsList recomboFromFile::recomboSites(siteList, 4);
+            //recomboSites = clkConformationAsList(siteList,4);
+            //recomboSites->writeAsCube(*sites_file);
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;
 			for (i = components.begin(); i != components.end(); i++)
 			{
 				i->writeAsCube(*out);
-                i->writeAsText(*sites_file);
+                //i->writeAsText(*sites_file);
 			}
 			count++;
 			if (sampling_mode > 0){

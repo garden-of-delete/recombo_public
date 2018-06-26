@@ -190,6 +190,12 @@ public:
    void undoRecombination();
    probs* probMap;
 
+    string getChosenSite(int n);
+    /**
+     *given random choice from all site get the actual site from the list
+     */
+
+
 protected:
 
    // Don't want default or copy constructors called, because they don't do anything now. Todo: make these constructors work

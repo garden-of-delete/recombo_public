@@ -14,7 +14,7 @@ void print_usage(){
 	cout << "[HALTING CRITERIA] -n\tnumber of samples per chain before completion" << endl;
 	cout << "[HALTING CRITERIA] -t\tInteger number of hours to run before completion" << endl;
 	cout << "-c\tnumber of BFACF steps between samples" << endl;
-	cout << "-m\tinitial number of CMC chains" << endl;
+	cout << "-m\tinitial number of CMC chains. If m = 1, then z-max will be the z-value" << endl;
 	cout << "-w\tnumber of BFACF steps to take in each chain to warmup" << endl;
 	cout << "-mode\tsample mode: ['a' Analyze Only], ['s' Sample Only], ['b' Analyze and Sample], ['m' Block-Mean Sampling]" << endl;
 	cout << "[OPTIONAL] -minarc\tsample filtering criteria" << endl;

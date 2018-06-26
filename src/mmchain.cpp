@@ -1,6 +1,5 @@
 #include "mmchain.h"
 
-
 using namespace std;
 
 void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int Q, double sr, int s, int N, int C, long int W, int M, char mode, int Seed,

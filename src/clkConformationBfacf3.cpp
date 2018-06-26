@@ -13,6 +13,8 @@
 #include <list>
 #include <vector>
 #include <utility>
+#include "stdlib.h"
+#include "stdio.h"
 
 using namespace std;
 
@@ -909,6 +911,40 @@ void clkConformationBfacf3::performRecombination(int n)
    clkConformationBfacf3::impl::site site = implementation->sites[n];
    perform_recombination(implementation->clkp, site.first, site.second);
 }
+
+string clkConformationBfacf3::getChosenSite(int n){
+   implementation->lastRecombo = n;
+   clkConformationBfacf3::impl::site site = implementation->sites[n];
+    std::string result = " ";
+    for (int i = 0; i < 3; ++i) {
+        result += std::to_string(site.first->start[i]);
+        if(i != 2)
+            result += ",";
+    }
+    result += " ";
+    for (int i = 0; i < 3; ++i) {
+        result += std::to_string(site.first->next->start[i]);
+        if(i != 2)
+            result += ",";
+    }
+    result += " ";
+    for (int i = 0; i < 3; ++i) {
+        result += std::to_string(site.second->start[i]);
+        if(i != 2)
+            result += ",";
+    }
+    result += " ";
+    for (int i = 0; i < 3; ++i) {
+        result += std::to_string(site.second->next->start[i]);
+        if(i != 2)
+            result += ",";
+    }
+    //result = site.first->start + " " + site.first->next->start + " " + site.second->start + " " + site.second->next->start;
+    return result;
+}
+
+
+
 
 void clkConformationBfacf3::undoRecombination()
 {

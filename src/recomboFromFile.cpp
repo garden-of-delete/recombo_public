@@ -144,10 +144,10 @@ void recomboFromFile::do_recombo_knots(){
 			choice = siteSelector.rand_integer(0, sites); //sites, NOT sites-1
 
             //read vertices of recombo sites
-            std::vector<threevector<int> >alist;
-            alist = knot->getChosenSite(choice);
-            for (int i=0; i++; i<3) {
-                recomboSites.addVertexBack(alist[i]);
+            std::vector<threevector<int> >sitelist;
+            sitelist = knot->getChosenSite(choice);
+            for (int i=0; i++; i<4) {
+                recomboSites.addVertexBack(sitelist[i]);
             }
 
 			knot->performRecombination(choice);

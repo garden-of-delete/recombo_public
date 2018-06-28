@@ -194,10 +194,7 @@ public:
     /**
      *given random choice from all site get the actual site from the list
      */
-    int* getChosenSiteToL(int n);
-    /**
-     * return a integer array with all recombo sites coords
-     */
+
 
 
 

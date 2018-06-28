@@ -947,20 +947,8 @@ std::vector<threevector<int> > clkConformationBfacf3::getChosenSite(int n){
             result += ",";
     }
     //result = site.first->start + " " + site.first->next->start + " " + site.second->start + " " + site.second->next->start;
+    cout << result;
     return recomboSites;
-}
-
-int* clkConformationBfacf3::getChosenSiteToL(int n){
-    int r[12];
-    implementation->lastRecombo = n;
-    clkConformationBfacf3::impl::site site = implementation->sites[n];
-    for (int i = 0; i < 3; ++i) {
-        r[i] = site.first->start[i];
-        r[i+3] = site.first->next->start[i];
-        r[i+6] = site.second->start[i];
-        r[i+9] = site.second->next->start[i];
-    }
-    return r;
 }
 
 

@@ -12,7 +12,7 @@ private:
 	bool supress_output, info_mode;
 	string* infile_name;
 	clkConformationAsList initialComp0, initialComp1;
-	clkConformationAsList *recomboSites;
+	clkConformationAsList recomboSites;
 	clkConformationBfacf3* knot;
 	pseudorandom siteSelector;
 	ifstream* in;

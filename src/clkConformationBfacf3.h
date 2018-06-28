@@ -190,7 +190,7 @@ public:
    void undoRecombination();
    probs* probMap;
 
-    string getChosenSite(int n);
+    std::vector<threevector<int> > getChosenSite(int n);
     /**
      *given random choice from all site get the actual site from the list
      */

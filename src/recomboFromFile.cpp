@@ -142,12 +142,14 @@ void recomboFromFile::do_recombo_knots(){
 			list<clkConformationAsList> components;
             //choice is the chosen site to perform recombo. Want to output this file
 			choice = siteSelector.rand_integer(0, sites); //sites, NOT sites-1
-            //try to print out
-            cout << "try to print out the coordinate";
-            cout << knot->getChosenSite(choice) << endl;
+
             //read vertices of recombo sites
-            int *alist = knot->getChosenSiteToL(choice);
-            //clkConformationAsList recomboFromFile::recomboSites(alist,4);
+            std::vector<threevector<int> >alist;
+            alist = knot->getChosenSite(choice);
+            for (int i=0; i++; i<3) {
+                recomboSites.addVertexBack(alist[i]);
+            }
+
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;
@@ -279,12 +281,6 @@ void recomboFromFile::do_recombo_links(){
 		if(sites > 0){
 			list<clkConformationAsList> components;
 			choice = siteSelector.rand_integer(0, sites-1);
-            cout << "try to print out the coordinate";
-            cout << knot->getChosenSite(choice) << endl;
-            const int *siteList = knot->getChosenSiteToL(choice);
-            clkConformationAsList recomboFromFile::recomboSites(siteList, 4);
-            //recomboSites = clkConformationAsList(siteList,4);
-            //recomboSites->writeAsCube(*sites_file);
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;

@@ -912,10 +912,17 @@ void clkConformationBfacf3::performRecombination(int n)
    perform_recombination(implementation->clkp, site.first, site.second);
 }
 
-string clkConformationBfacf3::getChosenSite(int n){
+std::vector<threevector<int> > clkConformationBfacf3::getChosenSite(int n){
    implementation->lastRecombo = n;
    clkConformationBfacf3::impl::site site = implementation->sites[n];
-    std::string result = " ";
+   std::vector<threevector<int> > recomboSites;
+
+
+   recomboSites.push_back(threevector<int>(site.first->start));
+   recomboSites.push_back(threevector<int>(site.first->next->start));
+   recomboSites.push_back(threevector<int>(site.second->start));
+   recomboSites.push_back(threevector<int>(site.second->next->start));
+   std::string result = " ";
     for (int i = 0; i < 3; ++i) {
         result += std::to_string(site.first->start[i]);
         if(i != 2)
@@ -940,7 +947,7 @@ string clkConformationBfacf3::getChosenSite(int n){
             result += ",";
     }
     //result = site.first->start + " " + site.first->next->start + " " + site.second->start + " " + site.second->next->start;
-    return result;
+    return recomboSites;
 }
 
 int* clkConformationBfacf3::getChosenSiteToL(int n){

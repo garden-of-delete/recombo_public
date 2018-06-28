@@ -947,7 +947,7 @@ std::vector<threevector<int> > clkConformationBfacf3::getChosenSite(int n){
             result += ",";
     }
     //result = site.first->start + " " + site.first->next->start + " " + site.second->start + " " + site.second->next->start;
-    cout << result;
+    cout << result <<endl;
     return recomboSites;
 }
 

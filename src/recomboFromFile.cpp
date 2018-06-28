@@ -46,7 +46,7 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 	}
 	//open n_sites file (EXPERIMENTAL)
 	stringstream tt;
-	tt << Outfile << "_sites.txt";
+	tt << Outfile << "_sites.b";
 	sites_file = new ofstream(tt.str().c_str(), ios::out);
 
 	n_components = N_components;
@@ -281,13 +281,20 @@ void recomboFromFile::do_recombo_links(){
 		if(sites > 0){
 			list<clkConformationAsList> components;
 			choice = siteSelector.rand_integer(0, sites-1);
+            //read vertices of recombo sites
+            std::vector<threevector<int> >sitelist;
+            sitelist = knot->getChosenSite(choice);
+            for (int j = 0; j < 4; ++j) {
+                recomboSites.addVertexBack(sitelist[j]);
+            }
+            recomboSites.writeAsCube(*sites_file);
+            recomboSites.clear();
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;
 			for (i = components.begin(); i != components.end(); i++)
 			{
 				i->writeAsCube(*out);
-                //i->writeAsText(*sites_file);
 			}
 			count++;
 			if (sampling_mode > 0){

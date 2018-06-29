@@ -732,9 +732,9 @@ int mmchain::block_mean_sample(){
 					//sites = chains[i].member_knot->countRecomboSites(min_arc, max_arc);
 					recombination = count_recombo_sites(chains[i].member_knot);
 				}
-			if (target_recombo_length == 0){
-				recombination = count_recombo_sites(chains[i].member_knot);
 			}
+			else {
+				recombination = count_recombo_sites(chains[i].member_knot);
 			}
 			//record clk if recombination criteria are met
 			if (recombination){

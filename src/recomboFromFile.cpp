@@ -149,7 +149,8 @@ void recomboFromFile::do_recombo_knots(){
             for (int i=0; i++; i<4) {
                 recomboSites.addVertexBack(sitelist[i]);
             }
-
+            recomboSites.writeAsCube(*sites_file);
+            recomboSites.clear();
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;

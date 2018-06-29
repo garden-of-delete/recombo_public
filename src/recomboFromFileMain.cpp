@@ -10,7 +10,7 @@ void print_usage(){
 	cout << "recomboFromFile operators:" << endl;
 	cout << "-min\tminimum arclength" << endl;
 	cout << "-max\tmaximum arclength" << endl;
-	cout << "-ncomp\tnumber of components" << endl;
+	cout << "-ncomp\tnumber of components in substrate topology" << endl;
 	cout << "-seed\tset seed for reproducable recombination" << endl;
 	cout << "--m\tinput file format. use --m b for binary (default). use --m t for plain text." << endl;
 	cout << "--bfm\tblock file mode. use --bfm 0 for single file mode (default)." << endl 

@@ -452,8 +452,12 @@ bool mmchain::do_recombo_knots(int current_chain){
 	//perform recombination
 		//check length and count recombo sites
 	int length = chains[current_chain].member_knot->getComponent(0).size();
-	if (length == (target_recombo_length)){
-		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc);
+	if (target_recombo_length !=0) {
+		if (length == (target_recombo_length)){
+			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
+		}
+	} else {
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);

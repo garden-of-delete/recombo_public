@@ -135,7 +135,7 @@ void recomboFromFile::do_recombo_knots(){
 		lengths.push_back(length);
 		length_counter++;
 		
-            	sites = knot->countRecomboSites(min_arc, max_arc,recombo_orientation);
+        sites = knot->countRecomboSites(min_arc, max_arc,recombo_orientation);
 		if(sites > 0){
 			list<clkConformationAsList> components;
             //choice is the chosen site to perform recombo. Want to output this file

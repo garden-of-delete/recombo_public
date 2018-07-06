@@ -130,9 +130,10 @@ private:
 	char recombo_orientation;
 	double z_m, z_1, target_swap_ratio;
 	clkConformationAsList initialComp0, initialComp1;
+    clkConformationAsList recomboSites;
 	ofstream logfile;
 	//when in filtering mode, out2 is for the after recombo conformations
-	ofstream out, out2;
+	ofstream out, out2, out3;
 	//when in block mean sampling mode, info_file is used to store state information when sampling
 	ofstream info_file;
 	//conformationAsList toPrint;

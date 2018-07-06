@@ -434,6 +434,7 @@ int mmchain::sample(){
 			else{
 				//if not filtering samples, save conformation
 				write_to_block_file(chains[i].member_knot);
+				samples++;
 			}
 		}
 		return samples;
@@ -448,7 +449,6 @@ bool mmchain::do_recombo_knots(int current_chain){
 	//setup recombo environment
 	int sites = 0, choice = 0;
 	pseudorandom siteSelector;
-
 	//perform recombination
 		//check length and count recombo sites
 	int length = chains[current_chain].member_knot->getComponent(0).size();
@@ -476,9 +476,13 @@ bool mmchain::do_recombo_links(int current_chain){
 	//perform recombination
 	//check length and count recombo sites
 	//cout << chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() << ' ';
-	if (chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size() == target_recombo_length 
-		&& chains[current_chain].member_knot->getComponent(0).size() == chains[current_chain].member_knot->getComponent(1).size()){
-		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc);
+	int length = chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size();
+	if (target_recombo_length !=0) {
+		if (length == (target_recombo_length)){
+			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
+		}
+	} else {
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);
@@ -590,18 +594,46 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice){
 	if ((block_file_index < block_file_size) && (block_file_index != 0)){
 		if (n_components == 1){
+
+            //write sites file
+            std::vector<threevector<int> >sitelist;
+            sitelist = clk->getChosenSite(site_choice);
+            for (int j = 0; j < 4; ++j) {
+                recomboSites.addVertexBack(sitelist[j]);
+            }
+            recomboSites.writeAsCube(out3);
+            recomboSites.clear();
+
+            list<clkConformationAsList> components;
 			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
 			toPrint.writeAsCube(out);
-			//perform recombination
-			clk->performRecombination(site_choice);
-			//write clk_after to second output file
-			clkConformationAsList toPrint2(clk->getComponent(0));
-			toPrint.writeAsCube(out2);
-			//undo recombination
-			clk->undoRecombination();
+            //perform recombination
+            clk->performRecombination(site_choice);
+            //write clk_after to second output file
+            //clkConformationAsList toPrint2(clk->getComponent(0));
+            clk->getComponents(components);
+            list<clkConformationAsList>::const_iterator i;
+            for (i = components.begin(); i != components.end(); i++)
+            {
+                i->writeAsCube(out2);
+            }
+            //toPrint.writeAsCube(out2);
+            //undo recombination
+            clk->undoRecombination();
 		}
 		else if (n_components == 2){
+
+            //write sites file
+            std::vector<threevector<int> >sitelist;
+            sitelist = clk->getChosenSite(site_choice);
+            for (int j = 0; j < 4; ++j) {
+                recomboSites.addVertexBack(sitelist[j]);
+            }
+            recomboSites.writeAsCube(out3);
+            recomboSites.clear();
+
+            list<clkConformationAsList> components;
 			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
@@ -610,10 +642,16 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			//perform recombination
 			clk->performRecombination(site_choice);
 			//write clk_after to second output file
-			clkConformationAsList toPrint3(clk->getComponent(0));
-			clkConformationAsList toPrint4(clk->getComponent(1));
-			toPrint3.writeAsCube(out2);
-			toPrint4.writeAsCube(out2);
+            clk->getComponents(components);
+            list<clkConformationAsList>::const_iterator i;
+            for (i = components.begin(); i != components.end(); i++)
+            {
+                i->writeAsCube(out2);
+            }
+			//clkConformationAsList toPrint3(clk->getComponent(0));
+			//clkConformationAsList toPrint4(clk->getComponent(1));
+			//toPrint3.writeAsCube(out2);
+			//toPrint4.writeAsCube(out2);
 			//undo recombination
 			clk->undoRecombination();
 		}
@@ -638,11 +676,18 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		out.open(ss.str().c_str(), ios::out | ios::binary);
 
 		//if in filter mode, open second output file
-		if (sample_mode == 'f'){ //this conditional block is probably not neccisary 
+		if (sample_mode == 'f'){ //this conditional block is probably not neccisary
+            //recombo file
 			stringstream tt;
 			tt << outfile_name << "_after%" << current_block_file_number << ".b";
 			out2.open(tt.str().c_str(), ios::out | ios::binary);
 
+            //recomboSites file
+            stringstream rr;
+            rr << outfile_name << "_sites%" << current_block_file_number << ".b";
+            out3.open(rr.str().c_str(), ios::out | ios::binary);
+
+            //info file
 			stringstream ss;
 			ss << outfile_name << '%' << current_block_file_number << ".info";
 			//open new file
@@ -650,18 +695,46 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		}
 
 		if (n_components == 1){
+
+            //write sites file
+            std::vector<threevector<int> >sitelist;
+            sitelist = clk->getChosenSite(site_choice);
+            for (int j = 0; j < 4; ++j) {
+                recomboSites.addVertexBack(sitelist[j]);
+            }
+            recomboSites.writeAsCube(out3);
+            recomboSites.clear();
+
+			list<clkConformationAsList> components;
 			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
 			toPrint.writeAsCube(out);
 			//perform recombination
 			clk->performRecombination(site_choice);
 			//write clk_after to second output file
-			clkConformationAsList toPrint2(clk->getComponent(0));
-			toPrint.writeAsCube(out2);
+			//clkConformationAsList toPrint2(clk->getComponent(0));
+			clk->getComponents(components);
+			list<clkConformationAsList>::const_iterator i;
+			for (i = components.begin(); i != components.end(); i++)
+			{
+				i->writeAsCube(out2);
+			}
+			//toPrint.writeAsCube(out2);
 			//undo recombination
 			clk->undoRecombination();
 		}
 		else if (n_components == 2){
+
+            //write sites file
+            std::vector<threevector<int> >sitelist;
+            sitelist = clk->getChosenSite(site_choice);
+            for (int j = 0; j < 4; ++j) {
+                recomboSites.addVertexBack(sitelist[j]);
+            }
+            recomboSites.writeAsCube(out3);
+            recomboSites.clear();
+
+            list<clkConformationAsList> components;
 			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
 			clkConformationAsList toPrint2(clk->getComponent(1));
@@ -670,12 +743,18 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			//perform recombination
 			clk->performRecombination(site_choice);
 			//write clk_after to second output file
-			clkConformationAsList toPrint3(clk->getComponent(0));
-			clkConformationAsList toPrint4(clk->getComponent(1));
-			toPrint3.writeAsCube(out2);
-			toPrint4.writeAsCube(out2);
-			//undo recombination
-			clk->undoRecombination();
+            clk->getComponents(components);
+            list<clkConformationAsList>::const_iterator i;
+            for (i = components.begin(); i != components.end(); i++)
+            {
+                i->writeAsCube(out2);
+            }
+            //clkConformationAsList toPrint3(clk->getComponent(0));
+            //clkConformationAsList toPrint4(clk->getComponent(1));
+            //toPrint3.writeAsCube(out2);
+            //toPrint4.writeAsCube(out2);
+            //undo recombination
+            clk->undoRecombination();
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;

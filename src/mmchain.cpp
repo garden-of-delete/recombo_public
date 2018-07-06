@@ -448,7 +448,7 @@ int mmchain::sample(){
 bool mmchain::do_recombo_knots(int current_chain){
 	//setup recombo environment
 	int sites = 0, choice = 0;
-	pseudorandom siteSelector;
+	pseudorandom siteSelector(seed);
 	//perform recombination
 		//check length and count recombo sites
 	int length = chains[current_chain].member_knot->getComponent(0).size();
@@ -471,7 +471,7 @@ bool mmchain::do_recombo_knots(int current_chain){
 bool mmchain::do_recombo_links(int current_chain){ 
 	//setup recombo environment
 	int sites = 0, choice = 0;
-	pseudorandom siteSelector;
+	pseudorandom siteSelector(seed);
 
 	//perform recombination
 	//check length and count recombo sites

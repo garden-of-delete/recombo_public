@@ -144,7 +144,10 @@ void recomboFromFile::do_recombo_knots(){
             //read vertices of recombo sites
             std::vector<threevector<int> >sitelist;
             sitelist = knot->getChosenSite(choice);
-            for (int j = 0; j < 4; ++j) {
+            for (int j = 0; j < 2; ++j) {
+                recomboSites.addVertexBack(sitelist[j]);
+            }
+            for (int j = 3; j > 1; --j) {
                 recomboSites.addVertexBack(sitelist[j]);
             }
             recomboSites.writeAsCube(*sites_file);

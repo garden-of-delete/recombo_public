@@ -212,12 +212,12 @@ private:
 
 	/**
 	* called by run_mmc(). It will run a simulated sampling session for w steps after the warmup and evaluate the resulting swap ratios for each interval.
-	* the process will increase m if neccisary, adding new chains where needed, and repeat this process until a cycle completes with no new chains added. 
+	* the process will increase m if neccesary, adding new chains where needed, and repeat this process until a cycle completes with no new chains added.
 	*/
 	void calibrate_chains(); 
 
 	/*
-	* These three functions are part of Orlandini's described implimentation. They are tested and working already, 
+	* These three functions are part of Orlandini's described implementation. They are tested and working already,
 	* and are preserved here in case they are needed in the future. 
 	*/
 	/*
@@ -235,6 +235,13 @@ private:
 	* finds the size of the conformation stored in each chain. prints the sizes to cout. useful for debugging
 	*/
 	void update_size();
+
+	/**
+	 * write the recombination site to the sites file
+	 * @param clk
+	 * @param site_choice
+	 */
+	void writeSitesFile(clkConformationBfacf3* clk, int site_choice);
 	
 	/**
 	* writes conformations to block files of size block_file_size binary clks

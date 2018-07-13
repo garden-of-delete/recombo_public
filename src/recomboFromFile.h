@@ -1,8 +1,12 @@
 #pragma once
 
-#include "mmchain.h"
+//#include "mmchain.h"
 #include <algorithm>
 #include <string>
+
+#include "clkConformationAsList.h"
+#include "clkConformationBfacf3.h"
+#include "pseudorandom.h"
 
 class recomboFromFile{
 private:
@@ -17,6 +21,7 @@ private:
 	pseudorandom siteSelector;
 	ifstream* in;
 	ofstream* out, *info_file, *sites_file;
+	void writeSitesFile(clkConformationBfacf3* clk, int site_choice);
 	void do_recombo_knots();
 	void do_recombo_knots_all();
 	void do_recombo_links();

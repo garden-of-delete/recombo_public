@@ -1,6 +1,8 @@
 #include "recomboFromFile.h"
 #include <iostream>
-#include <string>
+#include <fstream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -118,6 +120,26 @@ void recomboFromFile::do_recombo(){
 	}
 }
 
+void recomboFromFile::writeSitesFile(clkConformationBfacf3* clk, int site_choice) {
+	std::vector<threevector<int> >sitelist;
+	sitelist = knot->getChosenSite(site_choice);
+
+	if (recombo_orientation == 'p') {
+		for (int j = 0; j < 2; ++j) {
+			recomboSites.addVertexBack(sitelist[j]);
+		}
+		for (int j = 3; j > 1; --j) {
+			recomboSites.addVertexBack(sitelist[j]);
+		}
+	} else {
+		for (int j = 0; j < 4; ++j) {
+			recomboSites.addVertexBack(sitelist[j]);
+		}
+	}
+	recomboSites.writeAsCube(*sites_file);
+	recomboSites.clear();
+}
+
 void recomboFromFile::do_recombo_knots(){
 	int attempts = 0, count = 0, sites = 0, choice = 0, length_counter = 0;
 	long int total_attempts = 0, total_count = 0;
@@ -141,17 +163,9 @@ void recomboFromFile::do_recombo_knots(){
             //choice is the chosen site to perform recombo. Want to output this file
 			choice = siteSelector.rand_integer(0, sites); //sites, NOT sites-1
 
-            //read vertices of recombo sites
-            std::vector<threevector<int> >sitelist;
-            sitelist = knot->getChosenSite(choice);
-            for (int j = 0; j < 2; ++j) {
-                recomboSites.addVertexBack(sitelist[j]);
-            }
-            for (int j = 3; j > 1; --j) {
-                recomboSites.addVertexBack(sitelist[j]);
-            }
-            recomboSites.writeAsCube(*sites_file);
-            recomboSites.clear();
+			//write sites file
+            writeSitesFile(knot, choice);
+
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;
@@ -283,14 +297,10 @@ void recomboFromFile::do_recombo_links(){
 		if(sites > 0){
 			list<clkConformationAsList> components;
 			choice = siteSelector.rand_integer(0, sites-1);
-            //read vertices of recombo sites
-            std::vector<threevector<int> >sitelist;
-            sitelist = knot->getChosenSite(choice);
-            for (int j = 0; j < 4; ++j) {
-                recomboSites.addVertexBack(sitelist[j]);
-            }
-            recomboSites.writeAsCube(*sites_file);
-            recomboSites.clear();
+
+			//write sites file
+			writeSitesFile(knot, choice);
+
 			knot->performRecombination(choice);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator i;

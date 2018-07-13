@@ -909,7 +909,17 @@ void clkConformationBfacf3::performRecombination(int n)
 {
    implementation->lastRecombo = n;
    clkConformationBfacf3::impl::site site = implementation->sites[n];
-   perform_recombination(implementation->clkp, site.first, site.second);
+   //checks if the site contains parallel edges, need update ep2 after return from perform_recombination() to
+   // make ep1 and ep2 parallel in the site
+   // for the later use in undo_recombination()
+   if (site.first->dir == site.second->dir)
+   {
+       EdgePtr newep2 = site.first->next;
+       perform_recombination(implementation->clkp, site.first, site.second);
+       implementation->sites[n].second = newep2;
+   }
+   else
+       perform_recombination(implementation->clkp, site.first, site.second);
 }
 
 std::vector<threevector<int> > clkConformationBfacf3::getChosenSite(int n){

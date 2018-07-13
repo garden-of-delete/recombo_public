@@ -229,7 +229,6 @@ void mmchain::run_mmc(){
 	for (int i = 0; i < chains.size(); i++){
 		chains[i].data.clear();
 	}
-	
 	//main loop
 	i = 0;
 
@@ -238,10 +237,10 @@ void mmchain::run_mmc(){
 	while(i < n || n == 0){
 		//check the time based halt-condition
 		std::time(&current_time);
-		if (((current_time - start_time)/3600 >= time_limit) && (time_limit > 0)){
-			cout << "Time-limit exceeded, Terminating program.";
-			return;
-		}
+		if (((current_time - start_time)/3600 >= time_limit) && (time_limit > 0)) {
+            cout << "Time-limit exceeded, Terminating program.";
+            return;
+        }
 		for(int j = 0; j < c/swap_interval; j++){
 			for(int k = 0; k < m; k++){
 				chains[k].member_knot->stepQ(swap_interval, q, chains[k].z);
@@ -250,6 +249,7 @@ void mmchain::run_mmc(){
                 swap();
             }
 		}
+
 		i += sample();
 		sample_attempts++;
 		//if not filtering samples by recombination criteria
@@ -530,6 +530,27 @@ void mmchain::update_size(){
 		cout << endl;
 }*/
 
+void mmchain::writeSitesFile(clkConformationBfacf3* clk, int site_choice){
+	std::vector<threevector<int> >sitelist;
+	sitelist = clk->getChosenSite(site_choice);
+
+	//reverse the order of 3rd and 4th coordinates so it pass bad_increment test under 'p'
+	if (recombo_orientation == 'p' && n_components == 1){
+		recomboSites.addVertexBack(sitelist[0]); //newly added Diwen 07/11/18
+		recomboSites.addVertexBack(sitelist[1]);
+		recomboSites.addVertexBack(sitelist[3]);
+		recomboSites.addVertexBack(sitelist[2]);
+	}
+	else {
+		for (int j = 0; j < 4; ++j) {
+			recomboSites.addVertexBack(sitelist[j]);
+		}
+	}
+
+	recomboSites.writeAsCube(out3);
+	recomboSites.clear();
+}
+
 void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	if ((block_file_index < block_file_size) && (block_file_index != 0)){
 		//write conformation to file
@@ -553,7 +574,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 	{
 		//close current file if open
 		out.close();
-		//incriment file name
+		//increment file name
 		current_block_file_number++;
 		//reset block file index
 		block_file_index = 0;
@@ -596,13 +617,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		if (n_components == 1){
 
             //write sites file
-            std::vector<threevector<int> >sitelist;
-            sitelist = clk->getChosenSite(site_choice);
-            for (int j = 0; j < 4; ++j) {
-                recomboSites.addVertexBack(sitelist[j]);
-            }
-            recomboSites.writeAsCube(out3);
-            recomboSites.clear();
+			writeSitesFile(clk, site_choice);
 
             list<clkConformationAsList> components;
 			//write before recombination conformation to file
@@ -625,13 +640,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		else if (n_components == 2){
 
             //write sites file
-            std::vector<threevector<int> >sitelist;
-            sitelist = clk->getChosenSite(site_choice);
-            for (int j = 0; j < 4; ++j) {
-                recomboSites.addVertexBack(sitelist[j]);
-            }
-            recomboSites.writeAsCube(out3);
-            recomboSites.clear();
+			writeSitesFile(clk, site_choice);
 
             list<clkConformationAsList> components;
 			//write before recombination conformation to file
@@ -666,7 +675,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		//close current file if open
 		out.close();
 		out2.close();
-		//incriment file name
+		//increment file name
 		current_block_file_number++;
 		//reset block file index
 		block_file_index = 0;
@@ -676,7 +685,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		out.open(ss.str().c_str(), ios::out | ios::binary);
 
 		//if in filter mode, open second output file
-		if (sample_mode == 'f'){ //this conditional block is probably not neccisary
+		if (sample_mode == 'f'){ //this conditional block is probably not necessary
             //recombo file
 			stringstream tt;
 			tt << outfile_name << "_after%" << current_block_file_number << ".b";
@@ -694,23 +703,19 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			info_file.open(ss.str().c_str(), ios::out);
 		}
 
-		if (n_components == 1){
+		if (n_components == 1) {
 
-            //write sites file
-            std::vector<threevector<int> >sitelist;
-            sitelist = clk->getChosenSite(site_choice);
-            for (int j = 0; j < 4; ++j) {
-                recomboSites.addVertexBack(sitelist[j]);
-            }
-            recomboSites.writeAsCube(out3);
-            recomboSites.clear();
+			//write sites file
+			writeSitesFile(clk, site_choice);
 
 			list<clkConformationAsList> components;
 			//write before recombination conformation to file
 			clkConformationAsList toPrint(clk->getComponent(0));
+
 			toPrint.writeAsCube(out);
 			//perform recombination
 			clk->performRecombination(site_choice);
+
 			//write clk_after to second output file
 			//clkConformationAsList toPrint2(clk->getComponent(0));
 			clk->getComponents(components);
@@ -726,13 +731,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 		else if (n_components == 2){
 
             //write sites file
-            std::vector<threevector<int> >sitelist;
-            sitelist = clk->getChosenSite(site_choice);
-            for (int j = 0; j < 4; ++j) {
-                recomboSites.addVertexBack(sitelist[j]);
-            }
-            recomboSites.writeAsCube(out3);
-            recomboSites.clear();
+			writeSitesFile(clk, site_choice);
 
             list<clkConformationAsList> components;
 			//write before recombination conformation to file

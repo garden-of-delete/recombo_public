@@ -48,7 +48,7 @@ typedef struct _comp {
   int flags;             // properties of this component
   int nedges;            // number of edges in knot component
   int minedges;          // minimum number of edges permitted in this component
-  int maxedges;          // maximum number of edges permitted in this component
+  int maxedges;          // maximum number of edges peymitted in this component
   void *clkp;            // which clkp this component is in
   EdgePtr first_edge;    // pointer to first edge in knot component
   EdgePtr last_edge;     // pointer to last edge in knot component

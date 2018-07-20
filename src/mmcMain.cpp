@@ -24,6 +24,9 @@ void print_usage(){
 	cout << "-bfs\tnumber of conformations to save per binary block file" << endl;
 	cout << "+s\tsupress status output. For use with shell scripts." << endl;
 	cout << "[OPTIONAL] -orientation: ['p' parallel],['a' anti-parallel],['u' p or a]" << endl;
+	cout << "---------------------------------------------------------------------------------------------------------------" << endl;
+	cout << "When selecting values for minarc and maxarc, notice that if the range is too small, " << endl;
+	cout << "it would take long time to run, because the samples that satisfy that minarc and maxarc are rare."<< endl;
 }
 
 int main(int argc, char* argv[]){

@@ -603,23 +603,10 @@ class clkConformationBfacf3::impl
       //      this->clkp;
       sites.clear();
       int n = clkp->fcomp->nedges;
-
-      // Sanity check.
-      if (maxarclength < minarclength)
-      {
-         cerr << "It does not make sense that maximum arc length should be less than minimum." << endl;
-         return;
-      }
-      // There must be at least three edges between edges of recombo site
-      if (minarclength < 3)
-      {
-         cerr << "No possible recombo sites for minimum arc less than 3." << endl;
-         return;
-      }
       // We must have 2 * minarclength <= n-2 <= 2 * maxarclength
       if (2 * minarclength > n - 2 || 2 * maxarclength < n - 2)
       {
-         //      printf("Length %d is not enough for minimum arclength %d and max %d.\n", n, minarclength, maxarclength);
+         //printf("Length %d is not enough for minimum arclength %d and max %d.\n", n, minarclength, maxarclength);
          return;
       }
 
@@ -655,27 +642,14 @@ class clkConformationBfacf3::impl
    void searchForRecomboSitesOneComp(//CubicLatticeKnotPtr clkp, 
            int minarclength, int maxarclength, char orientation) //, recomboSites& sites)
    {
-      //This version for use with orientation parameter	
-      
+      //This version for use with orientation parameter
       sites.clear();
       int n = clkp->fcomp->nedges;
 
-      // Sanity check.
-      if (maxarclength < minarclength)
-      {
-         cerr << "It does not make sense that maximum arc length should be less than minimum." << endl;
-         return;
-      }
-      // There must be at least three edges between edges of recombo site
-      if (minarclength < 3)
-      {
-         cerr << "No possible recombo sites for minimum arc less than 3." << endl;
-         return;
-      }
       // We must have 2 * minarclength <= n-2 <= 2 * maxarclength
       if (2 * minarclength > n - 2 || 2 * maxarclength < n - 2)
       {
-         //      printf("Length %d is not enough for minimum arclength %d and max %d.\n", n, minarclength, maxarclength);
+         //printf("Length %d is not enough for minimum arclength %d and max %d.\n", n, minarclength, maxarclength);
          return;
       }
 
@@ -692,7 +666,7 @@ class clkConformationBfacf3::impl
             if (MIN(arc1, arc2) >= minarclength && MAX(arc1, arc2) <= maxarclength)
             {
                // candidate edges must have opposite orientation
-               
+
 	       switch (orientation)
 	       {
 	          case 'a': {
@@ -865,6 +839,18 @@ void clkConformationBfacf3::stepQ(long int c, int q, double z)
 
 int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength, char orientation)
 {
+    //Sanity check
+    if (maxarclength < minarclength)
+    {
+        cerr << "It does not make sense that maximum arc length should be less than minimum." << endl;
+        exit(104);
+    }
+    // There must be at least three edges between edges of recombo site
+    if (minarclength < 3)
+    {
+        cerr << "No possible recombo sites for minimum arc less than 3." << endl;
+        exit(104);
+    }
    //This version for use with orientation parameter
    if (size() == 1)
    {
@@ -887,6 +873,17 @@ int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength,
 
 int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength)
 {
+    if (maxarclength < minarclength)
+    {
+        cerr << "It does not make sense that maximum arc length should be less than minimum." << endl;
+        exit(104);
+    }
+    // There must be at least three edges between edges of recombo site
+    if (minarclength < 3)
+    {
+        cerr << "No possible recombo sites for minimum arc less than 3." << endl;
+        exit(104);
+    }
    if (size() == 1)
    {
       implementation->searchForRecomboSitesOneComp(minarclength, maxarclength);

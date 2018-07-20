@@ -102,7 +102,7 @@ public:
    virtual void writeAsText(std::ostream& os) const;
 
    /**
-    * Gets conformation as a string in same formate as that output by
+    * Gets conformation as a string in same format as that output by
     * writeAsText(std::ostream& os) const.
     * @return a string containing coordinates separated by single spaces.
     */

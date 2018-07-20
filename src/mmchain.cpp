@@ -39,11 +39,11 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 	supress_output = Supress_output;
 	sample_attempts = 0;
-	if (mode == 'm' or mode == 'f'){
+	/*if (mode == 'm' or mode == 'f'){      //deleted on Jul 20, 18
 		stringstream ss;
 		ss << outfile_name << "%0.info";
 		info_file.open(ss.str().c_str(), ios::out);
-	}
+	}*/
 }
 
 void mmchain::create_config_file(){
@@ -439,13 +439,13 @@ int mmchain::sample(){
 		}
 		return samples;
 	}
-	else if (sample_mode == 'm' or sample_mode == 'f'){ //block mean sampling mode
+	else if (sample_mode == 'm' or sample_mode == 'f'){
 		return block_mean_sample();
 	}
 }
 
 
-bool mmchain::do_recombo_knots(int current_chain){
+int mmchain::do_recombo_knots(int current_chain){
 	//setup recombo environment
 	int sites = 0, choice = 0;
 	pseudorandom siteSelector(seed);
@@ -456,19 +456,20 @@ bool mmchain::do_recombo_knots(int current_chain){
 		if (length == (target_recombo_length)){
 			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
 		}
-	} else {
+	}
+	else {
 		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);
 			//perform recombination and write both conformations to respective block files
 		write_recombination_to_block_file(chains[current_chain].member_knot, choice);
-		return true;
+		return sites;
 	}
-	return false;
+	return 0;
 }
 
-bool mmchain::do_recombo_links(int current_chain){ 
+int mmchain::do_recombo_links(int current_chain){
 	//setup recombo environment
 	int sites = 0, choice = 0;
 	pseudorandom siteSelector(seed);
@@ -481,15 +482,16 @@ bool mmchain::do_recombo_links(int current_chain){
 		if (length == (target_recombo_length)){
 			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
 		}
-	} else {
+	}
+	else {
 		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);
 		write_recombination_to_block_file(chains[current_chain].member_knot, choice);
-		return true;
+		return sites;
 	}
-	return false;
+	return 0;
 }
 
 void mmchain::display_statistics(){
@@ -570,7 +572,7 @@ void mmchain::write_to_block_file(clkConformationBfacf3* clk){
 		}
 		block_file_index++;
 	}
-	else 
+	else
 	{
 		//close current file if open
 		out.close();
@@ -692,11 +694,13 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			out2.open(tt.str().c_str(), ios::out | ios::binary);
 
             //recomboSites file
+            out3.close(); //new added on Jul 20, 18
             stringstream rr;
             rr << outfile_name << "_sites%" << current_block_file_number << ".b";
             out3.open(rr.str().c_str(), ios::out | ios::binary);
 
             //info file
+            info_file.close();// new added on Jul 20, 18
 			stringstream ss;
 			ss << outfile_name << '%' << current_block_file_number << ".info";
 			//open new file
@@ -792,12 +796,15 @@ int mmchain::block_mean_sample(){
 
 		if (sample_mode=='f'){
 			if (n_components == 1){
+				length = chains[i].member_knot->getComponent(0).size(); //new added Jul 20, 18
 				recombination=do_recombo_knots(i);
 			}	
 			else if (n_components == 2){
+				length = chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size(); //new added Jul 20,18
 				recombination=do_recombo_links(i);
 			}
 			if (recombination){
+				//write_to_block_file(chains[i].member_knot); //new
 				samples++;
 			}
 		}

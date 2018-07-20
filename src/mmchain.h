@@ -260,8 +260,8 @@ private:
 	void write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice);
 
 	
-	bool do_recombo_knots(int current_chain);
-	bool do_recombo_links(int current_chain);
+	int do_recombo_knots(int current_chain);
+	int do_recombo_links(int current_chain);
 
 	//deprecated
 	/*void write_reci_files();*/

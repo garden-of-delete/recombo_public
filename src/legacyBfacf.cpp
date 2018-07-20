@@ -4506,11 +4506,10 @@ int clk_count_edges(EdgePtr ep)
    return kount;
 }
 
-int clk_validate(CubicLatticeKnotPtr clkp)
-{
-   for (int i = 0; i < clkp->nedges_total; i++)
-      if (clkp->edgepool [i]->locpool != i)
-         return 1;
+int clk_validate(CubicLatticeKnotPtr clkp) {
+    for (int i = 0; i < clkp->nedges_total; i++)
+        if (clkp->edgepool[i]->locpool != i)
+            return 1;
 
    int kount = 0;
    ComponentCLKPtr comp = clkp->fcomp;
@@ -6360,69 +6359,65 @@ void clk_fix_incr(EdgePtr ep)
       pexit("invalid increment detected");
 }
 
-bool perform_recombination_inverted(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgePtr ep2)
-{
-   if (ep1->comp != ep2->comp) return false;
-   ivector test;
-   sub_ivector(test, ep1->start, ep2->start);
+bool perform_recombination_inverted(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgePtr ep2) {
+    if (ep1->comp != ep2->comp) return false;
+    ivector test;
+    sub_ivector(test, ep1->start, ep2->start);
 
-   // the following section can be removed once we use pairs
-   if (!clk_check_increment(test))
-      pexit("impossible situation perform_recombination_inverted () A");
-   if (ep1->next == ep2 || ep1->prev == ep2)
-      pexit("impossible situation perform_recombination_inverted () B");
+    // the following section can be removed once we use pairs
+    if (!clk_check_increment(test))
+        pexit("impossible situation perform_recombination_inverted () A");
+    if (ep1->next == ep2 || ep1->prev == ep2)
+        pexit("impossible situation perform_recombination_inverted () B");
+
+    EdgePtr ep1n = ep1->next;
+    EdgePtr ep2n = ep2->next;
+    EdgePtr ep1nn = ep1n->next;
+    EdgePtr ep2p = ep2->prev;
+
+    EdgePtr epp = ep1n;
+    EdgePtr ep = ep1n->next;
+
+    int kount = 0;
+
+    while (ep != ep2) {
+        EdgePtr epn = ep->next;
+        ep->next = epp;
+        ep->prev = epn;
+        epp = ep;
+        ep = epn;
+        if (++kount > 16008)
+            pexit("infinite loop A");
+    }
+
+    ep1->next = ep2;
+    ep2->prev = ep1;
+    ep2->next = ep2p;
+    ep1n->prev = ep1nn;
+    ep1n->next = ep2n;
+    ep2n->prev = ep1n;
 
 
-   EdgePtr ep1n = ep1->next;
-   EdgePtr ep2n = ep2->next;
-   EdgePtr ep1nn = ep1n->next;
-   EdgePtr ep2p = ep2->prev;
+    /*ivector ep1start;
+    ivector ep2start;
+    sub_ivector (ep1start, ep1->start, clkp->loffset);
+    sub_ivector (ep2start, ep2->start, clkp->loffset);
+    printf ("%d %d %d, %d %d %d, kount = %d, nedges = %d\n",
+       ep1start [0], ep1start [1], ep1start [2],
+       ep2start [0], ep2start [1], ep2start [2],
+       kount, clkp->fcomp->nedges);*/
 
-   EdgePtr epp = ep1n;
-   EdgePtr ep = ep1n->next;
-
-   int kount = 0;
-
-   while (ep != ep2)
-   {
-      EdgePtr epn = ep->next;
-      ep->next = epp;
-      ep->prev = epn;
-      epp = ep;
-      ep = epn;
-      if (++kount > 16008)
-         pexit("infinite loop A");
-   }
-
-   ep1->next = ep2;
-   ep2->prev = ep1;
-   ep2->next = ep2p;
-   ep1n->prev = ep1nn;
-   ep1n->next = ep2n;
-   ep2n->prev = ep1n;
-
-   /*
-   ivector ep1start;
-   ivector ep2start;
-   sub_ivector (ep1start, ep1->start, clkp->loffset);
-   sub_ivector (ep2start, ep2->start, clkp->loffset);
-   printf ("%d %d %d, %d %d %d, kount = %d, nedges = %d\n", 
-      ep1start [0], ep1start [1], ep1start [2], 
-      ep2start [0], ep2start [1], ep2start [2], 
-      kount, clkp->fcomp->nedges);*/
-
-   kount = 0;
-   ep = ep1;
-   do
-   {
-      clk_fix_incr(ep);
-      ep = ep->next;
-      if (++kount > 16008)
-         pexit("infinite loop B");
-   }
-   while (ep != ep2n);
+    kount = 0;
+    ep = ep1;
+    do {
+        clk_fix_incr(ep);
+        ep = ep->next;
+        if (++kount > 16008)
+            pexit("infinite loop B");
+    } while (ep != ep2n);
 
    clk_validate(clkp, "end of perform_recombination_inverted()");
+
    return true;
 }
 
@@ -6442,11 +6437,11 @@ bool perform_recombination(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgePtr ep2)
 
       return false;
    }
-   // following is needed to prevent edges like 29 and 31 in 9jun10a.k from being recomboed
+   // following is needed to prevent edges like 29 and 31 in 9jun10a.k from being recombined
    if (ep1->next == ep2->prev || ep1->prev == ep2->next) return false;
 
    if (ep1->dir == ep2->dir)
-      return perform_recombination_inverted(clkp, ep1, ep2);
+       return perform_recombination_inverted(clkp, ep1, ep2);
 
    // do some paranoia checking (for now)
    if (!anti [ep1->dir][ep2->dir])

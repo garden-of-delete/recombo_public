@@ -3,15 +3,10 @@
 using namespace std;
 
 void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int Q, double sr, int s, int N, int C, long int W, int M, char mode, int Seed,
-	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int T, char orientation, bool Supress_output){
+	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int T, bool Supress_output, int para1, int para2, int para3){
 	string infile;
 	min_arc = Min_arc;
 	max_arc = Max_arc;
-	recombo_orientation=orientation;
-	//set orientation to default (anti-parallel) if not set
-	if (recombo_orientation == 0){
-		recombo_orientation = 'a';
-	}
 	target_recombo_length = Target_recombo_length;
 	infile.append(in);
 	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
@@ -39,6 +34,9 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 	supress_output = Supress_output;
 	sample_attempts = 0;
+	inco_Or_co = para1;
+	std_Or_vir = para2;
+	virtual_Dir = para3;
 	/*if (mode == 'm' or mode == 'f'){      //deleted on Jul 20, 18
 		stringstream ss;
 		ss << outfile_name << "%0.info";
@@ -80,11 +78,11 @@ bool mmchain::add_initial_conformation(istream& is){
    return true;
 }
 
-bool mmchain::add_initial_conformation_from_file(string& filename){ 
+bool mmchain::add_initial_conformation_from_file(string& filename){
 	ifstream in;
 	in.open(filename.c_str(), ios::in);
 	if (!in){
-		cout << "ERROR: UNABLE TO OPEN FILE";
+		cout << "ERROR: UNABLE TO OPEN FILE" << endl;
 		return false;
 	}
 	if (add_initial_conformation(in))
@@ -123,7 +121,6 @@ void mmchain::stamp_log(string buff){
 	cout << "seed= " << seed << endl;
 	cout << "block_file_size= " << block_file_size << endl;
 	cout << "time_limit= " << time_limit << endl;
-	cout << "orientation = " << recombo_orientation << endl;
 	cout << endl;
 }
 
@@ -347,7 +344,7 @@ void mmchain::insert_new_chain(int i){
 		chains[j+1] = chains[j];
 	}
 	chains[i+1] = *tempChain;
-	//create new interval, push into invervals, update delta_bs using update_intervals()
+	//create new interval, push into intervals, update delta_bs using update_intervals()
 	interval_data tempInterval;
 	intervals.push_back(tempInterval); 
 	for (int j = m-3; j > i; j--){
@@ -454,13 +451,13 @@ int mmchain::do_recombo_knots(int current_chain){
 	int length = chains[current_chain].member_knot->getComponent(0).size();
 	if (target_recombo_length !=0) {
 		if (length == (target_recombo_length)){
-			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
+			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
 		}
 	}
 	else {
-		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
 	}
-	if (sites > 0){
+    if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);
 			//perform recombination and write both conformations to respective block files
 		write_recombination_to_block_file(chains[current_chain].member_knot, choice);
@@ -480,11 +477,11 @@ int mmchain::do_recombo_links(int current_chain){
 	int length = chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size();
 	if (target_recombo_length !=0) {
 		if (length == (target_recombo_length)){
-			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
+			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
 		}
 	}
 	else {
-		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);
@@ -537,7 +534,7 @@ void mmchain::writeSitesFile(clkConformationBfacf3* clk, int site_choice){
 	sitelist = clk->getChosenSite(site_choice);
 
 	//reverse the order of 3rd and 4th coordinates so it pass bad_increment test under 'p'
-	if (recombo_orientation == 'p' && n_components == 1){
+	if (clk->dirIsParal(site_choice) && n_components == 1){
 		recomboSites.addVertexBack(sitelist[0]); //newly added Diwen 07/11/18
 		recomboSites.addVertexBack(sitelist[1]);
 		recomboSites.addVertexBack(sitelist[3]);
@@ -626,18 +623,27 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			clkConformationAsList toPrint(clk->getComponent(0));
 			toPrint.writeAsCube(out);
             //perform recombination
-            clk->performRecombination(site_choice);
-            //write clk_after to second output file
-            //clkConformationAsList toPrint2(clk->getComponent(0));
-            clk->getComponents(components);
-            list<clkConformationAsList>::const_iterator i;
-            for (i = components.begin(); i != components.end(); i++)
-            {
-                i->writeAsCube(out2);
-            }
-            //toPrint.writeAsCube(out2);
-            //undo recombination
-            clk->undoRecombination();
+
+			if (clk->performRecombination(out2, inco_Or_co, virtual_Dir, site_choice))
+			{
+
+				//write clk_after to second output file
+				//clkConformationAsList toPrint2(clk->getComponent(0));
+				clk->getComponents(components);
+				list<clkConformationAsList>::const_iterator i;
+				out2.write("KnotPlot 1.0", 12);
+				out2.put((char)12);
+				out2.put((char)10);
+				for (i = components.begin(); i != components.end(); i++) {
+					out2.write("comp", 4);
+					i->writeAsCube(out2);
+				}
+				out2.write("endf", 4);
+				out2.put((char)10);
+				//toPrint.writeAsCube(out2);
+				//undo recombination
+				clk->undoRecombination(out2, inco_Or_co, virtual_Dir);
+			}
 		}
 		else if (n_components == 2){
 
@@ -651,20 +657,26 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			toPrint.writeAsCube(out);
 			toPrint2.writeAsCube(out);
 			//perform recombination
-			clk->performRecombination(site_choice);
+            clk->performRecombination(out2, inco_Or_co, virtual_Dir, site_choice);
 			//write clk_after to second output file
             clk->getComponents(components);
             list<clkConformationAsList>::const_iterator i;
+            out2.write("KnotPlot 1.0", 12);
+            out2.put((char)12);
+            out2.put((char)10);
             for (i = components.begin(); i != components.end(); i++)
             {
+                out2.write("comp", 4);
                 i->writeAsCube(out2);
             }
+            out2.write("endf", 4);
+            out2.put((char)10);
 			//clkConformationAsList toPrint3(clk->getComponent(0));
 			//clkConformationAsList toPrint4(clk->getComponent(1));
 			//toPrint3.writeAsCube(out2);
 			//toPrint4.writeAsCube(out2);
 			//undo recombination
-			clk->undoRecombination();
+            clk->undoRecombination(out2, inco_Or_co, virtual_Dir);
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
@@ -718,19 +730,26 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 
 			toPrint.writeAsCube(out);
 			//perform recombination
-			clk->performRecombination(site_choice);
-
-			//write clk_after to second output file
-			//clkConformationAsList toPrint2(clk->getComponent(0));
-			clk->getComponents(components);
-			list<clkConformationAsList>::const_iterator i;
-			for (i = components.begin(); i != components.end(); i++)
+			if (clk->performRecombination(out2, inco_Or_co, virtual_Dir, site_choice))
 			{
-				i->writeAsCube(out2);
+
+				//write clk_after to second output file
+				//clkConformationAsList toPrint2(clk->getComponent(0));
+				clk->getComponents(components);
+				list<clkConformationAsList>::const_iterator i;
+				out2.write("KnotPlot 1.0", 12);
+				out2.put((char)12);
+				out2.put((char)10);
+				for (i = components.begin(); i != components.end(); i++) {
+					out2.write("comp", 4);
+					i->writeAsCube(out2);
+				}
+				out2.write("endf", 4);
+				out2.put((char)10);
+				//toPrint.writeAsCube(out2);
+				//undo recombination
+				clk->undoRecombination(out2, inco_Or_co, virtual_Dir);
 			}
-			//toPrint.writeAsCube(out2);
-			//undo recombination
-			clk->undoRecombination();
 		}
 		else if (n_components == 2){
 
@@ -744,20 +763,26 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			toPrint.writeAsCube(out);
 			toPrint2.writeAsCube(out);
 			//perform recombination
-			clk->performRecombination(site_choice);
+			clk->performRecombination(out2, inco_Or_co, virtual_Dir, site_choice);
 			//write clk_after to second output file
             clk->getComponents(components);
             list<clkConformationAsList>::const_iterator i;
+            out2.write("KnotPlot 1.0", 12);
+            out2.put((char)12);
+            out2.put((char)10);
             for (i = components.begin(); i != components.end(); i++)
             {
+                out2.write("comp", 4);
                 i->writeAsCube(out2);
             }
+            out2.write("endf", 4);
+            out2.put((char)10);
             //clkConformationAsList toPrint3(clk->getComponent(0));
             //clkConformationAsList toPrint4(clk->getComponent(1));
             //toPrint3.writeAsCube(out2);
             //toPrint4.writeAsCube(out2);
             //undo recombination
-            clk->undoRecombination();
+            clk->undoRecombination(out2, inco_Or_co, virtual_Dir);
 		}
 		else{
 			cout << endl << "ERROR: write_to_block_file(): n_components=" << n_components << ", only 1 or 2 component links supported" << endl;
@@ -769,7 +794,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 
 int mmchain::count_recombo_sites(clkConformationBfacf3* clk){
 	int length = 0, sites = 0, recombination = 0;
-	sites = clk->countRecomboSites(min_arc, max_arc, recombo_orientation);
+	sites = clk->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
 	if (n_components == 1){
 		length = clk->getComponent(0).size();
 	}

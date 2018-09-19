@@ -23,7 +23,18 @@ void print_usage(){
 	cout << "-seed\tset seed for random number generator" << endl;
 	cout << "-bfs\tnumber of conformations to save per binary block file" << endl;
 	cout << "+s\tsupress status output. For use with shell scripts." << endl;
-	cout << "[OPTIONAL] -orientation: ['p' parallel],['a' anti-parallel],['u' p or a]" << endl;
+	cout << "-recomboType:" << endl;
+	cout << "    i    : do incoherent(knot->knot) and standard recombo" << endl;
+	cout << "    iv   : do incoherent and positive virtual recombo" << endl;
+	cout << "    ivn  : do incoherent and negative virtual recombo" << endl;
+	cout << "    isv  : do incoherent and both standard and positive virtual recombo" << endl;
+	cout << "    isvn : do incoherent and both standard and negative virtual recombo" << endl;
+	cout << "    c    : do coherent(knot->link OR link->knot) and standard recombo" << endl;
+	cout << "    cv   : do coherent and positive virtual recombo" << endl;
+	cout << "    cvn  : do coherent and negative virtual recombo" << endl;
+	cout << "    csv  : do coherent and both standard and positive virtual recombo" << endl;
+	cout << "    csvn : do coherent and both standard and negative virtual recombo" << endl;
+	cout << "    ONLY USE i or c IF KNOT SUBSTRATE IS A LINK!!!!" << endl;
 	cout << "---------------------------------------------------------------------------------------------------------------" << endl;
 	cout << "When selecting values for minarc and maxarc, notice that if the range is too small, " << endl;
 	cout << "it would take long time to run, because the samples that satisfy that minarc and maxarc are rare."<< endl;
@@ -31,9 +42,20 @@ void print_usage(){
 
 int main(int argc, char* argv[]){
 	bool supress_output = false;
-	char* infile, *outfile, mode, recombo_orientation = 0;
+	char* infile,
+		*outfile,
+		mode;
+
+	string recombo_paras; //used to store recomboType
+
+	int incoOrco = -1,           //1: incoherent, 0: coherent
+		stdOrvir = 1,           //1: standard, 0: virtual, 2: both
+		virtualDir = 1;       //1: positive, 0: negative
+
 	double zmin = 0, zmax = 0, sr=0;
+
 	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0, bfs = 0, t=0;
+
 	long int w = 0;
 
 	if (argc <= 1){
@@ -49,10 +71,51 @@ int main(int argc, char* argv[]){
 				zmin = atof(argv[i + 1]);
 				i++;
 			}
-			else if (!strcmp(argv[i], "-orientation")){
-                                recombo_orientation = *argv[i + 1];
-                                i++;
-                        }
+            else if (!strcmp(argv[i], "-recomboType")){
+				recombo_paras.append(argv[i + 1]);
+				if (recombo_paras.length() == 1){
+					if (recombo_paras[0] == 'i')				// i
+						incoOrco = 1;
+					else 										// c
+						incoOrco = 0;
+				}
+				else if (recombo_paras.length() == 2){
+					if (recombo_paras[0] == 'i')				// iv
+						incoOrco = 1;
+					else										// cv
+						incoOrco = 0;
+					stdOrvir = 0;
+				}
+				else if (recombo_paras.length() == 3) {
+					if (recombo_paras[0] == 'i') {
+						incoOrco = 1;
+						if (recombo_paras[1] == 'v') {			// ivn
+							stdOrvir = 0;
+							virtualDir = 0;
+						}
+						else									// isv
+							stdOrvir = 2;
+					}
+					else {// == 'c'
+						incoOrco = 0;
+						if (recombo_paras[1] == 'v'){			// cvn
+							stdOrvir = 0;
+							virtualDir = 0;
+						}
+						else
+							stdOrvir = 2;						// csv
+					}
+				}
+				else {//==4
+					if (recombo_paras[0] == 'i')				// isvn
+						incoOrco = 1;
+					else
+						incoOrco = 0;							// csvn
+					stdOrvir = 2;
+					virtualDir = 0;
+				}
+				i++;
+			}
 			else if (!strcmp(argv[i], "-zmax")){
 				zmax = atof(argv[i + 1]);
 				i++;
@@ -123,7 +186,7 @@ int main(int argc, char* argv[]){
 		}
 		//need to write checks for invalid operating parameters
 		mmchain mmc;
-		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, t, recombo_orientation, supress_output);
+		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, t, supress_output, incoOrco, stdOrvir, virtualDir);
 		mmc.run_mmc();
 	}
 

@@ -6,13 +6,15 @@
 
 using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode, int Seed, char orientation){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode, int Seed, int inco_Or_co, int std_Or_vir, int virtual_Dir){
 	//set operating variables
 	supress_output = Supress_output;
 	min_arc = Min_arc;
 	max_arc = Max_arc;
 	read_mode = Read_mode;
-	recombo_orientation = orientation;
+	incoOrco = inco_Or_co;
+	stdOrvir = std_Or_vir;
+	virtualDir = virtual_Dir;
 	sampling_mode = Sampling_mode;
 	block_file_mode = Block_file_mode;
 	seed = Seed;
@@ -30,7 +32,7 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 	//allocate uninitialized ifstream
 	in = new ifstream;
 	if (block_file_mode == 1){
-		//incriment infile_name 
+		//increment infile_name
 		inc_filename();
 		//allocate and open output file
 		out = new ofstream(Outfile, ios::out | ios::binary);
@@ -61,14 +63,14 @@ recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* O
 bool recomboFromFile::inc_filename(){
 	//close current file if open
 	in->close();
-	//incriment block file counter
+	//increment block file counter
 	current_block_file_number++;
 	//put the new filename together with a string stream
 	stringstream ss;
 	ss << *infile_name << '%' << current_block_file_number << ".b";
 	//try to open new filename
 	in->open(ss.str().c_str(), ios::out | ios::binary);
-	//check if succesful, return based on result
+	//check if successful, return based on result
 	if (in->good()){
 		return true;
 	}
@@ -124,7 +126,7 @@ void recomboFromFile::writeSitesFile(clkConformationBfacf3* clk, int site_choice
 	std::vector<threevector<int> >sitelist;
 	sitelist = knot->getChosenSite(site_choice);
 
-	if (recombo_orientation == 'p') {
+	if (knot->dirIsParal(site_choice) && n_components == 1) {
 		for (int j = 0; j < 2; ++j) {
 			recomboSites.addVertexBack(sitelist[j]);
 		}
@@ -157,7 +159,7 @@ void recomboFromFile::do_recombo_knots(){
 		lengths.push_back(length);
 		length_counter++;
 		
-        sites = knot->countRecomboSites(min_arc, max_arc,recombo_orientation);
+        sites = knot->countRecomboSites(min_arc, max_arc, incoOrco, stdOrvir, virtualDir);
 		if(sites > 0){
 			list<clkConformationAsList> components;
             //choice is the chosen site to perform recombo. Want to output this file
@@ -166,13 +168,19 @@ void recomboFromFile::do_recombo_knots(){
 			//write sites file
             writeSitesFile(knot, choice);
 
-			knot->performRecombination(choice);
-			knot->getComponents(components);
-			list<clkConformationAsList>::const_iterator i;
-			for (i = components.begin(); i != components.end(); i++)
-			{
-				i->writeAsCube(*out);
-			}
+			if (knot->performRecombination(*out, incoOrco, virtualDir, choice)){
+                knot->getComponents(components);
+                list<clkConformationAsList>::const_iterator i;
+                out->write("KnotPlot 1.0", 12);
+                out->put((char) 12);
+                out->put((char) 10);
+                for (i = components.begin(); i != components.end(); i++) {
+                    out->write("comp", 4);
+                    i->writeAsCube(*out);
+                }
+                out->write("endf", 4);
+                out->put((char) 10);
+            }
 			count++;
 			if (sampling_mode > 0){
 				sampling_mode--;
@@ -225,7 +233,7 @@ TOP:
 			length_counter++;
 			sites = knot->countRecomboSites(min_arc, max_arc);
 		}*/
-		sites = knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
+		sites = knot->countRecomboSites(min_arc, max_arc, incoOrco, stdOrvir, virtualDir);
 		//write sites to sites_file
 		/*stringstream ss;
 		ss << sites << '\n';
@@ -233,7 +241,7 @@ TOP:
 		cout << sites << '\n';
 		for (int i=0; i < sites; i++){
 			list<clkConformationAsList> components;
-			knot->performRecombination(i);
+			knot->performRecombination(*out, incoOrco, virtualDir, i);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator j;
 			for (j = components.begin(); j != components.end(); j++)
@@ -241,7 +249,7 @@ TOP:
 				j->writeAsCube(*out);
 			}
 			count++;
-			knot->undoRecombination();
+			knot->undoRecombination(*out, incoOrco, virtualDir);
 		}
 		delete knot;
 	}
@@ -289,7 +297,7 @@ void recomboFromFile::do_recombo_links(){
 		lengths.push_back(short_length + long_length);
 		if ((short_length >= min_arc) && (long_length <= max_arc)){
 		    length_counter++;
-            sites = knot->countRecomboSites(min_arc, max_arc, recombo_orientation);
+            sites = knot->countRecomboSites(min_arc, max_arc, incoOrco, stdOrvir, virtualDir);
             }
 	//}
 		//sites = knot->countRecomboSites(knot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);
@@ -301,13 +309,19 @@ void recomboFromFile::do_recombo_links(){
 			//write sites file
 			writeSitesFile(knot, choice);
 
-			knot->performRecombination(choice);
-			knot->getComponents(components);
-			list<clkConformationAsList>::const_iterator i;
-			for (i = components.begin(); i != components.end(); i++)
-			{
-				i->writeAsCube(*out);
-			}
+			if (knot->performRecombination(*out, incoOrco, virtualDir, choice)) {
+                knot->getComponents(components);
+                list<clkConformationAsList>::const_iterator i;
+                out->write("KnotPlot 1.0", 12);
+                out->put((char) 12);
+                out->put((char) 10);
+                for (i = components.begin(); i != components.end(); i++) {
+                    out->write("comp", 4);
+                    i->writeAsCube(*out);
+                }
+                out->write("endf", 4);
+                out->put((char) 10);
+            }
 			count++;
 			if (sampling_mode > 0){
 				sampling_mode--;

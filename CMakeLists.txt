@@ -88,3 +88,4 @@ add_executable(unitTest ${SHARED_SOURCE_FILES} ${TEST_SOURCE_FILES} src/tests/un
 add_executable(mmc ${SHARED_SOURCE_FILES} src/mmcMain.cpp)
 add_executable(homfly ${SHARED_SOURCE_FILES} src/homfly1_21.c src/cross.c src/cross.h)
 add_executable(idknot ${SHARED_SOURCE_FILES} src/idknot.cpp)
+

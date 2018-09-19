@@ -7,6 +7,7 @@
 
 #include "clkConformationBfacf3.h"
 #include "legacyBfacf.h"
+#include "threevector.h"   //diwen 08/22
 
 #include <cstdlib>
 #include <iostream>
@@ -508,19 +509,24 @@ class clkConformationBfacf3::impl
    bool edgesUnitDistant(EdgePtr ep, EdgePtr eq)
    {
       // candidate edges may have opposite or same orientation
-      //antiparallel distance   
-      ivector displacement_a;
-      int dist_a;
-      //parallel distance
-      ivector displacement_p;
-      int dist_p;
-      // candidate edges must have beginning vertex distance one to ending vertex
-      sub_ivector(displacement_a, ep->start, eq->next->start);
-      sub_ivector(displacement_p, ep->start, eq->start);
-      dist_a = abs(displacement_a[0]) + abs(displacement_a[1]) + abs(displacement_a[2]);
-      dist_p = abs(displacement_p[0]) + abs(displacement_p[1]) + abs(displacement_p[2]);
-      return dist_a == 1 || dist_p == 1;
-   } 
+      if ((ep->dir == eq->dir) || oppositeDirection(ep->dir, eq->dir)) {
+         //antiparallel distance
+         ivector displacement_a;
+         int dist_a;
+         //parallel distance
+         ivector displacement_p;
+         int dist_p;
+         // candidate edges must have beginning vertex distance one to ending vertex
+         sub_ivector(displacement_a, ep->start, eq->next->start);
+         sub_ivector(displacement_p, ep->start, eq->start);
+         dist_a = abs(displacement_a[0]) + abs(displacement_a[1]) + abs(displacement_a[2]);
+         dist_p = abs(displacement_p[0]) + abs(displacement_p[1]) + abs(displacement_p[2]);
+
+         return (oppositeDirection(ep->dir, eq->dir) && dist_a == 1) || (ep->dir == eq->dir && dist_p == 1);
+      }
+      else
+         return false;
+   }
 
    bool edgesParallelAndUnitDistant(EdgePtr ep, EdgePtr eq)
    {
@@ -591,7 +597,7 @@ class clkConformationBfacf3::impl
 
    // making no attempt to optimize
 
-   void searchForRecomboSitesOneComp(//CubicLatticeKnotPtr clkp, 
+   void searchForRecomboSitesOneComp(//CubicLatticeKnotPtr clkp,
            int minarclength, int maxarclength) //, recomboSites& sites)
    {
       // for component length n, there will be two arcs between edges j > i
@@ -639,10 +645,8 @@ class clkConformationBfacf3::impl
 
 
 
-   void searchForRecomboSitesOneComp(//CubicLatticeKnotPtr clkp, 
-           int minarclength, int maxarclength, char orientation) //, recomboSites& sites)
+   void searchForRecomboSitesOneComp(int minarclength, int maxarclength, int incoOrco, int stdOrvir, int vritualDir)
    {
-      //This version for use with orientation parameter
       sites.clear();
       int n = clkp->fcomp->nedges;
 
@@ -665,30 +669,18 @@ class clkConformationBfacf3::impl
             int arc2 = ARC2(i, j, n);
             if (MIN(arc1, arc2) >= minarclength && MAX(arc1, arc2) <= maxarclength)
             {
-               // candidate edges must have opposite orientation
-
-	       switch (orientation)
-	       {
-	          case 'a': {
-                     if (edgesAntiParallelAndUnitDistant(ep, eq))
-                     {
-                        //                  count++;
-                        sites.push_back(site(ep, eq));
-                     }
-		  } break;
-		 case 'p': {
-		     if (edgesParallelAndUnitDistant(ep,eq))
-		     {
-			sites.push_back(site(ep,eq));
-		     }
-		  } break;
-		 case 'u': {
-		     if (edgesUnitDistant(ep,eq))
-		     {
-			sites.push_back(site(ep,eq));
-		     }
-		  } break;
-	       }
+               if (stdOrvir == 2) { //(inco_Or_co, std_Or_vir, virtual_Dir) = (1,2,1), (1,2,0), (0,2,1), (0,2,0)
+                  if (edgesUnitDistant(ep, eq))
+                     sites.push_back(site(ep, eq));
+               }
+               else if ((incoOrco == 1 && stdOrvir == 1) || (incoOrco == 0 && stdOrvir == 0)) { //(inco_Or_co, std_Or_vir, virtual_Dir) = (1,1), (0,0,1), (0,0,0)
+                  if (edgesParallelAndUnitDistant(ep, eq))
+                     sites.push_back(site(ep, eq));
+               }
+               else { //(inco_Or_co, std_Or_vir, virtual_Dir) = (1,0,1), (1,0,0), (0,1)
+                  if (edgesAntiParallelAndUnitDistant(ep, eq))
+                     sites.push_back(site(ep, eq));
+               }
             }
             eq = eq->next;
          }
@@ -837,7 +829,7 @@ void clkConformationBfacf3::stepQ(long int c, int q, double z)
 }
 
 
-int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength, char orientation)
+int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength, int incoOrco, int stdOrvir, int virtualDir)
 {
     //Sanity check
     if (maxarclength < minarclength)
@@ -854,7 +846,7 @@ int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength,
    //This version for use with orientation parameter
    if (size() == 1)
    {
-      implementation->searchForRecomboSitesOneComp(minarclength, maxarclength, orientation);
+      implementation->searchForRecomboSitesOneComp(minarclength, maxarclength, incoOrco, stdOrvir, virtualDir);
       return implementation->sites.size();
    }
    // here we assume that conformation is a two component link
@@ -867,12 +859,11 @@ int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength,
       implementation->searchForRecomboSitesBetweenComps(); //minarclength, maxarclength);
       return implementation->sites.size();
    }
-   
    return 0;
 }
 
-int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength)
-{
+int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength){ //only used by runRecombo.cpp
+//Sanity check
     if (maxarclength < minarclength)
     {
         cerr << "It does not make sense that maximum arc length should be less than minimum." << endl;
@@ -884,39 +875,229 @@ int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength)
         cerr << "No possible recombo sites for minimum arc less than 3." << endl;
         exit(104);
     }
-   if (size() == 1)
-   {
-      implementation->searchForRecomboSitesOneComp(minarclength, maxarclength);
-      return implementation->sites.size();
-   }
-   // here we assume that conformation is a two component link
-   int sizeComp0, sizeComp1;
-   sizeComp0 = getComponent(0).size();
-   sizeComp1 = getComponent(1).size();
-   if (sizeComp0 >= minarclength + 1 && sizeComp0 <= maxarclength + 1
-          && sizeComp1 >= minarclength + 1 && sizeComp1 <= maxarclength + 1)
-   {
-      implementation->searchForRecomboSitesBetweenComps(); //minarclength, maxarclength);
-      return implementation->sites.size();
-   }
-   
-   return 0;
+    //This version for use with orientation parameter
+    if (size() == 1)
+    {
+        implementation->searchForRecomboSitesOneComp(minarclength, maxarclength);
+        return implementation->sites.size();
+    }
+    // here we assume that conformation is a two component link
+    int sizeComp0, sizeComp1;
+    sizeComp0 = getComponent(0).size();
+    sizeComp1 = getComponent(1).size();
+    if (sizeComp0 >= minarclength + 1 && sizeComp0 <= maxarclength + 1
+        && sizeComp1 >= minarclength + 1 && sizeComp1 <= maxarclength + 1)
+    {
+        implementation->searchForRecomboSitesBetweenComps(); //minarclength, maxarclength);
+        return implementation->sites.size();
+    }
+    return 0;
 }
-void clkConformationBfacf3::performRecombination(int n)
+
+class floatio //diwen 09/04
+{
+public:
+
+    floatio() { }
+
+    void write(int* arr, ostream& os) {
+        float a = arr[0];
+        float b = arr[1];
+        float c = arr[2];
+
+        write_float(&a, os);
+        write_float(&b, os);
+        write_float(&c, os);
+    }
+
+    void write(float* arr, ostream& os) {
+        write_float(arr, os);
+        write_float(arr + 1, os);
+        write_float(arr + 2, os);
+    }
+
+    void write_int(int *val, ostream& os)
+    {
+        unsigned char a, b, c, d;
+
+        a = (unsigned char) (0xff & (*val) >> 24);
+        b = (unsigned char) (0xff & (*val) >> 16);
+        c = (unsigned char) (0xff & (*val) >> 8);
+        d = (unsigned char) (0xff & (*val));
+
+        os.put(a);
+        os.put(b);
+        os.put(c);
+        os.put(d);
+    }
+
+    void write_float(float *val, ostream& os){
+        union {
+            float f;
+            int i;
+        } x;
+        x.f = *val;
+        write_int (&x.i, os);
+    }
+};
+
+void calculateNewCords(float *a, float *b, int *c, int *d , int *e, int *f){
+    a[0] = (c[0] + e[0]) * 0.5;
+    a[1] = (c[1] + e[1]) * 0.5;
+    a[2] = (c[2] + e[2]) * 0.5;
+    b[0] = (d[0] + f[0]) * 0.5;
+    b[1] = (d[1] + f[1]) * 0.5;
+    b[2] = (d[2] + f[2]) * 0.5;
+    if (c[0] == d[0] && d[0] == e[0] && e[0] == f[0]){
+        a[0] += 0.5;
+        b[0] -= 0.5;
+    }
+    else if (c[1] == d[1] && d[1] == e[1] && e[1] == f[1]){
+        a[1] += 0.5;
+        b[1] -= 0.5;
+    }
+    else {
+        a[2] += 0.5;
+        b[2] -= 0.5;
+    }
+}
+
+bool clkConformationBfacf3::performRecombination(std::ostream& os, int incoOrco, int virtualDir, int n)
 {
    implementation->lastRecombo = n;
    clkConformationBfacf3::impl::site site = implementation->sites[n];
    //checks if the site contains parallel edges, need update ep2 after return from perform_recombination() to
    // make ep1 and ep2 parallel in the site
    // for the later use in undo_recombination()
-   if (site.first->dir == site.second->dir)
+   if (incoOrco == 1) //incoherent
    {
-       EdgePtr newep2 = site.first->next;
-       perform_recombination(implementation->clkp, site.first, site.second);
-       implementation->sites[n].second = newep2;
+      if (site.first->dir == site.second->dir) //standard
+      {
+         EdgePtr newep2 = site.first->next;
+         perform_recombination(implementation->clkp, site.first, site.second);
+         implementation->sites[n].second = newep2;
+         return true;
+      }
+      else // do virtual and write in binary
+      {
+         //binary input to os
+          floatio floatio;
+          float new_cordup[3], new_corddown[3];
+          calculateNewCords(new_cordup, new_corddown, site.first->start, site.first->next->start, site.second->start, site.second->next->start);
+          os.write("KnotPlot 1.0", 12);
+          os.put((char)12);
+          os.put((char)10);
+          os.write("comp", 4);
+          os.write("LOCF", 4);
+          int Nvertices = implementation->clkp->nedges_total + 2;
+          int num_bytes = 12 * Nvertices;
+          floatio.write_int(&num_bytes, os);
+
+         EdgePtr ep = site.first->next;
+          while (ep != site.second){
+              floatio.write(ep->start, os);
+              ep = ep->next;
+          }
+          floatio.write(ep->start, os);
+          if (virtualDir == 1)
+              floatio.write(new_cordup, os);
+          else
+              floatio.write(new_corddown, os);
+          floatio.write(site.first->start, os);
+          ep = site.first->prev;
+          while (ep != site.second){
+              floatio.write(ep->start, os);
+              ep = ep->prev;
+          }
+          if (virtualDir == 1)
+              floatio.write(new_corddown, os);
+          else
+              floatio.write(new_cordup, os);
+          os.write("endf", 4);
+          os.put((char)10);
+          return false;
+      }
    }
-   else
-       perform_recombination(implementation->clkp, site.first, site.second);
+   else  //coherent
+   {
+      if (site.first->dir != site.second->dir)
+      {
+         perform_recombination(implementation->clkp, site.first, site.second);
+         return true;
+      }
+      else // do virtual
+      {
+         //binary input to os
+         floatio floatio;
+         float new_cordup[3], new_corddown[3];
+         calculateNewCords(new_cordup, new_corddown, site.first->start, site.first->next->start, site.second->start, site.second->next->start);
+         os.write("KnotPlot 1.0", 12);
+         os.put((char)12);
+         os.put((char)10);
+         //writing the 1st comp
+         os.write("comp", 4);
+         os.write("LOCF", 4);
+         int Nvertices1 = 0;
+         EdgePtr ep1 = site.first;
+         while (ep1 != site.second){
+            ep1 = ep1->next;
+            Nvertices1++;
+         }
+         Nvertices1++;
+         int num_bytes1 = 12 * Nvertices1;
+         floatio.write_int(&num_bytes1, os);
+         ep1 = site.first;
+         while (ep1 != site.second){
+             ep1 = ep1->next;
+             floatio.write(ep1->start, os);
+         }
+         floatio.write(ep1->start, os);
+         if (virtualDir == 1)
+             floatio.write(new_cordup, os);
+         else
+             floatio.write(new_corddown, os);
+         //writing the 2nd comp
+         os.write("comp", 4);
+         os.write("LOCF", 4);
+         int Nvertices2 = 0;
+         EdgePtr ep2 = site.second;
+         while (ep2 != site.first){
+            ep2 = ep2->next;
+            Nvertices2++;
+         }
+         Nvertices2++;
+         int num_bytes2 = 12 * Nvertices2;
+         floatio.write_int(&num_bytes2, os);
+         ep2 = site.second;
+         while (ep2 != site.first){
+             ep2 = ep2->next;
+             floatio.write(ep2->start, os);
+         }
+         if (virtualDir == 1)
+              floatio.write(new_corddown, os);
+         else
+              floatio.write(new_cordup, os);
+         os.write("endf", 4);
+         os.put((char)10);
+         return false;
+      }
+   }
+}
+
+bool clkConformationBfacf3::performRecombination(int n){   //only used by runRecombo.cpp
+    implementation->lastRecombo = n;
+    clkConformationBfacf3::impl::site site = implementation->sites[n];
+    //checks if the site contains parallel edges, need update ep2 after return from perform_recombination() to
+    // make ep1 and ep2 parallel in the site
+    // for the later use in undo_recombination()
+    if (site.first->dir == site.second->dir)
+    {
+        EdgePtr newep2 = site.first->next;
+        perform_recombination(implementation->clkp, site.first, site.second);
+        implementation->sites[n].second = newep2;
+    }
+    else
+        perform_recombination(implementation->clkp, site.first, site.second);
 }
 
 std::vector<threevector<int> > clkConformationBfacf3::getChosenSite(int n){
@@ -958,13 +1139,21 @@ std::vector<threevector<int> > clkConformationBfacf3::getChosenSite(int n){
     return recomboSites;
 }
 
+bool clkConformationBfacf3::dirIsParal(int site_choice){
+   if (implementation->sites[site_choice].first->dir == implementation->sites[site_choice].second->dir)
+      return true;
+   return false;
+}
 
+void clkConformationBfacf3::undoRecombination(std::ostream& os, int incoOrco, int virtualDir)
+{
+   performRecombination(os, incoOrco, virtualDir, implementation->lastRecombo);
+}
 
-void clkConformationBfacf3::undoRecombination()
+void clkConformationBfacf3::undoRecombination()  //only used by runRecombo.cpp
 {
    performRecombination(implementation->lastRecombo);
 }
-
 
 // Don't want default or copy constructors called, because they don't do anything now. Todo: make these constructors work
 

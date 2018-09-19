@@ -167,7 +167,7 @@ public:
     * choices for of edge pairs for recombination.
     */
 
-   int countRecomboSites(int minarclength, int maxarclength, char orientation);
+   int countRecomboSites(int minarclength, int maxarclength, int incoOrco, int stdOrvir, int virtualDir);
    int countRecomboSites(int minarclength, int maxarclength);
    
    /**
@@ -179,14 +179,15 @@ public:
     * countRecomboSites(int, int, char).
     * @param n index of recombo site at which to perform recombination.
     */
-   void performRecombination(int n = 0);
-   
+   bool performRecombination(std::ostream& os, int incoOrco, int virtualDir, int n = 0);
+   bool performRecombination(int n = 0);
    /**
     * Will undo the most recent recombination operation performed by
     * performRecombination(int). Results will be unpredictable if no 
     * recombination has been performed, or if step() or step(int) have been 
     * called since the most recent call to performRecombination(int).
     */
+   void undoRecombination(std::ostream& os, int incoOrco, int virtualDir);
    void undoRecombination();
    probs* probMap;
 
@@ -195,6 +196,7 @@ public:
      *given random choice from all site get the actual site from the list
      */
 
+    bool dirIsParal(int site_choice);
 
 
 

@@ -172,7 +172,7 @@ top:
 		reset();
 		goto top;
 	}
-	/*
+
 	while ((max.center - max.std_dev) > target){ 
 		temp = max;
 		max.z -= step_size;

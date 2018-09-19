@@ -347,6 +347,7 @@ public:
       c = (unsigned char) (0xff & val >> 8);
       d = (unsigned char) (0xff & val);
 
+
       os.put(a);
       os.put(b);
       os.put(c);
@@ -393,19 +394,21 @@ bool clkConformationAsList::writeAsCube(std::ostream& os) const
    intio intio;
 
    int num_vertices = size();
+   int val = 59;
+    int a = (unsigned char) (val >> 24);
    int numbits = num_vertices * 3;
    int numbytes = (numbits + 7) / 8;
 
    os.write("CUBE", 4);
    int S; // size of field is 16 bytes (number of vertices plus starting point) plus numbytes
    S = 16 + numbytes;
+
    intio.write(S, os);
    //   os.write((const char*) &S, sizeof (int));
-
    // write number of vertices
    intio.write(num_vertices, os);
-   //   os.write((const char*) &num_vertices, sizeof (int));
 
+   //   os.write((const char*) &num_vertices, sizeof (int));
    // write starting location
    deque<threevector<int> >::const_iterator i = data.begin();
    //   int firstVertex[3] = {i->getX(), i->getY(), i->getZ()};
@@ -430,7 +433,6 @@ bool clkConformationAsList::writeAsCube(std::ostream& os) const
 
    for (int pad = 0; pad < num_pad_bits; pad++)
       bf.write_bit(1, os);
-
    return true;
 
 }

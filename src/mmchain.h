@@ -72,7 +72,10 @@ public:
 	int Target_recombo_length, 
 	int bfs, 
 	int time_limit, 
-	bool Supress_output);
+	bool Supress_output,
+	int para1,
+	int para2,
+	int para3);
 
 	/*
 	* Constructor for filtering samples to ones that meet recombination criteria
@@ -94,9 +97,12 @@ public:
 	int Max_arc, 
 	int Target_recombo_length, 
 	int bfs, 
-	int time_limit, 
-	char orientation, 
-	bool Supress_output);
+	int time_limit,
+	char orientation,
+	bool Supress_output,
+	int para1,
+	int para2,
+	int para3);
 
 	/**
 	* adds an initial conformation from the given istream. practically speaking, will only be called from outside add_initial_conformation_From_file(...)
@@ -127,7 +133,7 @@ private:
 	string outfile_name;
 	bool supress_output;
 	char sample_mode;
-	char recombo_orientation;
+	int inco_Or_co, std_Or_vir, virtual_Dir;
 	double z_m, z_1, target_swap_ratio;
 	clkConformationAsList initialComp0, initialComp1;
     clkConformationAsList recomboSites;

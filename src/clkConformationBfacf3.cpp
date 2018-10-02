@@ -941,13 +941,23 @@ public:
     }
 };
 
-void calculateNewCords(float *a, float *b, int *c, int *d , int *e, int *f){
-    a[0] = (c[0] + e[0]) * 0.5;
-    a[1] = (c[1] + e[1]) * 0.5;
-    a[2] = (c[2] + e[2]) * 0.5;
-    b[0] = (d[0] + f[0]) * 0.5;
-    b[1] = (d[1] + f[1]) * 0.5;
-    b[2] = (d[2] + f[2]) * 0.5;
+void calculateNewCords(float *a, float *b, int *c, int *d , int *e, int *f, bool p){
+    if (p) {
+        a[0] = (c[0] + e[0]) * 0.5;
+        a[1] = (c[1] + e[1]) * 0.5;
+        a[2] = (c[2] + e[2]) * 0.5;
+        b[0] = (d[0] + f[0]) * 0.5;
+        b[1] = (d[1] + f[1]) * 0.5;
+        b[2] = (d[2] + f[2]) * 0.5;
+    }
+    else{
+        a[0] = (c[0] + f[0]) * 0.5;
+        a[1] = (c[1] + f[1]) * 0.5;
+        a[2] = (c[2] + f[2]) * 0.5;
+        b[0] = (d[0] + e[0]) * 0.5;
+        b[1] = (d[1] + e[1]) * 0.5;
+        b[2] = (d[2] + e[2]) * 0.5;
+    }
     if (c[0] == d[0] && d[0] == e[0] && e[0] == f[0]){
         a[0] += 0.5;
         b[0] -= 0.5;
@@ -983,7 +993,8 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int incoOrco,
          //binary input to os
           floatio floatio;
           float new_cordup[3], new_corddown[3];
-          calculateNewCords(new_cordup, new_corddown, site.first->start, site.first->next->start, site.second->start, site.second->next->start);
+          bool p = true;
+          calculateNewCords(new_cordup, new_corddown, site.first->start, site.first->next->start, site.second->start, site.second->next->start, p);
           os.write("KnotPlot 1.0", 12);
           os.put((char)12);
           os.put((char)10);
@@ -993,7 +1004,7 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int incoOrco,
           int num_bytes = 12 * Nvertices;
           floatio.write_int(&num_bytes, os);
 
-         EdgePtr ep = site.first->next;
+          EdgePtr ep = site.first->next;
           while (ep != site.second){
               floatio.write(ep->start, os);
               ep = ep->next;
@@ -1030,7 +1041,8 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int incoOrco,
          //binary input to os
          floatio floatio;
          float new_cordup[3], new_corddown[3];
-         calculateNewCords(new_cordup, new_corddown, site.first->start, site.first->next->start, site.second->start, site.second->next->start);
+         bool p = false;
+         calculateNewCords(new_cordup, new_corddown, site.first->start, site.first->next->start, site.second->start, site.second->next->start, p);
          os.write("KnotPlot 1.0", 12);
          os.put((char)12);
          os.put((char)10);
@@ -1044,14 +1056,14 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int incoOrco,
             Nvertices1++;
          }
          Nvertices1++;
-         int num_bytes1 = 12 * Nvertices1;
+          int num_bytes1 = 12 * Nvertices1;
          floatio.write_int(&num_bytes1, os);
          ep1 = site.first;
          while (ep1 != site.second){
              ep1 = ep1->next;
              floatio.write(ep1->start, os);
          }
-         floatio.write(ep1->start, os);
+         //floatio.write(ep1->start, os);
          if (virtualDir == 1)
              floatio.write(new_cordup, os);
          else

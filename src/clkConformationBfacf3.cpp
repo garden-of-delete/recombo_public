@@ -562,7 +562,7 @@ class clkConformationBfacf3::impl
    recomboSites sites;
    int lastRecombo;
 
-   void searchForRecomboSitesBetweenComps() //CubicLatticeKnotPtr clkp) //, recomboSites& sites)
+   void searchForRecomboSitesBetweenComps(int incoOrco, int stdOrvir, int vritualDir)//Used in mmc
    {
       sites.clear();
       //      int count = 0;
@@ -582,23 +582,28 @@ class clkConformationBfacf3::impl
          eq = d->first_edge;
          for (int j = 0; j < d->nedges; j++)
          {
-            // candidate edges must have opposite orientation
-            if (edgesAntiParallelAndUnitDistant(ep, eq))
-            {
-               //               count++;
-               sites.push_back(site(ep, eq));
-            }
+             if (stdOrvir == 2) { //(inco_Or_co, std_Or_vir, virtual_Dir) = (1,2,1), (1,2,0), (0,2,1), (0,2,0)
+                 if (edgesUnitDistant(ep, eq))
+                     sites.push_back(site(ep, eq));
+             }
+             else if ((incoOrco == 1 && stdOrvir == 1) || (incoOrco == 0 && stdOrvir == 0)) { //(inco_Or_co, std_Or_vir, virtual_Dir) = (1,1), (0,0,1), (0,0,0)
+                 if (edgesParallelAndUnitDistant(ep, eq))
+                     sites.push_back(site(ep, eq));
+             }
+             else { //(inco_Or_co, std_Or_vir, virtual_Dir) = (1,0,1), (1,0,0), (0,1)
+                 if (edgesAntiParallelAndUnitDistant(ep, eq))
+                     sites.push_back(site(ep, eq));
+             }
+
             eq = eq->next;
          }
          ep = ep->next;
       }
-      //      cout << "Number of sites recorded was " << count << endl;
    }
 
    // making no attempt to optimize
 
-   void searchForRecomboSitesOneComp(//CubicLatticeKnotPtr clkp,
-           int minarclength, int maxarclength) //, recomboSites& sites)
+   void searchForRecomboSitesOneComp(int minarclength, int maxarclength) //Only used in RunRecombo, has bugs
    {
       // for component length n, there will be two arcs between edges j > i
       // arc1 = j-i-1
@@ -634,6 +639,7 @@ class clkConformationBfacf3::impl
                   //                  count++;
                   sites.push_back(site(ep, eq));
                }
+
             }
             eq = eq->next;
          }
@@ -645,7 +651,7 @@ class clkConformationBfacf3::impl
 
 
 
-   void searchForRecomboSitesOneComp(int minarclength, int maxarclength, int incoOrco, int stdOrvir, int vritualDir)
+   void searchForRecomboSitesOneComp(int minarclength, int maxarclength, int incoOrco, int stdOrvir, int vritualDir) //Used in mmc
    {
       sites.clear();
       int n = clkp->fcomp->nedges;
@@ -686,8 +692,6 @@ class clkConformationBfacf3::impl
          }
          ep = ep->next;
       }
-      //      if (count > 0)
-      //         cout << "Number of sites recorded was " << count << endl;
    }
 
    friend class clkConformationBfacf3;
@@ -856,7 +860,7 @@ int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength,
    if (sizeComp0 >= minarclength + 1 && sizeComp0 <= maxarclength + 1
           && sizeComp1 >= minarclength + 1 && sizeComp1 <= maxarclength + 1)
    {
-      implementation->searchForRecomboSitesBetweenComps(); //minarclength, maxarclength);
+      implementation->searchForRecomboSitesBetweenComps(incoOrco, stdOrvir, virtualDir); //minarclength, maxarclength);
       return implementation->sites.size();
    }
    return 0;
@@ -888,7 +892,7 @@ int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength)
     if (sizeComp0 >= minarclength + 1 && sizeComp0 <= maxarclength + 1
         && sizeComp1 >= minarclength + 1 && sizeComp1 <= maxarclength + 1)
     {
-        implementation->searchForRecomboSitesBetweenComps(); //minarclength, maxarclength);
+        implementation->searchForRecomboSitesBetweenComps(0, 0, 0); //minarclength, maxarclength);
         return implementation->sites.size();
     }
     return 0;
@@ -972,7 +976,7 @@ void calculateNewCords(float *a, float *b, int *c, int *d , int *e, int *f, bool
     }
 }
 
-bool clkConformationBfacf3::performRecombination(std::ostream& os, int incoOrco, int virtualDir, int n)
+bool clkConformationBfacf3::performRecombination(std::ostream& os, int incoOrco, int virtualDir, int component_num, int n)
 {
    implementation->lastRecombo = n;
    clkConformationBfacf3::impl::site site = implementation->sites[n];
@@ -1043,55 +1047,97 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int incoOrco,
          float new_cordup[3], new_corddown[3];
          bool p = false;
          calculateNewCords(new_cordup, new_corddown, site.first->start, site.first->next->start, site.second->start, site.second->next->start, p);
-         os.write("KnotPlot 1.0", 12);
-         os.put((char)12);
-         os.put((char)10);
-         //writing the 1st comp
-         os.write("comp", 4);
-         os.write("LOCF", 4);
-         int Nvertices1 = 0;
-         EdgePtr ep1 = site.first;
-         while (ep1 != site.second){
-            ep1 = ep1->next;
+         if (component_num == 1) {
+            //writing the 1st comp
+            os.write("KnotPlot 1.0", 12);
+            os.put((char) 12);
+            os.put((char) 10);
+            os.write("comp", 4);
+            os.write("LOCF", 4);
+            int Nvertices1 = 0;
+            EdgePtr ep1 = site.first;
+            while (ep1 != site.second) {
+               ep1 = ep1->next;
+               Nvertices1++;
+            }
             Nvertices1++;
-         }
-         Nvertices1++;
-          int num_bytes1 = 12 * Nvertices1;
-         floatio.write_int(&num_bytes1, os);
-         ep1 = site.first;
-         while (ep1 != site.second){
-             ep1 = ep1->next;
-             floatio.write(ep1->start, os);
-         }
-         //floatio.write(ep1->start, os);
-         if (virtualDir == 1)
-             floatio.write(new_cordup, os);
-         else
-             floatio.write(new_corddown, os);
-         //writing the 2nd comp
-         os.write("comp", 4);
-         os.write("LOCF", 4);
-         int Nvertices2 = 0;
-         EdgePtr ep2 = site.second;
-         while (ep2 != site.first){
-            ep2 = ep2->next;
+            int num_bytes1 = 12 * Nvertices1;
+            floatio.write_int(&num_bytes1, os);
+
+            ep1 = site.first;
+            while (ep1 != site.second) {
+               ep1 = ep1->next;
+               floatio.write(ep1->start, os);
+            }
+            //floatio.write(ep1->start, os);
+            if (virtualDir == 1)
+               floatio.write(new_cordup, os);
+            else
+               floatio.write(new_corddown, os);
+            os.write("endf", 4);
+            os.put((char) 10);
+            //writing the 2nd comp
+            os.write("KnotPlot 1.0", 12);
+            os.put((char) 12);
+            os.put((char) 10);
+            os.write("comp", 4);
+            os.write("LOCF", 4);
+            int Nvertices2 = 0;
+            EdgePtr ep2 = site.second;
+            while (ep2 != site.first) {
+               ep2 = ep2->next;
+               Nvertices2++;
+            }
             Nvertices2++;
+            int num_bytes2 = 12 * Nvertices2;
+            floatio.write_int(&num_bytes2, os);
+            ep2 = site.second;
+            while (ep2 != site.first) {
+               ep2 = ep2->next;
+               floatio.write(ep2->start, os);
+            }
+            if (virtualDir == 1)
+               floatio.write(new_corddown, os);
+            else
+               floatio.write(new_cordup, os);
+            os.write("endf", 4);
+            os.put((char) 10);
+            return false;
          }
-         Nvertices2++;
-         int num_bytes2 = 12 * Nvertices2;
-         floatio.write_int(&num_bytes2, os);
-         ep2 = site.second;
-         while (ep2 != site.first){
-             ep2 = ep2->next;
-             floatio.write(ep2->start, os);
+         else //component_num = 2
+         {
+            os.write("KnotPlot 1.0", 12);
+            os.put((char) 12);
+            os.put((char) 10);
+            os.write("comp", 4);
+            os.write("LOCF", 4);
+            int Nvertices = implementation->clkp->nedges_total + 2;
+            int num_bytes = 12 * Nvertices;
+            floatio.write_int(&num_bytes, os);
+            EdgePtr ep = site.first;
+            while (ep != site.first->prev){
+                ep = ep->next;
+                floatio.write(ep->start,os);
+            }
+            floatio.write(site.first->start, os);
+            if (virtualDir == 1)
+                floatio.write(new_cordup, os);
+            else
+                floatio.write(new_corddown, os);
+            ep = site.second;
+            while (ep != site.second->prev){
+                ep = ep->next;
+                floatio.write(ep->start, os);
+            }
+            floatio.write(site.second->start,os);
+             if (virtualDir == 1)
+                 floatio.write(new_corddown, os);
+             else
+                 floatio.write(new_cordup, os);
+             os.write("endf", 4);
+             os.put((char) 10);
+             return false;
          }
-         if (virtualDir == 1)
-              floatio.write(new_corddown, os);
-         else
-              floatio.write(new_cordup, os);
-         os.write("endf", 4);
-         os.put((char)10);
-         return false;
       }
    }
 }
@@ -1157,9 +1203,9 @@ bool clkConformationBfacf3::dirIsParal(int site_choice){
    return false;
 }
 
-void clkConformationBfacf3::undoRecombination(std::ostream& os, int incoOrco, int virtualDir)
+void clkConformationBfacf3::undoRecombination(std::ostream& os, int incoOrco, int virtualDir, int component_num)
 {
-   performRecombination(os, incoOrco, virtualDir, implementation->lastRecombo);
+   performRecombination(os, incoOrco, virtualDir, component_num, implementation->lastRecombo);
 }
 
 void clkConformationBfacf3::undoRecombination()  //only used by runRecombo.cpp

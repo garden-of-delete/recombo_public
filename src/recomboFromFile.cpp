@@ -249,7 +249,7 @@ TOP:
 				j->writeAsCube(*out);
 			}
 			count++;
-			knot->undoRecombination(*out, incoOrco, virtualDir);
+			knot->undoRecombination(*out, incoOrco, virtualDir, 0);
 		}
 		delete knot;
 	}

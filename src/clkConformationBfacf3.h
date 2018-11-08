@@ -179,7 +179,7 @@ public:
     * countRecomboSites(int, int, char).
     * @param n index of recombo site at which to perform recombination.
     */
-   bool performRecombination(std::ostream& os, int incoOrco, int virtualDir, int n = 0);
+   bool performRecombination(std::ostream& os, int incoOrco, int virtualDir, int component_num, int n = 0);
    bool performRecombination(int n = 0);
    /**
     * Will undo the most recent recombination operation performed by
@@ -187,7 +187,7 @@ public:
     * recombination has been performed, or if step() or step(int) have been 
     * called since the most recent call to performRecombination(int).
     */
-   void undoRecombination(std::ostream& os, int incoOrco, int virtualDir);
+   void undoRecombination(std::ostream& os, int incoOrco, int virtualDir, int component_num);
    void undoRecombination();
    probs* probMap;
 

@@ -562,7 +562,40 @@ class clkConformationBfacf3::impl
    recomboSites sites;
    int lastRecombo;
 
-   void searchForRecomboSitesBetweenComps(int incoOrco, int stdOrvir, int vritualDir)//Used in mmc
+    void searchForRecomboSitesBetweenComps() //CubicLatticeKnotPtr clkp) //, recomboSites& sites)
+    {
+       sites.clear();
+       //      int count = 0;
+       //      initRecombo();
+       if (clkp->ncomps < 2)
+       {
+          // nothing more to do
+          return;
+       }
+
+       ComponentCLK* c = clkp->fcomp;
+       ComponentCLK* d = c->next;
+       EdgePtr ep, eq;
+       ep = c->first_edge;
+       for (int i = 0; i < c->nedges; i++)
+       {
+          eq = d->first_edge;
+          for (int j = 0; j < d->nedges; j++)
+          {
+             // candidate edges must have opposite orientation
+             if (edgesAntiParallelAndUnitDistant(ep, eq))
+             {
+                //               count++;
+                sites.push_back(site(ep, eq));
+             }
+             eq = eq->next;
+          }
+          ep = ep->next;
+       }
+       //      cout << "Number of sites recorded was " << count << endl;
+    }
+
+    void searchForRecomboSitesBetweenComps(int incoOrco, int stdOrvir, int vritualDir)//Used in mmc
    {
       sites.clear();
       //      int count = 0;
@@ -892,7 +925,7 @@ int clkConformationBfacf3::countRecomboSites(int minarclength, int maxarclength)
     if (sizeComp0 >= minarclength + 1 && sizeComp0 <= maxarclength + 1
         && sizeComp1 >= minarclength + 1 && sizeComp1 <= maxarclength + 1)
     {
-        implementation->searchForRecomboSitesBetweenComps(0, 0, 0); //minarclength, maxarclength);
+        implementation->searchForRecomboSitesBetweenComps();
         return implementation->sites.size();
     }
     return 0;

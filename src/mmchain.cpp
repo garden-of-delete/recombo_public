@@ -3,7 +3,7 @@
 using namespace std;
 
 void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int Q, double sr, int s, int N, int C, long int W, int M, char mode, int Seed,
-	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int T, bool Supress_output, int para1, int para2, int para3){
+	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int T, bool Supress_output, int Sequence_type, int Recombo_type){
 	string infile;
 	min_arc = Min_arc;
 	max_arc = Max_arc;
@@ -34,9 +34,8 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	current_block_file_number = 0;
 	supress_output = Supress_output;
 	sample_attempts = 0;
-	inco_Or_co = para1;
-	std_Or_vir = para2;
-	virtual_Dir = para3;
+	sequence_type = Sequence_type;
+	recombo_type = Recombo_type;
 	/*if (mode == 'm' or mode == 'f'){      //deleted on Jul 20, 18
 		stringstream ss;
 		ss << outfile_name << "%0.info";
@@ -419,10 +418,11 @@ int mmchain::sample(){
 	if (sample_mode == 's'){ // standard sampling
 		int samples = 0;
 		for (int i = 0; i < m; i++){
+		    int para_site = 0, anti_site = 0;
 			//check if filtering samples
 			if (target_recombo_length > 0 || min_arc < max_arc){
 				//attempt a sample with current recombination criteria
-				int sites = count_recombo_sites(chains[i].member_knot);
+				int sites = count_recombo_sites(chains[i].member_knot, para_site, anti_site);
 				if (sites > 0){
 					write_to_block_file(chains[i].member_knot);
 					samples++;
@@ -442,7 +442,7 @@ int mmchain::sample(){
 }
 
 
-int mmchain::do_recombo_knots(int current_chain){
+int mmchain::do_recombo_knots(int current_chain, int& Para_site, int& Anti_site){
 	//setup recombo environment
 	int sites = 0, choice = 0;
 	pseudorandom siteSelector(seed);
@@ -451,11 +451,11 @@ int mmchain::do_recombo_knots(int current_chain){
 	int length = chains[current_chain].member_knot->getComponent(0).size();
 	if (target_recombo_length !=0) {
 		if (length == (target_recombo_length)){
-			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
+			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, sequence_type, recombo_type, total_para_site, total_anti_site, Para_site, Anti_site);
 		}
 	}
 	else {
-		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, sequence_type, recombo_type, total_para_site, total_anti_site, Para_site, Anti_site);
 	}
     if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);
@@ -466,7 +466,7 @@ int mmchain::do_recombo_knots(int current_chain){
 	return 0;
 }
 
-int mmchain::do_recombo_links(int current_chain){
+int mmchain::do_recombo_links(int current_chain, int& Para_site, int& Anti_site){
 	//setup recombo environment
 	int sites = 0, choice = 0;
 	pseudorandom siteSelector(seed);
@@ -477,11 +477,11 @@ int mmchain::do_recombo_links(int current_chain){
 	int length = chains[current_chain].member_knot->getComponent(0).size() + chains[current_chain].member_knot->getComponent(1).size();
 	if (target_recombo_length !=0) {
 		if (length == (target_recombo_length)){
-			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
+			sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, sequence_type, recombo_type, total_para_site, total_anti_site, Para_site, Anti_site);
 		}
 	}
 	else {
-		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
+		sites = chains[current_chain].member_knot->countRecomboSites(min_arc, max_arc, sequence_type, recombo_type, total_para_site, total_anti_site, Para_site, Anti_site);
 	}
 	if (sites > 0){
 		choice = siteSelector.rand_integer(0, sites);
@@ -624,7 +624,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			toPrint.writeAsCube(out);
             //perform recombination
 
-			if (clk->performRecombination(out2, inco_Or_co, virtual_Dir, 1, site_choice))
+			if (clk->performRecombination(out2, sequence_type, recombo_type, n_components, site_choice))
 			{
 
 				//write clk_after to second output file
@@ -642,7 +642,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 				out2.put((char)10);
 				//toPrint.writeAsCube(out2);
 				//undo recombination
-				clk->undoRecombination(out2, inco_Or_co, virtual_Dir, 2);
+				clk->undoRecombination(out2, sequence_type, recombo_type, 2);
 			}
 		}
 		else if (n_components == 2){
@@ -657,7 +657,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			toPrint.writeAsCube(out);
 			toPrint2.writeAsCube(out);
 			//perform recombination
-            if (clk->performRecombination(out2, inco_Or_co, virtual_Dir, 2, site_choice)) {
+            if (clk->performRecombination(out2, sequence_type, recombo_type, n_components, site_choice)) {
                 //write clk_after to second output file
                 clk->getComponents(components);
                 list<clkConformationAsList>::const_iterator i;
@@ -675,7 +675,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
                 //toPrint3.writeAsCube(out2);
                 //toPrint4.writeAsCube(out2);
                 //undo recombination
-                clk->undoRecombination(out2, inco_Or_co, virtual_Dir, 1);
+                clk->undoRecombination(out2, sequence_type, recombo_type, 1);
             }
 		}
 		else{
@@ -730,7 +730,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 
 			toPrint.writeAsCube(out);
 			//perform recombination
-			if (clk->performRecombination(out2, inco_Or_co, virtual_Dir, 1, site_choice))
+			if (clk->performRecombination(out2, sequence_type, recombo_type, n_components, site_choice))
 			{
 
 				//write clk_after to second output file
@@ -748,7 +748,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 				out2.put((char)10);
 				//toPrint.writeAsCube(out2);
 				//undo recombination
-				clk->undoRecombination(out2, inco_Or_co, virtual_Dir, 2);
+				clk->undoRecombination(out2, sequence_type, recombo_type, 2);
 			}
 		}
 		else if (n_components == 2){ //substrate is a link
@@ -763,7 +763,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 			toPrint.writeAsCube(out);
 			toPrint2.writeAsCube(out);
 			//perform recombination
-			if (clk->performRecombination(out2, inco_Or_co, virtual_Dir, 2, site_choice)){
+			if (clk->performRecombination(out2, sequence_type, recombo_type, n_components, site_choice)){
                 //write clk_after to second output file
                 clk->getComponents(components);
                 list<clkConformationAsList>::const_iterator i;
@@ -781,7 +781,7 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
                 //toPrint3.writeAsCube(out2);
                 //toPrint4.writeAsCube(out2);
                 //undo recombination
-                clk->undoRecombination(out2, inco_Or_co, virtual_Dir, 1);
+                clk->undoRecombination(out2, sequence_type, recombo_type, 1);
             }
 		}
 		else{
@@ -792,9 +792,9 @@ void mmchain::write_recombination_to_block_file(clkConformationBfacf3* clk, int 
 	}
 }
 
-int mmchain::count_recombo_sites(clkConformationBfacf3* clk){
+int mmchain::count_recombo_sites(clkConformationBfacf3* clk, int& Para_site, int& Anti_site){
 	int length = 0, sites = 0, recombination = 0;
-	sites = clk->countRecomboSites(min_arc, max_arc, inco_Or_co, std_Or_vir, virtual_Dir);
+	sites = clk->countRecomboSites(min_arc, max_arc, sequence_type, recombo_type, total_para_site, total_anti_site, Para_site, Anti_site);
 	if (n_components == 1){
 		length = clk->getComponent(0).size();
 	}
@@ -816,17 +816,17 @@ int mmchain::block_mean_sample(){
 	int samples = 0;
 	for (int i = 0; i < m; i++){
 		//check recombination criteria
-		int length = 0, sites = 0, recombination = 0;
+		int length = 0, sites = 0, recombination = 0, para_site = 0, anti_site = 0;
 		//retrieve lengths (DONT WANT TO COMPUTE LENGTHS TWICE WHEN CALLING count_recombo_sites
 
 		if (sample_mode=='f'){
 			if (n_components == 1){
 				length = chains[i].member_knot->getComponent(0).size(); //new added Jul 20, 18
-				recombination=do_recombo_knots(i);
+				recombination=do_recombo_knots(i, para_site, anti_site);
 			}	
 			else if (n_components == 2){
 				length = chains[i].member_knot->getComponent(0).size() + chains[i].member_knot->getComponent(1).size(); //new added Jul 20,18
-				recombination=do_recombo_links(i);
+				recombination=do_recombo_links(i, para_site, anti_site);
 			}
 			if (recombination){
 				//write_to_block_file(chains[i].member_knot); //new
@@ -844,11 +844,11 @@ int mmchain::block_mean_sample(){
 			if (target_recombo_length > 0){
 				if (length == target_recombo_length){
 					//sites = chains[i].member_knot->countRecomboSites(min_arc, max_arc);
-					recombination = count_recombo_sites(chains[i].member_knot);
+					recombination = count_recombo_sites(chains[i].member_knot, para_site, anti_site);
 				}
 			}
 			else {
-				recombination = count_recombo_sites(chains[i].member_knot);
+				recombination = count_recombo_sites(chains[i].member_knot, para_site, anti_site);
 			}
 			//record clk if recombination criteria are met
 			if (recombination){
@@ -857,7 +857,7 @@ int mmchain::block_mean_sample(){
 				samples++;
 			}
 		}
-		info_file << length << ' ' << recombination << ' ';
+        info_file << length << ' ' << recombination << ' ';
 	}
 	info_file << '\n';
 	return samples;

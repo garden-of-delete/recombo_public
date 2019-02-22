@@ -6,15 +6,14 @@
 
 using namespace std;
 
-recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode, int Seed, int inco_Or_co, int std_Or_vir, int virtual_Dir){
+recomboFromFile::recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int N_components, char Read_mode, int Sampling_mode, int Block_file_mode, bool Supress_output, bool Info_mode, int Seed, int Sequence_type, int Recombo_type){
 	//set operating variables
 	supress_output = Supress_output;
 	min_arc = Min_arc;
 	max_arc = Max_arc;
 	read_mode = Read_mode;
-	incoOrco = inco_Or_co;
-	stdOrvir = std_Or_vir;
-	virtualDir = virtual_Dir;
+	sequence_type = Sequence_type;
+	recombo_type = Recombo_type;
 	sampling_mode = Sampling_mode;
 	block_file_mode = Block_file_mode;
 	seed = Seed;
@@ -159,7 +158,7 @@ void recomboFromFile::do_recombo_knots(){
 		lengths.push_back(length);
 		length_counter++;
 		
-        sites = knot->countRecomboSites(min_arc, max_arc, incoOrco, stdOrvir, virtualDir);
+        sites = knot->countRecomboSites(min_arc, max_arc);
 		if(sites > 0){
 			list<clkConformationAsList> components;
             //choice is the chosen site to perform recombo. Want to output this file
@@ -168,7 +167,7 @@ void recomboFromFile::do_recombo_knots(){
 			//write sites file
             writeSitesFile(knot, choice);
 
-			if (knot->performRecombination(*out, incoOrco, virtualDir, choice)){
+			if (knot->performRecombination(*out, sequence_type, recombo_type, 1, choice)){
                 knot->getComponents(components);
                 list<clkConformationAsList>::const_iterator i;
                 out->write("KnotPlot 1.0", 12);
@@ -233,7 +232,7 @@ TOP:
 			length_counter++;
 			sites = knot->countRecomboSites(min_arc, max_arc);
 		}*/
-		sites = knot->countRecomboSites(min_arc, max_arc, incoOrco, stdOrvir, virtualDir);
+		sites = knot->countRecomboSites(min_arc, max_arc);
 		//write sites to sites_file
 		/*stringstream ss;
 		ss << sites << '\n';
@@ -241,7 +240,7 @@ TOP:
 		cout << sites << '\n';
 		for (int i=0; i < sites; i++){
 			list<clkConformationAsList> components;
-			knot->performRecombination(*out, incoOrco, virtualDir, i);
+			knot->performRecombination(*out, sequence_type, recombo_type, 1, i);
 			knot->getComponents(components);
 			list<clkConformationAsList>::const_iterator j;
 			for (j = components.begin(); j != components.end(); j++)
@@ -249,7 +248,7 @@ TOP:
 				j->writeAsCube(*out);
 			}
 			count++;
-			knot->undoRecombination(*out, incoOrco, virtualDir, 0);
+			knot->undoRecombination(*out, sequence_type, recombo_type, 0);
 		}
 		delete knot;
 	}
@@ -297,7 +296,7 @@ void recomboFromFile::do_recombo_links(){
 		lengths.push_back(short_length + long_length);
 		if ((short_length >= min_arc) && (long_length <= max_arc)){
 		    length_counter++;
-            sites = knot->countRecomboSites(min_arc, max_arc, incoOrco, stdOrvir, virtualDir);
+            sites = knot->countRecomboSites(min_arc, max_arc);
             }
 	//}
 		//sites = knot->countRecomboSites(knot->getComponent(0).size()/2-4, knot->getComponent(0).size()/2+4);
@@ -309,7 +308,7 @@ void recomboFromFile::do_recombo_links(){
 			//write sites file
 			writeSitesFile(knot, choice);
 
-			if (knot->performRecombination(*out, incoOrco, virtualDir, choice)) {
+			if (knot->performRecombination(*out, sequence_type, recombo_type, 2, choice)) {
                 knot->getComponents(components);
                 list<clkConformationAsList>::const_iterator i;
                 out->write("KnotPlot 1.0", 12);

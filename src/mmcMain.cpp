@@ -23,18 +23,22 @@ void print_usage(){
 	cout << "-seed\tset seed for random number generator" << endl;
 	cout << "-bfs\tnumber of conformations to save per binary block file" << endl;
 	cout << "+s\tsupress status output. For use with shell scripts." << endl;
-	cout << "-recomboType:" << endl;
-	cout << "    i    : do incoherent(knot->knot) and standard recombo" << endl;
-	cout << "    iv   : do incoherent and positive virtual recombo" << endl;
-	cout << "    ivn  : do incoherent and negative virtual recombo" << endl;
-	cout << "    isv  : do incoherent and both standard and positive virtual recombo" << endl;
-	cout << "    isvn : do incoherent and both standard and negative virtual recombo" << endl;
-	cout << "    c    : do coherent(knot->link OR link->knot) and standard recombo" << endl;
-	cout << "    cv   : do coherent and positive virtual recombo" << endl;
-	cout << "    cvn  : do coherent and negative virtual recombo" << endl;
-	cout << "    csv  : do coherent and both standard and positive virtual recombo" << endl;
-	cout << "    csvn : do coherent and both standard and negative virtual recombo" << endl;
-	cout << "    ONLY USE i or c IF KNOT SUBSTRATE IS A LINK!!!!" << endl;
+	cout << "-recomboParas:" << endl;
+	cout << "    is    : do incoherent(knot->knot) and standard recombo" << endl;                   //00
+	cout << "    ip   : do incoherent and positive virtual recombo" << endl;                        //01
+	cout << "    in  : do incoherent and negative virtual recombo" << endl;                         //02
+    cout << "    ia  : do incoherent and automatic virtual recombo" << endl;                        //03
+    cout << "    isp   : " << endl;                                                                 //04
+    cout << "    isn  : " << endl;                                                                  //05
+    cout << "    isa  : " << endl;                                                                  //06
+	cout << "    ds    : do only coherent(knot->link OR link->knot) standard recombo" << endl;      //10
+	cout << "    dp  : do only coherent positive virtual recombo" << endl;                          //11
+	cout << "    dn  : do only coherent negative virtual recombo" << endl;                          //12
+    cout << "    da  : do only coherent automatic virtual recombo" << endl;                         //13
+    cout << "    dsp  : do a mix of coherent standard and positive virtual recombo" << endl;        //14
+    cout << "    dsn  : do a mix of coherent standard and negative virtual recombo" << endl;        //15
+    cout << "    dsa  : do a mix of coherent standard and automatic virtual recombo" << endl;       //16
+	cout << "    ONLY USE is or ds IF KNOT SUBSTRATE IS A LINK!!!!" << endl;
 	cout << "---------------------------------------------------------------------------------------------------------------" << endl;
 	cout << "When selecting values for minarc and maxarc, notice that if the range is too small, " << endl;
 	cout << "it would take long time to run, because the samples that satisfy that minarc and maxarc are rare."<< endl;
@@ -46,11 +50,17 @@ int main(int argc, char* argv[]){
 		*outfile,
 		mode;
 
-	string recombo_paras; //used to store recomboType
+	string recombo_paras; //used to store recomboParas
 
-	int incoOrco = -1,           //1: incoherent, 0: coherent
-		stdOrvir = 1,           //1: standard, 0: virtual, 2: both
-		virtualDir = 1;       //1: positive, 0: negative
+	int sequence_type, recombo_type;
+	//0:inverted, 1:direct
+    // 0: standard,
+    // 1: positive,
+    // 2: negative,
+    // 3: automatic,
+    // 4: standard+positive,
+    // 5: standard+negative,
+    // 6: standard+automatic
 
 	double zmin = 0, zmax = 0, sr=0;
 
@@ -71,49 +81,58 @@ int main(int argc, char* argv[]){
 				zmin = atof(argv[i + 1]);
 				i++;
 			}
-            else if (!strcmp(argv[i], "-recomboType")){
+			else if (!strcmp(argv[i], "-recomboParas"))
+			{
 				recombo_paras.append(argv[i + 1]);
-				if (recombo_paras.length() == 1){
-					if (recombo_paras[0] == 'i')				// i
-						incoOrco = 1;
-					else 										// c
-						incoOrco = 0;
-				}
-				else if (recombo_paras.length() == 2){
-					if (recombo_paras[0] == 'i')				// iv
-						incoOrco = 1;
-					else										// cv
-						incoOrco = 0;
-					stdOrvir = 0;
-				}
-				else if (recombo_paras.length() == 3) {
-					if (recombo_paras[0] == 'i') {
-						incoOrco = 1;
-						if (recombo_paras[1] == 'v') {			// ivn
-							stdOrvir = 0;
-							virtualDir = 0;
-						}
-						else									// isv
-							stdOrvir = 2;
-					}
-					else {// == 'c'
-						incoOrco = 0;
-						if (recombo_paras[1] == 'v'){			// cvn
-							stdOrvir = 0;
-							virtualDir = 0;
-						}
-						else
-							stdOrvir = 2;						// csv
-					}
-				}
-				else {//==4
-					if (recombo_paras[0] == 'i')				// isvn
-						incoOrco = 1;
-					else
-						incoOrco = 0;							// csvn
-					stdOrvir = 2;
-					virtualDir = 0;
-				}
+
+                if (recombo_paras.length() == 2) {
+                    if (recombo_paras[0] == 'i')
+                    {
+                        sequence_type = 0;
+                        if (recombo_paras[1] == 's')
+                            recombo_type = 0;
+                        else if (recombo_paras[1] == 'p')
+                            recombo_type = 1;
+                        else if (recombo_paras[1] == 'n')
+                            recombo_type = 2;
+                        else if (recombo_paras[1] == 'a')
+                            recombo_type = 3;
+                    }
+                    else if (recombo_paras[0] == 'd')
+                    {
+                        sequence_type = 1;
+                        if (recombo_paras[1] == 's')
+                            recombo_type = 0;
+                        else if (recombo_paras[1] == 'p')
+                            recombo_type = 1;
+                        else if (recombo_paras[1] == 'n')
+                            recombo_type = 2;
+                        else if (recombo_paras[1] == 'a')
+                            recombo_type = 3;
+                    }
+                }
+                else if (recombo_paras.length() == 3) {
+                    if (recombo_paras[0] == 'i')
+                    {
+                        sequence_type = 0;
+                        if (recombo_paras[2] == 'p')
+                            recombo_type = 4;
+                        else if (recombo_paras[2] == 'n')
+                            recombo_type = 5;
+                        else if (recombo_paras[2] == 'a')
+                            recombo_type = 6;
+                    }
+                    else if (recombo_paras[0] == 'd')
+                    {
+                        sequence_type = 1;
+                        if (recombo_paras[2] == 'p')
+                            recombo_type = 4;
+                        else if (recombo_paras[2] == 'n')
+                            recombo_type = 5;
+                        else if (recombo_paras[2] == 'a')
+                            recombo_type = 6;
+                    }
+                }
 				i++;
 			}
 			else if (!strcmp(argv[i], "-zmax")){
@@ -186,7 +205,7 @@ int main(int argc, char* argv[]){
 		}
 		//need to write checks for invalid operating parameters
 		mmchain mmc;
-		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, t, supress_output, incoOrco, stdOrvir, virtualDir);
+		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, t, supress_output, sequence_type, recombo_type);
 		mmc.run_mmc();
 	}
 

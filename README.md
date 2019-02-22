@@ -52,6 +52,37 @@ Advanced operating modes work in conjunction with recombo to perform reconnectio
 
 `-targetlength n` Optional when in one of the two advanced operating modes. Def
 
+
+`-recomboParas < >` is used in place of recomboFromFile.
+
+`-recomboParas ds` Optional when in f mode. Do standard (on-lattice) recombination in direct repeat
+
+`-recomboParas da` Optional when in f mode. Do writhe_based virtual (off-lattice) recombination in direct repeat
+
+`-recomboParas dp` Optional when in f mode. Do positive virtual (off-lattice) recombination in direct repeat
+
+`-recomboParas dn` Optional when in f mode. Do negative virtual (off-lattice) recombination in direct repeat 
+
+`-recomboParas dsa` Optional when in f mode. Do a mix of standard and writhe-based recombination in direct repeat
+
+`-recomboParas dsp` Optional when in f mode. Do a mix of standard and positive virtual recombination in direct repeat
+
+`-recomboParas dsn` Optional when in f mode. Do a mix of standard and negative virtual recombination in direct repeat
+
+`-recomboParas is` Optional when in f mode. Do standard recombination in inverted repeat
+
+`-recomboParas ip` Optional when in f mode. Do positive virtual recombination in inverted repeat  (Not implemented)
+
+`-recomboParas in` Optioanl when in f mode. Do positive virtual recombination in inverted repeat  (Not implemented)
+
+`-recomboParas ia` Optional when in f mode. Do writhe-based virtual recombination in inverted repeat  (Not implemented)
+
+`-recomboParas isp` Optioanl when in f mode. Do a mix of standard and positive virtual recombination in inverted repeat  (Not implemented)
+
+`-recomboParas isn` Optional when in f mode. Do a mix of standard and negative virtual recombination in inverted repeat  (Not implemented)
+
+`-recomboParas isa` Optional when in f mode. Do a mix of standard and writhe-based virtual recombination in inverted repeat  (Not implemented)
+
 ##### Optional Arguments
 `-q` (Optional) the q value used for all markov chains in the mmc process. If unspecified, defaults to q=1.
 
@@ -71,7 +102,7 @@ At least one of these must be specified for the program to terminate. If more th
 #### Example Usage
 `mmc initial/3_1 3_1 -zmin 0.20466 -zmax 0.20966 -q 1 -sr .8 -s 5 -n 800000 -c 20000 -m 5 -w 1000000 -mode m -minarc 57 -maxarc 63 -targetlength 120 -seed 42 +s > 3_1_log.txt &`
 
-## recomboFromFile
+## recomboFromFile (Not working now. It is integrated to MMC by -recomboParas < >)
 recomboFromFile takes an input file or stream of CUBE binary formatted polygons, and attempts to perform reconnection on each one according to user-specified reconnection criteria. It is capable of performing reconnection in direct ~~and inverted~~ repeat. 
 
 ## homfly

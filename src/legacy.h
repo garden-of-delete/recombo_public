@@ -185,6 +185,7 @@ extern bool input_CUBE (int &num_vertices, FILE *fp, ivector *coord);
 
 void bbox (int &volume, ivector range, int nvert, ivector *vert);
 double writhe (double &ACN, int nvert, ivector *vert, double jitter);
+double writhe_open(ivector *AB, ivector *CD); //Diwen 01/17/2019
 double radius_of_gyration (int nvert, ivector *vert);
 
 #endif

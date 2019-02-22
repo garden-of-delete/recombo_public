@@ -73,9 +73,9 @@ public:
 	int bfs, 
 	int time_limit, 
 	bool Supress_output,
-	int para1,
-	int para2,
-	int para3);
+	int Sequence_type,
+	int Recombo_type
+    );
 
 	/*
 	* Constructor for filtering samples to ones that meet recombination criteria
@@ -100,9 +100,9 @@ public:
 	int time_limit,
 	char orientation,
 	bool Supress_output,
-	int para1,
-	int para2,
-	int para3);
+	int Sequence_type,
+	int Recombo_type
+    );
 
 	/**
 	* adds an initial conformation from the given istream. practically speaking, will only be called from outside add_initial_conformation_From_file(...)
@@ -133,7 +133,8 @@ private:
 	string outfile_name;
 	bool supress_output;
 	char sample_mode;
-	int inco_Or_co, std_Or_vir, virtual_Dir;
+	int sequence_type, recombo_type;
+	int total_para_site = 0, total_anti_site = 0;
 	double z_m, z_1, target_swap_ratio;
 	clkConformationAsList initialComp0, initialComp1;
     clkConformationAsList recomboSites;
@@ -266,13 +267,13 @@ private:
 	void write_recombination_to_block_file(clkConformationBfacf3* clk, int site_choice);
 
 	
-	int do_recombo_knots(int current_chain);
-	int do_recombo_links(int current_chain);
+	int do_recombo_knots(int current_chain, int& Para_site, int& Anti_site);
+	int do_recombo_links(int current_chain, int& Para_site, int& Anti_site);
 
 	//deprecated
 	/*void write_reci_files();*/
 
-	int count_recombo_sites(clkConformationBfacf3* clk);
+	int count_recombo_sites(clkConformationBfacf3* clk, int& Para_site, int& Anti_site);
 	int block_mean_sample();
 
 	//private member objects

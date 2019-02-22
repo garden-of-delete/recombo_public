@@ -10,7 +10,9 @@
 
 class recomboFromFile{
 private:
-	int min_arc, max_arc, n_components, sampling_mode, block_file_mode, current_block_file_number, seed, incoOrco, stdOrvir, virtualDir;
+	int min_arc, max_arc, n_components, sampling_mode, block_file_mode, current_block_file_number, seed;
+	int sequence_type, recombo_type;
+	int total_para_site = 0, total_anti_site = 0;
 	char read_mode;
 	bool supress_output, info_mode;
 	string* infile_name;
@@ -30,7 +32,7 @@ private:
 	bool inc_filename();
 	string get_current_filename();
 public:
-	recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int n_components, char read_mode, int sampling_mode, int block_file_mode, bool supress_output, bool info_mode, int seed, int inco_Or_co, int std_Or_vir, int virtual_Dir);
+	recomboFromFile(int Min_arc, int Max_arc, char* Infile, char* Outfile, int n_components, char read_mode, int sampling_mode, int block_file_mode, bool supress_output, bool info_mode, int seed, int Sequence_type, int Recombo_type);
 	void do_recombo();
 	~recomboFromFile();
 };

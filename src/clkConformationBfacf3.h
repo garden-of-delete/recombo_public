@@ -167,7 +167,7 @@ public:
     * choices for of edge pairs for recombination.
     */
 
-   int countRecomboSites(int minarclength, int maxarclength, int incoOrco, int stdOrvir, int virtualDir);
+   int countRecomboSites(int minarclength, int maxarclength, int Sequence_type, int Recombo_type, int& Total_para_site, int& Total_anti_site, int& Para_site, int& Anti_site);
    int countRecomboSites(int minarclength, int maxarclength);
    
    /**
@@ -179,7 +179,7 @@ public:
     * countRecomboSites(int, int, char).
     * @param n index of recombo site at which to perform recombination.
     */
-   bool performRecombination(std::ostream& os, int incoOrco, int virtualDir, int component_num, int n = 0);
+   bool performRecombination(std::ostream& os, int Sequence_type, int Recombo_type, int component_num, int n = 0);
    bool performRecombination(int n = 0);
    /**
     * Will undo the most recent recombination operation performed by
@@ -187,7 +187,7 @@ public:
     * recombination has been performed, or if step() or step(int) have been 
     * called since the most recent call to performRecombination(int).
     */
-   void undoRecombination(std::ostream& os, int incoOrco, int virtualDir, int component_num);
+   void undoRecombination(std::ostream& os, int Sequence_type, int Recombo_type, int component_num);
    void undoRecombination();
    probs* probMap;
 

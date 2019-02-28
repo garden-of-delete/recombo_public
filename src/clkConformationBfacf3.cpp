@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   clkConformationBfacf3.cpp
  * Author: kmo
- * 
+ *
  * Created on December 4, 2012, 3:08 PM
  */
 
@@ -427,7 +427,7 @@ class clkConformationBfacf3::impl
                     << comp->last_edge->increment [0] << ", "
                     << comp->last_edge->increment [1] << ", "
                     << comp->last_edge->increment [2] << ")" << endl;
-            // TODO: should throw an exception rather than simply returning nothing        
+            // TODO: should throw an exception rather than simply returning nothing
             return (ComponentCLKPtr) NULL;
          }
 
@@ -486,7 +486,7 @@ class clkConformationBfacf3::impl
                     << comp->last_edge->increment [0] << ", "
                     << comp->last_edge->increment [1] << ", "
                     << comp->last_edge->increment [2] << ")" << endl;
-            // TODO: should throw an exception rather than simply returning nothing        
+            // TODO: should throw an exception rather than simply returning nothing
             return (ComponentCLKPtr) NULL;
          }
 
@@ -533,8 +533,8 @@ class clkConformationBfacf3::impl
    bool edgesParallelAndUnitDistant(EdgePtr ep, EdgePtr eq)
    {
       // candidate edges must NOT have opposite orientation
-      if (ep->dir!=eq->dir) return false;       
-      
+      if (ep->dir!=eq->dir) return false;
+
       ivector displacement;
       int dist;
       // candidate edges must have beginning vertex distance one to ending vertex
@@ -771,7 +771,7 @@ clkConformationBfacf3::clkConformationBfacf3(const clk& firstComponent, const cl
 implementation(new clkConformationBfacf3::impl(firstComponent, secondComponent)) {
 	probMap = new probs[MAX_PRECOMPUTE_LENGTH];
 	q = 1;
-}	
+}
 
 clkConformationBfacf3::~clkConformationBfacf3()
 {
@@ -870,7 +870,7 @@ void clkConformationBfacf3::stepQ(int current_q, double z)
 	double p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
 	double p_0 = .5*(p_plus2 + p_minus2);
 	bfacf_set_probabilities(comp, p_minus2, p_0, p_plus2);*/
-	
+
 	if (getZ() != z || current_q != q){
 		q = current_q;
 		setZ(z);
@@ -1008,146 +1008,224 @@ public:
     }
 };
 
-void calculateVirCords_manual(float *vir_vertx_right, float *vir_vertx_left, int *tail_first, int *head_first,
-                       int *tail_second, int *head_second, int first_dir, int second_dir){  //Diwen 01/17/2019
-    if (first_dir == second_dir){
-        //virtual recombination in directed repeated
-        vir_vertx_right[0] = vir_vertx_left[0] = (tail_first[0] + head_second[0]) * 0.5;
-        vir_vertx_right[1] = vir_vertx_left[1] = (tail_first[1] + head_second[1]) * 0.5;
-        vir_vertx_right[2] = vir_vertx_left[2] = (tail_first[2] + head_second[2]) * 0.5;
-        if (first_dir == 0){ //edges point to North
-            if (tail_first[0] != tail_second[0]){ //2 edges on xy plane
-               if (tail_first[0] < tail_second[0]) {
-                   vir_vertx_right[2] += 0.5;
-                   vir_vertx_left[2] -= 0.5;
-               }
-               else {//(tail_first[0] > tail_second[0])
-                   vir_vertx_right[2] -= 0.5;
-                   vir_vertx_left[2] += 0.5;
-               }
-            }
-            else { //2 edges on yz plane
-               if (tail_first[2] < tail_second[2]){
-                   vir_vertx_right[0] -= 0.5;
-                   vir_vertx_left[0] += 0.5;
-               }
-               else {//(tail_first[1] > tail_second[1])
-                   vir_vertx_right[0] += 0.5;
-                   vir_vertx_left[0] -= 0.5;
-               }
-            }
-        }
-        else if (first_dir == 1){ //edges point to East
-            if (tail_first[1] != tail_second[1]){ //2 edges on xy plane
-               if (tail_first[1] < tail_second[1]){
-                   vir_vertx_right[2] -= 0.5;
-                   vir_vertx_left[2] += 0.5;
-               }
-               else { //tail_first[1] > tail_second[1]
-                   vir_vertx_right[2] += 0.5;
-                   vir_vertx_left[2] -= 0.5;
-               }
-            }
-            else { //2 edges on xz plane
-               if (tail_first[2] < tail_second[2]){
-                   vir_vertx_right[1] += 0.5;
-                   vir_vertx_left[1] -= 0.5;
-               }
-               else { //tail_first[2] > tail_second[2]
-                   vir_vertx_right[1] -= 0.5;
-                   vir_vertx_left[1] += 0.5;
-               }
-            }
-        }
-        else if (first_dir == 2){ //edges point to West
-            if (tail_first[1] != tail_second[1]) { //2 edges on xy plane
-               if (tail_first[1] < tail_second[1]) {
-                   vir_vertx_right[2] += 0.5;
-                   vir_vertx_left[2] -= 0.5;
-               } else {//tail_first[1] > tail_second[1]}
-                   vir_vertx_right[2] -= 0.5;
-                   vir_vertx_left[2] += 0.5;
-               }
-            }
-            else { //2 edges on xz plane
-               if (tail_first[2] < tail_second[2]) {
-                   vir_vertx_right[1] -= 0.5;
-                   vir_vertx_left[1] += 0.5;
-               } else {
-                   vir_vertx_right[1] += 0.5;
-                   vir_vertx_left[1] -= 0.5;
-               }
-            }
-        }
-        else if (first_dir == 3){ //edges point to South
-            if (tail_first[0] != tail_second[0]){ //2 edges on xy plane
-               if (tail_first[0] < tail_second[0]){
-                   vir_vertx_right[2] -= 0.5;
-                   vir_vertx_left[2] += 0.5;
-               }
-               else{
-                   vir_vertx_right[2] += 0.5;
-                   vir_vertx_left[2] -= 0.5;
-               }
-            }
-            else { // 2 edges on yz plane
-               if (tail_first[2] < tail_second[2]){
-                   vir_vertx_right[0] += 0.5;
-                   vir_vertx_left[0] -= 0.5;
-               }
-               else {
-                   vir_vertx_right[0] -= 0.5;
-                   vir_vertx_left[0] += 0.5;
-               }
-            }
-        }
-        else if (first_dir == 4){ // edges point to Up
-            if (tail_first[0] != tail_second[0]){ //2 edges on xz plane
-               if (tail_first[0] < tail_second[0]){
-                   vir_vertx_right[1] -= 0.5;
-                   vir_vertx_left[1] += 0.5;
-               }
-               else {
-                   vir_vertx_right[1] += 0.5;
-                   vir_vertx_left[1] -= 0.5;
-               }
-            }
-            else{ //2 edges on yz plane
-               if (tail_first[1] < tail_second[1]){
-                   vir_vertx_right[0] += 0.5;
-                   vir_vertx_left[0] -= 0.5;
-               }
-               else {
-                   vir_vertx_right[0] -= 0.5;
-                   vir_vertx_left[0] += 0.5;
-               }
-            }
-        }
-        else { //edges point to Down
-            if (tail_first[1] != tail_second[1]){ //2 edges on yz plane
-               if (tail_first[1] < tail_second[1]){
-                   vir_vertx_right[0] -= 0.5;
-                   vir_vertx_left[0] += 0.5;
-               }
-               else {
-                   vir_vertx_right[0] += 0.5;
-                   vir_vertx_left[0] -= 0.5;
-               }
-            }
-            else { //2 edges on xz plane
-               if (tail_first[0] < tail_second[0]){
-                   vir_vertx_right[1] += 0.5;
-                   vir_vertx_left[1] -= 0.5;
-               }
-               else {
-                   vir_vertx_right[1] -= 0.5;
-                   vir_vertx_left[1] += 0.5;
-               }
-            }
-        }
+void calculate_virtual_coords(float* right, float* left, int* a, int* b, int* c, int* d, int first_dir){          //Diwen 02/27/2019
+   // a is tail of 1st edge
+   // b is head of 1st edge
+   // c is tail of 2nd edge
+   // d is head of 2nd edge
+   right[0] = left[0] = (a[0] + d[0]) * 0.5;
+   right[1] = left[1] = (a[1] + d[1]) * 0.5;
+   right[2] = left[2] = (a[2] + d[2]) * 0.5;
+   if ((first_dir == 0 && a[0] < c[0]) ||
+       (first_dir == 1 && a[1] > c[1]) ||
+       (first_dir == 2 && a[1] < c[1]) ||
+       (first_dir == 3 && a[0] > c[0]))
+   {
+      right[2] += 0.5;
+      left[2] -= 0.5;
+   }
+   else if ((first_dir == 0 && a[0] > c[0]) ||
+            (first_dir == 1 && a[1] < c[1]) ||
+            (first_dir == 2 && a[1] > c[1]) ||
+            (first_dir == 3 && a[0] < c[0]) )
+   {
+      right[2] -= 0.5;
+      left[2] += 0.5;
+   }
+   else if ((first_dir == 0 && a[2] < c[2]) ||
+            (first_dir == 3 && a[2] > c[2]) ||
+            (first_dir == 4 && a[1] > c[1]) ||
+            (first_dir == 5 && a[1] < c[1]))
+   {
+      right[0] -= 0.5;
+      left[0] += 0.5;
+   }
+   else if ((first_dir == 0 && a[2] > c[2]) ||
+            (first_dir == 3 && a[2] < c[2]) ||
+            (first_dir == 4 && a[1] < c[1]) ||
+            (first_dir == 5 && a[1] > c[1]))
+
+   {
+      right[0] += 0.5;
+      left[0] -= 0.5;
+   }
+   else if ((first_dir == 1 && a[2] < c[2]) ||
+            (first_dir == 2 && a[2] > c[2]) ||
+            (first_dir == 4 && a[0] > c[0]) ||
+            (first_dir == 5 && a[0] < c[0]))
+   {
+      right[1] += 0.5;
+      left[1] -= 0.5;
+   }
+   else if ((first_dir == 1 && a[2] > c[2]) ||
+            (first_dir == 2 && a[2] < c[2]) ||
+            (first_dir == 4 && a[0] < c[0]) ||
+            (first_dir == 5 && a[0] > c[0]))
+   {
+      right[1] -= 0.5;
+      left[1] += 0.5;
+   }
+}
+
+void write_to_binary_file_single_comp_inverted(std::ostream& os, EdgePtr first, EdgePtr second, float* ac, float* bd, int Numvertices){
+   floatio floatio;
+   os.write("KnotPlot 1.0", 12);
+   os.put((char) 12);
+   os.put((char) 10);
+   os.write("comp", 4);
+   os.write("LOCF", 4);
+   int num_bytes = 12 * Numvertices;
+   floatio.write_int(&num_bytes, os);
+   //looping through all coordinates
+   floatio.write(first->start, os);
+   floatio.write(ac, os);
+   floatio.write(second->start, os);
+   EdgePtr ep = second;
+   while (ep != first->next){
+      floatio.write(ep->prev->start, os);
+      ep = ep->prev;
+   }
+   floatio.write(bd, os);
+   ep = second;
+   while (ep != first->prev){
+      floatio.write(ep->next->start, os);
+      ep = ep->next;
+   }
+   os.write("endf", 4);
+   os.put((char) 10);
+}
+
+void perform_virtual_recombination_inverted(std::ostream& os, int recombo_type, EdgePtr first, EdgePtr second, int Numvertices){         //Diwen 02/27/2019
+   /* recombo_type == 1 or 4 => do positive virtual recombo
+    * recombo_type == 2 or 5 => do negative virtual recombo
+    * tail ------> head
+    * a is the coordinate of tail of first edge,
+    * b is the coordinate of head of first edge,
+    * c is the coordinate of tail of second edge,
+    * d if the coordinate of head of second edge */
+
+    //Sanity check
+    if (!(recombo_type == 1 || recombo_type == 2 || recombo_type == 4 || recombo_type == 5)){
+        cerr << "It doesn't make sense that we're not doing virtual recombination." << endl;
+        exit(104);
     }
-    else {
-        //virtual recombination in inverted repeat
+    float right[3], left[3];
+    calculate_virtual_coords(right, left, first->start, first->next->start, second->next->start, second->start, first->dir);
+    if (recombo_type == 1 || recombo_type == 4)                         // do positive virtual recombo
+        write_to_binary_file_single_comp_inverted(os, first, second, left, right, Numvertices);
+    else                                                                // do negative virtual recombo
+        write_to_binary_file_single_comp_inverted(os, first, second, right, left, Numvertices);
+}
+
+void write_to_binary_file_two_comp_direct(std::ostream& os, EdgePtr first, EdgePtr second, float* ad, float* cb){
+    floatio floatio;
+    // conformation is a 2-comp link
+    //writing the 1st comp
+    os.write("KnotPlot 1.0", 12);
+    os.put((char) 12);
+    os.put((char) 10);
+    os.write("compLOCF", 8);
+    int Nvertices1 = 0;
+    EdgePtr ep1 = first;
+    while (ep1 != second) {
+       ep1 = ep1->next;
+       Nvertices1++;
+    }
+    Nvertices1++;
+    int num_bytes1 = 12 * Nvertices1;
+    floatio.write_int(&num_bytes1, os);
+
+    ep1 = first;
+    while (ep1 != second) {
+       ep1 = ep1->next;
+       floatio.write(ep1->start, os);
+    }
+    floatio.write(cb, os);
+    os.write("endf", 4);
+    os.put((char) 10);
+
+    //writing the 2nd comp
+    os.write("KnotPlot 1.0", 12);
+    os.put((char) 12);
+    os.put((char) 10);
+    os.write("comp", 4);
+    os.write("LOCF", 4);
+    int Nvertices2 = 0;
+    EdgePtr ep2 = second;
+    while (ep2 != first) {
+        ep2 = ep2->next;
+        Nvertices2++;
+    }
+    Nvertices2++;
+    int num_bytes2 = 12 * Nvertices2;
+    floatio.write_int(&num_bytes2, os);
+    ep2 = second;
+    while (ep2 != first) {
+        ep2 = ep2->next;
+        floatio.write(ep2->start, os);
+    }
+    floatio.write(ad, os);
+    os.write("endf", 4);
+    os.put((char) 10);
+}
+
+void write_to_binary_file_single_comp_direct(std::ostream& os, EdgePtr first, EdgePtr second, float* ad, float* cb, int Numvertices){
+    // conformation is a 1-comp knot
+    floatio floatio;
+    //start writing the conformation to binary file
+    os.write("KnotPlot 1.0", 12);
+    os.put((char) 12);
+    os.put((char) 10);
+    os.write("compLOCF", 8);
+    int num_bytes = 12 * Numvertices;
+    floatio.write_int(&num_bytes, os);
+    EdgePtr ep = first;
+    while (ep != first->prev) {
+        ep = ep->next;
+        floatio.write(ep->start, os);
+    }
+    floatio.write(first->start, os);
+    floatio.write(ad, os);
+    ep = second;
+    while (ep != second->prev) {
+        ep = ep->next;
+        floatio.write(ep->start, os);
+    }
+    floatio.write(second->start, os);
+    floatio.write(cb, os);
+    os.write("endf", 4);
+    os.put((char) 10);
+}
+
+void perform_virtual_recombination_direct(std::ostream& os, int recombo_type, EdgePtr first, EdgePtr second, int comp, int Numvertices){ //Diwen 02/27/2019
+    /* recombo_type == 1 or 4 => do positive virtual recombo
+    * recombo_type == 2 or 5 => do negative virtual recombo
+    * tail ------> head
+    * a is the coordinate of tail of first edge,
+    * b is the coordinate of head of first edge,
+    * c is the coordinate of tail of second edge,
+    * d if the coordinate of head of second edge */
+
+    //Sanity check
+    if (!(recombo_type == 1 || recombo_type == 2 || recombo_type == 4 || recombo_type == 5)){
+        cerr << "It doesn't make sense that we're not doing virtual recombination." << endl;
+        exit(104);
+    }
+    float right[3], left[3], a_d[3], c_b[3];
+    calculate_virtual_coords(right, left, first->start, first->next->start, second->start, second->next->start, first->dir);
+    if (recombo_type == 1 || recombo_type == 4)                         // do positive virtual recombo
+    {
+        if (comp == 1)                                                  // knot -> link
+           write_to_binary_file_two_comp_direct(os, first, second, right, left);
+        else                                                            // link -> knot
+           write_to_binary_file_single_comp_direct(os, first, second, right, left, Numvertices);
+    }
+    else                                                                // do negative virtual recombo
+    {
+        if (comp == 1)
+           write_to_binary_file_two_comp_direct(os, first, second, left, right);
+        else
+           write_to_binary_file_single_comp_direct(os, first, second, a_d, c_b, Numvertices);
     }
 }
 
@@ -1203,132 +1281,36 @@ int checkLocalPositivity(EdgePtr first, EdgePtr second){ //Diwen 01/17/2019
     return writhe > 0.0;
 }
 
-
-
-void calculateVirCords_auto(float* c_b, float* a_d, int pos_or_neg, int* a, int* b, int* c, int* d, int first_dir, int second_dir){ //only works for direct repeat Diwen 01/17/2019
-    c_b[0] = (c[0] + b[0])/2.0;
-    c_b[1] = (c[1] + b[1])/2.0;
-    c_b[2] = (c[2] + b[2])/2.0;
-
-    a_d[0] = (a[0] + d[0])/2.0;
-    a_d[1] = (a[1] + d[1])/2.0;
-    a_d[2] = (a[2] + d[2])/2.0;
-
-    if (pos_or_neg){
-        /*2 straight lines AB and CD form a positive crossing in space*/
-        if ((first_dir == 3 && b[0] < d[0]) || (first_dir == 0 && b[0] > d[0]) || (first_dir == 2 && b[1] > d[1]) || (first_dir == 1 && b[1] < d[1])){
-            a_d[2] += 0.5;
-            c_b[2] -= 0.5;
-        }
-        else if ((first_dir == 3 && b[0] > d[0]) || (first_dir == 0 && b[0] < d[0]) || (first_dir == 2 && b[1] < d[1]) || (first_dir == 1 && b[1] > d[1])){
-            a_d[2] -= 0.5;
-            c_b[2] += 0.5;
-        }
-        else if ((first_dir == 4 && b[0] < d[0]) || (first_dir == 5 && b[0] > d[0]) || (first_dir == 1 && b[2] > d[2]) || (first_dir == 2 && b[2] < d[2])){
-            a_d[1] += 0.5;
-            c_b[1] -= 0.5;
-        }
-        else if ((first_dir == 4 && b[0] > d[0]) || (first_dir == 5 && b[0] < d[0]) || (first_dir == 1 && b[2] < d[2]) || (first_dir == 2 && b[2] > d[2])){
-            a_d[1] -= 0.5;
-            c_b[1] += 0.5;
-        }
-        else if ((first_dir == 4 && b[1] > d[1]) || (first_dir == 5 && b[1] < d[1]) || (first_dir == 3 && b[2] > d[2]) || (first_dir == 0 && b[2] < d[2])){
-            a_d[0] += 0.5;
-            c_b[0] -= 0.5;
-        }
-        else{
-            a_d[0] -= 0.5;
-            c_b[0] += 0.5;
-        }
-    }
-    else{
-        /*2 straight lines AB AND CD form a negative crossing in space*/
-        if ((first_dir == 3 && b[0] < d[0]) || (first_dir == 0 && b[0] > d[0]) || (first_dir == 2 && b[1] > d[1]) || (first_dir == 1 && b[1] < d[1])){
-            a_d[2] -= 0.5;
-            c_b[2] += 0.5;
-        }
-        else if ((first_dir == 3 && b[0] > d[0]) || (first_dir == 0 && b[0] < d[0]) || (first_dir == 2 && b[1] < d[1]) || (first_dir == 1 && b[1] > d[1])){
-            a_d[2] += 0.5;
-            c_b[2] -= 0.5;
-        }
-        else if ((first_dir == 4 && b[0] < d[0]) || (first_dir == 5 && b[0] > d[0]) || (first_dir == 1 && b[2] > d[2]) || (first_dir == 2 && b[2] < d[2])){
-            a_d[1] -= 0.5;
-            c_b[1] += 0.5;
-        }
-        else if ((first_dir == 4 && b[0] > d[0]) || (first_dir == 5 && b[0] < d[0]) || (first_dir == 1 && b[2] < d[2]) || (first_dir == 2 && b[2] > d[2])){
-            a_d[1] += 0.5;
-            c_b[1] -= 0.5;
-        }
-        else if ((first_dir == 4 && b[1] > d[1]) || (first_dir == 5 && b[1] < d[1]) || (first_dir == 3 && b[2] > d[2]) || (first_dir == 0 && b[2] < d[2])){
-            a_d[0] -= 0.5;
-            c_b[0] += 0.5;
-        }
-        else{
-            a_d[0] += 0.5;
-            c_b[0] -= 0.5;
-        }
-    }
-}
-
 bool clkConformationBfacf3::performRecombination(std::ostream& os, int Sequence_type, int Recombo_type, int component_num, int n)
 {
    implementation->lastRecombo = n;
    clkConformationBfacf3::impl::site site = implementation->sites[n];
+   int numvertices = implementation->clkp->nedges_total + 2;
    //checks if the site contains parallel edges, need update ep2 after return from perform_recombination() to
    // make ep1 and ep2 parallel in the site
    // for the later use in undo_recombination()
    if (Sequence_type == 0) //incoherent (inverted repeat)
    {
-      if (site.first->dir == site.second->dir) //standard, substrate is a knot, product is a knot
+      if (site.first->dir == site.second->dir)                                         //standard, knot -> knot
       {
          EdgePtr newep2 = site.first->next;
          perform_recombination(implementation->clkp, site.first, site.second);
          implementation->sites[n].second = newep2;
          return true;
       }
-      else // do virtual and write in binary
+      else                                                                             // virtual, knot -> knot
       {
-          //substrate is a knot, product is a knot
-          floatio floatio;
-          if (Recombo_type == 3 || Recombo_type == 6) { //automatic
-              return false;
+          if (Recombo_type == 3 || Recombo_type == 6)                                  // writhe-based virtual recombination
+          {
+              int local_positivity = checkLocalPositivity(site.first, site.second);
+              if (local_positivity)                                                    // locally positive, doing negative virtual recombo is more natural
+                  perform_virtual_recombination_inverted(os, 2, site.first, site.second, numvertices);
+              else                                                                     // locally negative, doing positive virtual recombo is more natural
+                  perform_virtual_recombination_inverted(os, 1, site.first, site.second, numvertices);
           }
-          else{ // manual
-              float vir_vertx_right[3], vir_vertx_left[3];
-              calculateVirCords_manual(vir_vertx_right, vir_vertx_left, site.first->start, site.first->next->start, site.second->start, site.second->next->start, site.first->dir, site.second->dir);
-              os.write("KnotPlot 1.0", 12);
-              os.put((char) 12);
-              os.put((char) 10);
-              os.write("comp", 4);
-              os.write("LOCF", 4);
-              int Nvertices = implementation->clkp->nedges_total + 2;
-              int num_bytes = 12 * Nvertices;
-              floatio.write_int(&num_bytes, os);
-
-              EdgePtr ep = site.first->next;
-              while (ep != site.second) {
-                  floatio.write(ep->start, os);
-                  ep = ep->next;
-              }
-              floatio.write(ep->start, os);
-              if (Recombo_type == 1 || Recombo_type == 4)
-                  floatio.write(vir_vertx_right, os);
-              else
-                  floatio.write(vir_vertx_left, os);
-              floatio.write(site.first->start, os);
-              ep = site.first->prev;
-              while (ep != site.second) {
-                  floatio.write(ep->start, os);
-                  ep = ep->prev;
-              }
-              if (Recombo_type == 1 || Recombo_type == 4)
-                  floatio.write(vir_vertx_left, os);
-              else
-                  floatio.write(vir_vertx_right, os);
-              os.write("endf", 4);
-              os.put((char) 10);
-              return false;
-          }
+          else                                                                         // manual virtual recombo
+              perform_virtual_recombination_inverted(os, Recombo_type, site.first, site.second, numvertices);
+          return false;
       }
    }
    else  //coherent (directed repeat)
@@ -1341,191 +1323,30 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int Sequence_
       else // do virtual recombination
       {
           floatio floatio;
-         if (component_num == 1) { //substrate is a knot, product is a link
-             if (Recombo_type == 3 || Recombo_type == 6){ //automatic
-                 float vir_cord_cb[3], vir_cord_ad[3];
-                 int pos_or_neg = checkLocalPositivity(site.first, site.second);
-                 calculateVirCords_auto(vir_cord_cb, vir_cord_ad, pos_or_neg, site.first->start, site.first->next->start, site.second->start, site.second->next->start, site.first->dir, site.second->dir);
-                 //start writing the conformation to binary file
-                 //writing the 1st comp
-                 os.write("KnotPlot 1.0", 12);
-                 os.put((char) 12);
-                 os.put((char) 10);
-                 os.write("comp", 4);
-                 os.write("LOCF", 4);
-                 int Nvertices1 = 0;
-                 EdgePtr ep1 = site.first;
-                 while (ep1 != site.second) {
-                     ep1 = ep1->next;
-                     Nvertices1++;
-                 }
-                 Nvertices1++;
-                 int num_bytes1 = 12 * Nvertices1;
-                 floatio.write_int(&num_bytes1, os);
-
-                 ep1 = site.first;
-                 while (ep1 != site.second) {
-                     ep1 = ep1->next;
-                     floatio.write(ep1->start, os);
-                 }
-                 floatio.write(vir_cord_cb, os);
-                 os.write("endf", 4);
-                 os.put((char) 10);
-
-                 //writing the 2nd comp
-                 os.write("KnotPlot 1.0", 12);
-                 os.put((char) 12);
-                 os.put((char) 10);
-                 os.write("comp", 4);
-                 os.write("LOCF", 4);
-                 int Nvertices2 = 0;
-                 EdgePtr ep2 = site.second;
-                 while (ep2 != site.first) {
-                     ep2 = ep2->next;
-                     Nvertices2++;
-                 }
-                 Nvertices2++;
-                 int num_bytes2 = 12 * Nvertices2;
-                 floatio.write_int(&num_bytes2, os);
-                 ep2 = site.second;
-                 while (ep2 != site.first) {
-                     ep2 = ep2->next;
-                     floatio.write(ep2->start, os);
-                 }
-                 floatio.write(vir_cord_ad, os);
-                 os.write("endf", 4);
-                 os.put((char) 10);
-                 return false;
-             }
-             else { // manually select to do pos or vir
-                 float vir_vertx_right[3], vir_vertx_left[3];
-                 calculateVirCords_manual(vir_vertx_right, vir_vertx_left, site.first->start, site.first->next->start, site.second->start, site.second->next->start, site.first->dir, site.second->dir);
-                 //start writing the conformation to binary file
-                 //writing the 1st comp
-                 os.write("KnotPlot 1.0", 12);
-                 os.put((char) 12);
-                 os.put((char) 10);
-                 os.write("comp", 4);
-                 os.write("LOCF", 4);
-                 int Nvertices1 = 0;
-                 EdgePtr ep1 = site.first;
-                 while (ep1 != site.second) {
-                     ep1 = ep1->next;
-                     Nvertices1++;
-                 }
-                 Nvertices1++;
-                 int num_bytes1 = 12 * Nvertices1;
-                 floatio.write_int(&num_bytes1, os);
-
-                 ep1 = site.first;
-                 while (ep1 != site.second) {
-                     ep1 = ep1->next;
-                     floatio.write(ep1->start, os);
-                 }
-                 if (Recombo_type == 1 || Recombo_type == 4) // do positive virtual recombination
-                     floatio.write(vir_vertx_left, os);
+         if (component_num == 1) {                                                     // knot -> link
+             if (Recombo_type == 3 || Recombo_type == 6){                              // writhe_based virtual recombo
+                 int local_positivity = checkLocalPositivity(site.first, site.second);
+                 if (local_positivity)
+                     perform_virtual_recombination_direct(os, 2, site.first, site.second, 1, numvertices);
                  else
-                     floatio.write(vir_vertx_right, os);
-                 os.write("endf", 4);
-                 os.put((char) 10);
-                 //writing the 2nd comp
-                 os.write("KnotPlot 1.0", 12);
-                 os.put((char) 12);
-                 os.put((char) 10);
-                 os.write("comp", 4);
-                 os.write("LOCF", 4);
-                 int Nvertices2 = 0;
-                 EdgePtr ep2 = site.second;
-                 while (ep2 != site.first) {
-                     ep2 = ep2->next;
-                     Nvertices2++;
-                 }
-                 Nvertices2++;
-                 int num_bytes2 = 12 * Nvertices2;
-                 floatio.write_int(&num_bytes2, os);
-                 ep2 = site.second;
-                 while (ep2 != site.first) {
-                     ep2 = ep2->next;
-                     floatio.write(ep2->start, os);
-                 }
-                 if (Recombo_type == 1 || Recombo_type == 4)  // do positive virtual recombination
-                     floatio.write(vir_vertx_right, os);
-                 else
-                     floatio.write(vir_vertx_left, os);
-                 os.write("endf", 4);
-                 os.put((char) 10);
-                 return false;
+                     perform_virtual_recombination_direct(os, 1, site.first, site.second, 1, numvertices);
              }
+             else                                                                      // manual virtual recombo
+                 perform_virtual_recombination_direct(os, Recombo_type, site.first, site.second, 1, numvertices);
+             return false;
          }
-         else //component_num = 2, substrate is a link, product is a knot
+         else                                                                          // link -> knot
          {
-             if (Recombo_type == 3 || Recombo_type == 6){ // automatic
-                 float vir_cord_cb[3], vir_cord_ad[3];
-                 int pos_or_neg = checkLocalPositivity(site.first, site.second);
-                 calculateVirCords_auto(vir_cord_cb, vir_cord_ad, pos_or_neg, site.first->start, site.first->next->start, site.second->start, site.second->next->start, site.first->dir, site.second->dir);
-                 //starting writing conformation to binary file
-                 os.write("KnotPlot 1.0", 12);
-                 os.put((char) 12);
-                 os.put((char) 10);
-                 os.write("comp", 4);
-                 os.write("LOCF", 4);
-                 int Nvertices = implementation->clkp->nedges_total + 2;
-                 int num_bytes = 12 * Nvertices;
-                 floatio.write_int(&num_bytes, os);
-                 EdgePtr ep = site.first;
-                 while (ep != site.first->prev) {
-                     ep = ep->next;
-                     floatio.write(ep->start, os);
-                 }
-                 floatio.write(site.first->start, os);
-                 floatio.write(vir_cord_ad, os);
-                 ep = site.second;
-                 while (ep != site.second->prev) {
-                     ep = ep->next;
-                     floatio.write(ep->start, os);
-                 }
-                 floatio.write(site.second->start, os);
-                 floatio.write(vir_cord_cb, os);
-                 os.write("endf", 4);
-                 os.put((char) 10);
-                 return false;
-             }
-             else{ // do manual vir recombo
-                 float new_cordup[3], new_corddown[3];
-                 calculateVirCords_manual(new_cordup, new_corddown, site.first->start, site.first->next->start, site.second->start, site.second->next->start, site.first->dir, site.second->dir);
-                 //start writing the conformation to binary file
-                 os.write("KnotPlot 1.0", 12);
-                 os.put((char) 12);
-                 os.put((char) 10);
-                 os.write("comp", 4);
-                 os.write("LOCF", 4);
-                 int Nvertices = implementation->clkp->nedges_total + 2;
-                 int num_bytes = 12 * Nvertices;
-                 floatio.write_int(&num_bytes, os);
-                 EdgePtr ep = site.first;
-                 while (ep != site.first->prev) {
-                     ep = ep->next;
-                     floatio.write(ep->start, os);
-                 }
-                 floatio.write(site.first->start, os);
-                 if (Recombo_type == 1 or Recombo_type == 4)
-                     floatio.write(new_cordup, os);
+             if (Recombo_type == 3 || Recombo_type == 6){                              // writhe-based virtual recombo
+                 int local_positivity = checkLocalPositivity(site.first, site.second);
+                 if (local_positivity)
+                     perform_virtual_recombination_direct(os, 2, site.first, site.second, 2, numvertices);
                  else
-                     floatio.write(new_corddown, os);
-                 ep = site.second;
-                 while (ep != site.second->prev) {
-                     ep = ep->next;
-                     floatio.write(ep->start, os);
-                 }
-                 floatio.write(site.second->start, os);
-                 if (Recombo_type == 1 or Recombo_type == 4)
-                     floatio.write(new_corddown, os);
-                 else
-                     floatio.write(new_cordup, os);
-                 os.write("endf", 4);
-                 os.put((char) 10);
-                 return false;
+                     perform_virtual_recombination_direct(os, 1, site.first, site.second, 2, numvertices);
              }
+             else                                                                     // manual virtual recombination
+                 perform_virtual_recombination_direct(os, Recombo_type, site.first, site.second, 2, numvertices);
+             return false;
          }
       }
    }
@@ -1609,6 +1430,6 @@ void clkConformationBfacf3::undoRecombination()  //only used by runRecombo.cpp
 clkConformationBfacf3::clkConformationBfacf3() { }
 
 clkConformationBfacf3::clkConformationBfacf3(const clkConformationBfacf3 & orig) {
-	
+
 }
 

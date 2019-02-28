@@ -181,6 +181,13 @@ public:
     */
    bool performRecombination(std::ostream& os, int Sequence_type, int Recombo_type, int component_num, int n = 0);
    bool performRecombination(int n = 0);
+
+
+
+
+
+
+
    /**
     * Will undo the most recent recombination operation performed by
     * performRecombination(int). Results will be unpredictable if no 

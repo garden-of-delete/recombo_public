@@ -1260,6 +1260,11 @@ int checkLocalPositivity(EdgePtr first, EdgePtr second){ //Diwen 01/17/2019
         /* writhe of 2 open straight chains is 0, go 1 edge further on 4 endpoints.*/
         radius++;
 
+        if (radius >= 10){ //halting criterion
+            //cout << "arb" << endl;
+            return 1;
+        }
+
         a_ptr = a_ptr->prev;
         b_ptr = b_ptr->next;
         c_ptr = c_ptr->prev;
@@ -1305,7 +1310,7 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int Sequence_
               int local_positivity = checkLocalPositivity(site.first, site.second);
               if (local_positivity)                                                    // locally positive, doing negative virtual recombo is more natural
                   perform_virtual_recombination_inverted(os, 2, site.first, site.second, numvertices);
-              else                                                                     // locally negative, doing positive virtual recombo is more natural
+              else                                                                 // locally negative, doing positive virtual recombo is more natural
                   perform_virtual_recombination_inverted(os, 1, site.first, site.second, numvertices);
           }
           else                                                                         // manual virtual recombo

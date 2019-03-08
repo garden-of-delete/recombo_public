@@ -1331,10 +1331,10 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int Sequence_
          if (component_num == 1) {                                                     // knot -> link
              if (Recombo_type == 3 || Recombo_type == 6){                              // writhe_based virtual recombo
                  int local_positivity = checkLocalPositivity(site.first, site.second);
-                 if (local_positivity)                                                 // locally a + crossing, do + virtual recombo is more natural
-                     perform_virtual_recombination_direct(os, 1, site.first, site.second, 1, numvertices);
-                 else                                                                  // locally a - crossing, do - virtual recombo is more natural
+                 if (local_positivity)                                                 // locally a + crossing, do - virtual recombo is more natural
                      perform_virtual_recombination_direct(os, 2, site.first, site.second, 1, numvertices);
+                 else                                                                  // locally a - crossing, do + virtual recombo is more natural
+                     perform_virtual_recombination_direct(os, 1, site.first, site.second, 1, numvertices);
              }
              else                                                                      // manual virtual recombo
                  perform_virtual_recombination_direct(os, Recombo_type, site.first, site.second, 1, numvertices);
@@ -1344,10 +1344,10 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int Sequence_
          {
              if (Recombo_type == 3 || Recombo_type == 6){                              // writhe-based virtual recombo
                  int local_positivity = checkLocalPositivity(site.first, site.second);
-                 if (local_positivity)                                                 // locally a + crossing, do + virtual recombo is more natural
-                     perform_virtual_recombination_direct(os, 1, site.first, site.second, 2, numvertices);
-                 else                                                                  // locally a - crossing, do - virtual recombo is more natural
+                 if (local_positivity)                                                 // locally a + crossing, do - virtual recombo is more natural
                      perform_virtual_recombination_direct(os, 2, site.first, site.second, 2, numvertices);
+                 else                                                                  // locally a - crossing, do + virtual recombo is more natural
+                     perform_virtual_recombination_direct(os, 1, site.first, site.second, 2, numvertices);
              }
              else                                                                     // manual virtual recombination
                  perform_virtual_recombination_direct(os, Recombo_type, site.first, site.second, 2, numvertices);

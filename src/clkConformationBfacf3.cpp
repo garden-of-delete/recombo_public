@@ -1211,7 +1211,7 @@ void perform_virtual_recombination_direct(std::ostream& os, int recombo_type, Ed
         cerr << "It doesn't make sense that we're not doing virtual recombination." << endl;
         exit(104);
     }
-    float right[3], left[3], a_d[3], c_b[3];
+    float right[3], left[3];
     calculate_virtual_coords(right, left, first->start, first->next->start, second->start, second->next->start, first->dir);
     if (recombo_type == 1 || recombo_type == 4)                         // do positive virtual recombo
     {
@@ -1225,7 +1225,7 @@ void perform_virtual_recombination_direct(std::ostream& os, int recombo_type, Ed
         if (comp == 1)
            write_to_binary_file_two_comp_direct(os, first, second, left, right);
         else
-           write_to_binary_file_single_comp_direct(os, first, second, a_d, c_b, Numvertices);
+           write_to_binary_file_single_comp_direct(os, first, second, left, right, Numvertices);
     }
 }
 
@@ -1331,10 +1331,10 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int Sequence_
          if (component_num == 1) {                                                     // knot -> link
              if (Recombo_type == 3 || Recombo_type == 6){                              // writhe_based virtual recombo
                  int local_positivity = checkLocalPositivity(site.first, site.second);
-                 if (local_positivity)
-                     perform_virtual_recombination_direct(os, 2, site.first, site.second, 1, numvertices);
-                 else
+                 if (local_positivity)                                                 // locally a + crossing, do + virtual recombo is more natural
                      perform_virtual_recombination_direct(os, 1, site.first, site.second, 1, numvertices);
+                 else                                                                  // locally a - crossing, do - virtual recombo is more natural
+                     perform_virtual_recombination_direct(os, 2, site.first, site.second, 1, numvertices);
              }
              else                                                                      // manual virtual recombo
                  perform_virtual_recombination_direct(os, Recombo_type, site.first, site.second, 1, numvertices);
@@ -1344,10 +1344,10 @@ bool clkConformationBfacf3::performRecombination(std::ostream& os, int Sequence_
          {
              if (Recombo_type == 3 || Recombo_type == 6){                              // writhe-based virtual recombo
                  int local_positivity = checkLocalPositivity(site.first, site.second);
-                 if (local_positivity)
-                     perform_virtual_recombination_direct(os, 2, site.first, site.second, 2, numvertices);
-                 else
+                 if (local_positivity)                                                 // locally a + crossing, do + virtual recombo is more natural
                      perform_virtual_recombination_direct(os, 1, site.first, site.second, 2, numvertices);
+                 else                                                                  // locally a - crossing, do - virtual recombo is more natural
+                     perform_virtual_recombination_direct(os, 2, site.first, site.second, 2, numvertices);
              }
              else                                                                     // manual virtual recombination
                  perform_virtual_recombination_direct(os, Recombo_type, site.first, site.second, 2, numvertices);

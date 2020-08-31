@@ -3,9 +3,8 @@
 ## Synopsis
 RECOMBO is the working title of the Topological Molecular Biology Recombination Tool Suite. The suite is made up of a number of different applications that share a common code base are designed to work well together. As a basic overview, these applications cover everything from generating SAPs of fixed topology (MMC), performing reconnection (recomboFromFile), computing homfly polynomials from extended gauss codes (homfly), identifying homfly polynomials with a topology (idknot). RECOMBO also includes an integrated unit testing suite, and a thoroughly experimental z-value finder (zAnalyzer). Each application in this suite is described in detail below.
 
-##Installation
-This software suite is intended for use on Linux platforms and may be compatible with most OSX platforms. Install by following these steps:
-
+## Installation
+This software suite is intended for use on Linux and OSX. Install by following these steps:
 1. Download and extract this repository.
 2. In a shell command line, navigate inside the repository's containing folder. 
 3. execute `make all`.
@@ -139,8 +138,52 @@ Seqconvert is a generally useful application that efficiently converts files fil
 
 Knotplot is a wonderful knot computation and visualization software developed and maintained by Rob Scharein. In the context of reconnection studies, it is useful for computing the extended gauss codes for each Polygon. Knotplot can be purchased for a small fee at http://knotplot.com/.
 
+## Guide
+### Introduction
+In this guide, we will walk through setup and all the steps the whole RECOMBO workflow. These steps are: generating randomized self-avoiding polygons, modifying the geometry of existing conformations, identifying knot and link-type, and analysis of the resulting transition data.
+
+For our example, we will start where every project starts, a question: "What linktypes are possible when you perform topological reconnection on the 5_1 knot in inverted repeat?" If some of those words are unfamiliar to you, I would recommend pausing to read [this]. Now if you have a background in knot theory, you may think this problem can be solved with analytical methods, which is true. But suppose I wanted a sense of WHICH of those possibilities...
+
+### Installation (OSX)
+1. Set up the directory structure and pull the repository using Git.
+Open the terminal. Start by navigating to the directory where you want to download the repository using the `cd` command. You can create a new directory using the `mkdir` command. 
+
+For example, if we wanted to create a new folder to host the repository called `recombo_public` in our home directory, we might type:
+```bash
+cd ~
+mkdir recombo_public
+cd recombo_public
+git init
+```
+2. Download the repository using the `git pull` command, as described in the Git documentation. Continuing the above example, we might use:
+```bash
+git pull https://github.com/USER/recombo_public master
+```
+3. Compile and build the software using `make all`. You will see messages from the make process in the terminal. If compilation is not successful, examine the error messages in the terminal window and ensure your compiler and environment are treating the code appropriately.
+4. Assuming compilation is successful, navigate to the /src/bin subdirectory to find the executables. Continuing our example, the commands would be:
+```bash
+cd src/bin
+ls .
+```
+### Generating randomized self-avoiding polygons
+The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. It is often the starting point for the RECOMBO workflow. Its options and their descriptions are provided in the manual above, 
+
+### Modifying existing conformations
+It may be desirable to modify the geometry of a collection of existing conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection. It provides two means of doing topological reconnection. The `mmc` executable supports topological reconnection at the time of polygon generation, and the `recomboFromFile` executable provides a way to perform reconnection on a file of polygons (in the CUBE binary format).
+
+Reconnection in mmc
+
+Reconnection in recomboFromFile
+
+### Identifying Knot and Link-type
+
+### Data Analysis and Pipelining support
+recomboHelper
+
 ## Contributors (ordered chronologically)
-Rob Schaerine, Reuben Brasher, Robert Stolz
+Rob Schaerine, Reuben Brasher, Robert Stolz, Michelle Flanner, Zihao Zhu, Diwen Lu
+
+## Temp
 
 ## License
 All rights reserved. 2017. 

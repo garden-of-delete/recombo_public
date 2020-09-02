@@ -165,21 +165,41 @@ git pull https://github.com/USER/recombo_public master
 cd src/bin
 ls .
 ```
-### Generating randomized self-avoiding polygons
-The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. It is often the starting point for the RECOMBO workflow. Its options and their descriptions are provided in the manual above, 
+...which should show five executables: `homfly`, `idknot`, `mmc`, `recomboFromFile` and `xinger`.
 
+### Generating randomized self-avoiding polygons
+The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. Its options and their descriptions are listed above. BFACF (and thus `mmc`) requires a coordinate file specifying an initial SAP conformation to randomize. There are many parameters that must be chosen, and I recommend the interested user dig into the RECOMBO appendix to learn more about the theoretical significance of each one. Most importantly, we must choose the fugacity parameter (`-zmax`: controls average length), the number of conformations to be sampled (`-n`), the number of BFACF moves between samples (`-c`: controls statistical dependence of samples), the number of BFACF moves to take as a warmup to randomize the initial conformation (`-w`: controls the statistical dependence between the first sample and the initial conformation), and the sampling mode (`-mode`: controls what is saved / output from `mmc`). 
+
+The parameter that controls the number of Markov chains (`-m`) can be set to 1, which makes `mmc` run as an instance of serial BFACF. If the number of Markov chains is greater than 1, . I recommend the beginner run `mmc` in this mode, since running more than one Markov chain requires a slew of other parameters to be specified (and understood). For the advanced user, these parameters are the lower fugacity parameter (`-zmin`), the swap ratio (`-sr`), the number of steps between attempted swaps (`-s`). I have provided reasonable choices of these parameters below as a guide
+
+To continue our example, we would like to generate a collection of random 5_1 knots. We will return to the project directory, create a directory for our results, and invoke mmc like so:
+```bash
+cd ~/recombo_public
+mkdir results
+bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 800000 -c 20000 -m 1 -w 1000000 -mode s -minarc 57 -maxarc 63 -targetlength 120 -seed 42 +s > 3_1_log.txt
+```
+When `mmc` finishes, it will be 
+
+If we wanted to also perform warmup analysis in addition to sampling, we would use the `-mode b` option. If we only want to perform autocorrelation analysis, we would use the `--mode a` option. 
 ### Modifying existing conformations
 It may be desirable to modify the geometry of a collection of existing conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection. It provides two means of doing topological reconnection. The `mmc` executable supports topological reconnection at the time of polygon generation, and the `recomboFromFile` executable provides a way to perform reconnection on a file of polygons (in the CUBE binary format).
 
-Reconnection in mmc
+The `mmc` executable is not only capiable of generating conformations, it can also perform reconnection on them at the time of sampling. This is a helpful time-saver in the case the user knows what arclength and absolute length criteria they are interested in.
 
-Reconnection in recomboFromFile
+```bash
+`mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 800000 -c 20000 -m 1 -w 1000000 -mode m -minarc 57 -maxarc 63 -targetlength 120 -seed 42 +s > 3_1_log.txt
+```
+
+Reconnection can also be performed to a file of conformations using the stand alone `recomboFromFile` executable. 
 
 ### Identifying Knot and Link-type
 
 ### Data Analysis and Pipelining support
-recomboHelper
 
+
+Data analysis
+
+Pipelining support
 ## Contributors (ordered chronologically)
 Rob Schaerine, Reuben Brasher, Robert Stolz, Michelle Flanner, Zihao Zhu, Diwen Lu
 

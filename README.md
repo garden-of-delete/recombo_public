@@ -9,7 +9,7 @@ This software suite is intended for use on Linux and OSX. Install by following t
 2. In a shell command line, navigate inside the repository's containing folder. 
 3. execute `make all`.
 4. Assuming compilation is successful and all unit tests pass, navigate to the /src/bin subdirectory to find the executables. 
-5. If compilation is not successful, examine the error messages and ensure your compiler and environment are treating the code appropriately. 
+5. If compilation is not successful, examine the error messages and ensure your compiler and environment are treating the code appropriately.
 
 ## MMC
 MMC is the largest and most complex piece of software in the RECOMBO suite. It uses an extension of the BFACF algorithm (CMC-BFACF) [Stolz et. al., 2017,Szafron,Orlandini] to generate and sample self-avoiding polygons. Because of its complexity, there are a number of options and run-modes avaliable to the user to best meet your simulation needs. 
@@ -23,7 +23,7 @@ For a more detailed explanation of the theory behind Composite Markov Chain Mont
 
 `-zmax` the largest z value set to one of the initial markov chains
 
-`-sr` the user-defined minimum acceptaple swap ratio that must be satisfied between adjacent markov chains
+`-sr` the user-defined minimum acceptaple swap ratio that must be satisfied between adjacent markov chains. If the swap-ratio is not satisfied, a new Markov chain will be added with a z value half-way between them on a linear curve. 
 
 `-s` the swap interval, or the number of BFACF moves between swap attempts in each chain
 
@@ -37,6 +37,8 @@ The sampling mode dictates how BFACF samples conformations. Basic options:
 
 `-mode s` Sample mode. Sample conformations in at an interval specified by the `-c` option into a binary format file.
 
+`-bfs n` Block-file size. Specifies the number of conformations to save per file, `n`. Useful for splitting up the dataset. With the `-bfs` option unused or if `n` is 1, each conformation will be output in its own CUBE binary formatted `.b` file. NOTE: The binary representation of the CUBE format should be thought of as a linked list. Retrieving a conformation at a particular index requires iterating through all the preceding conformations in the file. Therefore, it is advisable to think about how you will want to organize and analyze the output conformations when specifing the `-bfs` option.
+
 `-mode b` Combination of `a` and `s` mode.
 
 Advanced operating modes work in conjunction with recombo to perform reconnection in mmc:
@@ -49,8 +51,7 @@ Advanced operating modes work in conjunction with recombo to perform reconnectio
 
 `-maxarc n` Mandatory when in one of the two advanced operating modes. Defines the maximum arclength to identify a reconnection site as the integer `n`.
 
-`-targetlength n` Optional when in one of the two advanced operating modes. Def
-
+`-targetlength n` Optional when in one of the two advanced operating modes. For knots, the conformation must be of length `n` within a defined arclength tolerance. For two-component links, the components must add to `n` within a defined arclength tolerance.
 
 `-recomboParas < >` is used in place of recomboFromFile.
 
@@ -98,7 +99,7 @@ At least one of these must be specified for the program to terminate. If more th
 
 `-t` integer number of hours to run before safe termination. 
 
-#### Example Usage
+#### Example Usage (revise)
 `mmc initial/3_1 3_1 -zmin 0.20466 -zmax 0.20966 -q 1 -sr .8 -s 5 -n 800000 -c 20000 -m 5 -w 1000000 -mode m -minarc 57 -maxarc 63 -targetlength 120 -seed 42 +s > 3_1_log.txt &`
 
 ## recomboFromFile (Not working now. It is integrated to MMC by -recomboParas < >)
@@ -114,8 +115,11 @@ Homfly takes as an input a file of extended gauss codes (.egc), and outputs the 
 
 `homfly -- |` or ` homfly -- > output_file` for use in a stream.
 
+## xinger
+
+
 ## idknot
-Idknot takes a input file or stream of homfly polynomials and associates each one with a topology, or 'unknown' if unrecognized. 
+Idknot takes a input file or stream of homfly polynomials and associates each one with a topology, or 'unknown' if unrecognized. It expects an input file of homfly polynomials, one on each line, and can output the identifications in a variety of ways as described below.
 
 #### Usage
 Running `idknot` with no other arguments will print out detailed usage information. Some common usage scenarios:
@@ -125,9 +129,6 @@ Running `idknot` with no other arguments will print out detailed usage informati
 `idknot input_file output_file -k` to print conformation identifications line-by-line. 
 
 `idknot -- output_file -nz -u -P` or `idknot -- -nz -u -P > output_file` substitutes the input file for a data stream. 
-
-## zAnalyzer
-N/A
 
 ## Other Software
 There are other useful applications that are not included as part of RECOMBO: 
@@ -168,17 +169,17 @@ ls .
 ...which should show five executables: `homfly`, `idknot`, `mmc`, `recomboFromFile` and `xinger`.
 
 ### Generating randomized self-avoiding polygons
-The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. Its options and their descriptions are listed above. BFACF (and thus `mmc`) requires a coordinate file specifying an initial SAP conformation to randomize. There are many parameters that must be chosen, and I recommend the interested user dig into the RECOMBO appendix to learn more about the theoretical significance of each one. Most importantly, we must choose the fugacity parameter (`-zmax`: controls average length), the number of conformations to be sampled (`-n`), the number of BFACF moves between samples (`-c`: controls statistical dependence of samples), the number of BFACF moves to take as a warmup to randomize the initial conformation (`-w`: controls the statistical dependence between the first sample and the initial conformation), and the sampling mode (`-mode`: controls what is saved / output from `mmc`). 
+The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. Its options and their descriptions are listed above. BFACF (and thus `mmc`) requires a coordinate file specifying an initial SAP conformation to randomize. Initial conformations for many knot and link-types can be found in the initial folder. NAMING SCHEME. There are many parameters that must be chosen, and I recommend the interested user dig into the RECOMBO appendix to learn more about the theoretical significance of each one. Most importantly, we must choose the fugacity parameter (`-zmax`: controls average length), the number of conformations to be sampled (`-n`), the number of BFACF moves between samples (`-c`: controls statistical dependence of samples), the number of BFACF moves to take as a warmup to randomize the initial conformation (`-w`: controls the statistical dependence between the first sample and the initial conformation), and the sampling mode (`-mode`: controls what is saved / output from `mmc`).
 
 The parameter that controls the number of Markov chains (`-m`) can be set to 1, which makes `mmc` run as an instance of serial BFACF. If the number of Markov chains is greater than 1, . I recommend the beginner run `mmc` in this mode, since running more than one Markov chain requires a slew of other parameters to be specified (and understood). For the advanced user, these parameters are the lower fugacity parameter (`-zmin`), the swap ratio (`-sr`), the number of steps between attempted swaps (`-s`). I have provided reasonable choices of these parameters below as a guide
 
-To continue our example, we would like to generate a collection of random 5_1 knots. We will return to the project directory, create a directory for our results, and invoke mmc like so:
+To continue our example, we would like to generate a collection of random 5_1 knots. We will return to the project directory, create a directory for our results, and execute mmc like so:
 ```bash
 cd ~/recombo_public
 mkdir results
-bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 800000 -c 20000 -m 1 -w 1000000 -mode s -minarc 57 -maxarc 63 -targetlength 120 -seed 42 +s > 3_1_log.txt
+src/bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 100000 -mode s -bfs 5000 +s > 5_1_log.txt
 ```
-When `mmc` finishes, it will be 
+When `mmc` finishes, 5000 5_1 knot conformations will have been deposited in a file 
 
 If we wanted to also perform warmup analysis in addition to sampling, we would use the `-mode b` option. If we only want to perform autocorrelation analysis, we would use the `--mode a` option. 
 ### Modifying existing conformations
@@ -193,6 +194,9 @@ The `mmc` executable is not only capiable of generating conformations, it can al
 Reconnection can also be performed to a file of conformations using the stand alone `recomboFromFile` executable. 
 
 ### Identifying Knot and Link-type
+The conformation identification pathway relies on an existing installation of Knotplot with BFACF functionality enabled. Knotplot is commercial software that can be purchased [here](https://knotplot.com/download/). Its creator, Rob scharein, must provide instructions and a special license to enable the needed special functionality.
+
+The first step in the identification pathway is to use knotplot 
 
 ### Data Analysis and Pipelining support
 

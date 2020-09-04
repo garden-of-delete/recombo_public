@@ -248,10 +248,6 @@ void mmchain::run_mmc(){
 
 		i += sample();
 		sample_attempts++;
-		//if not filtering samples by recombination criteria
-		if (max_arc == 0){
-			i++;
-		}
 		if (!supress_output){
 			cout << "\rSampling Progress: " << i << '/' << n;
 		}

@@ -109,7 +109,7 @@ recomboFromFile takes an input file or stream of CUBE binary formatted polygons,
 Homfly takes as an input a file of extended gauss codes (.egc), and outputs the HOMFLY-PT polynomial [x] for each one. 
 
 #### Usage
-`homfly` for interactive usage.
+`homfly` for interactive usage. If you are a mathematician looking to 
 
 `homfly input_file output_file` 
 
@@ -143,7 +143,7 @@ Knotplot is a wonderful knot computation and visualization software developed an
 ### Introduction
 In this guide, we will walk through setup and all the steps the whole RECOMBO workflow. These steps are: generating randomized self-avoiding polygons, modifying the geometry of existing conformations, identifying knot and link-type, and analysis of the resulting transition data.
 
-For our example, we will start where every project starts, a question: "What linktypes are possible when you perform topological reconnection on the 5_1 knot in inverted repeat?" If some of those words are unfamiliar to you, I would recommend pausing to read [this]. Now if you have a background in knot theory, you may think this problem can be solved with analytical methods, which is true. But suppose I wanted a sense of WHICH of those possibilities...
+For our example, we will start where every project starts, a question: "What linktypes are possible outcomes of topological reconnection on the 5_1 knot, and which transition is most likely to ocurr at random?" If some of those words are unfamiliar to you, I would recommend pausing to read [this].
 
 ### Installation (OSX)
 1. Set up the directory structure and pull the repository using Git.
@@ -179,24 +179,46 @@ cd ~/recombo_public
 mkdir results
 src/bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 100000 -mode s -bfs 5000 +s > 5_1_log.txt
 ```
-When `mmc` finishes, 5000 5_1 knot conformations will have been deposited in a file 
+When `mmc` finishes, 5000 5_1 knot conformations should have been deposited in a file called `5_1n1.b` in our `results/` sub-directory.
 
-If we wanted to also perform warmup analysis in addition to sampling, we would use the `-mode b` option. If we only want to perform autocorrelation analysis, we would use the `--mode a` option. 
-### Modifying existing conformations
-It may be desirable to modify the geometry of a collection of existing conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection. It provides two means of doing topological reconnection. The `mmc` executable supports topological reconnection at the time of polygon generation, and the `recomboFromFile` executable provides a way to perform reconnection on a file of polygons (in the CUBE binary format).
-
-The `mmc` executable is not only capiable of generating conformations, it can also perform reconnection on them at the time of sampling. This is a helpful time-saver in the case the user knows what arclength and absolute length criteria they are interested in.
+MMC also has the ability to generate conformations and sample as a composite Markov chain. One might be motivated to use this functionality if sampling a wide range of lengths, or if randomization is too slow in serial BFACF mode. To run `mmc` in composite Markov chain mode, the `-m` parameter, which specifies the initial number of Markov chains, should be set to an integer value larger than 1. During the warmup, `mmc` will check if the swap-ratio (the proportion of attempted conformation exchanges between adjacent chains) 
 
 ```bash
-`mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 800000 -c 20000 -m 1 -w 1000000 -mode m -minarc 57 -maxarc 63 -targetlength 120 -seed 42 +s > 3_1_log.txt
+`mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 50000 -c 20000 -m 1 -w 1000000 -mode r -minarc 6 -maxarc 114 -targetlength 120 -seed 42 +s > 3_1_log.txt
 ```
 
-Reconnection can also be performed to a file of conformations using the stand alone `recomboFromFile` executable. 
+### Performing Topological Reconnection
+It may be desirable to modify the geometry of the generated conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection (see [this] or [this](https://www.nature.com/articles/s41598-017-12172-2) for more details). The `mmc` executable supports topological reconnection at the time of polygon generation through the `-mode f` (filter mode) and `-mode r` (reconnection mode). Filter mode saves only conformations that have sites meeting the arclength specified through `-minarc`, `-maxarc`, and `-targetlength`. Reconnection mode saves conformations on the specified interval like `-mode s`, but also saves a post-reconnection version of any conformations that has a site meeting the specified criteria.
+
+To continue our example, suppose we wanted to generate a larger version of the dataset above, but also perform reconnection in inverted repeat. For our arclength criteria, we will require that at least 6 edges fall on one side of the reconnection site, and we will require the conformation to be exactly 120 edges long.
+```bash
+`mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 50000 -c 20000 -m 1 -w 1000000 -mode r -minarc 6 -maxarc 114 -targetlength 120 -seed 42 +s > 3_1_log.txt
+```
 
 ### Identifying Knot and Link-type
-The conformation identification pathway relies on an existing installation of Knotplot with BFACF functionality enabled. Knotplot is commercial software that can be purchased [here](https://knotplot.com/download/). Its creator, Rob scharein, must provide instructions and a special license to enable the needed special functionality.
+The conformation identification pathway relies on an existing installation of Knotplot with BFACF functionality enabled. Knotplot is commercial software that can be purchased [here](https://knotplot.com/download/). Its creator, Rob scharein, must be contacted via email to provide instructions and a special license which enables the needed special functionality. Once knotplot is installed, the we must locate the stand-alone knotplot executable included in the installation (default location is `/Applications/KnotPlot/utilities/knotplot`), and copy/paste it into the `/knotplot` subdirectory of your local repository.
 
-The first step in the identification pathway is to use knotplot 
+The first step in the identification pathway is to use knotplot to carry out a sequence of critical tasks. First, the conformation is loaded into knotplot's BFACF engine. Then, a number of BFACF moves is performed allowing only moves that maintain or reduce the size of the conformation. This has the effect of reducing the conformation's compplexity, which . The conformation is taken off the lattice and embedded in R3, and an energy minimization algorithm straightens the conformation out to disambiguate the crossings in the projection. Finally, a projection of the conformation is taken onto the plane and the extended gauss code is computed. We will carry out all these tasks in sequence using a knotplot script. It is neccisary to know the number of components in our conformations of interest, as knot and two-component link conformations require different treatment. 
+
+To continue our example, the following knotplot script would be suitable for identifying the post-reconnection conformations we generated in the previous section:
+```
+alias idknot "bfacf load; bfacf prob 1 1 0; bfacf step 20000; ago 200; centre; align axes; gauss"
+alias idlink "save |tmp; sequence +; load combine |tmp"
+gauss noblank yes
+
+gauss open 5_1.egc
+sequence open 5_1_after.b
+until seqend "idlink; idknot; sequence +"
+sequence close
+gauss close
+```
+To execute this script, we should make sure we are in the main directory of our local repository, then invoke knotplot like so:
+```bash
+cd ~/recombo_public
+knotplot/knotplot 
+```
+
+The above knotplot script and another example for knotted conformations have been included in the `/knotplot` subdirectory of this repository. I recommend contacting Rob Scharein with questions about KnotPlot's built-in scripting functionality.
 
 ### Data Analysis and Pipelining support
 
@@ -204,12 +226,12 @@ The first step in the identification pathway is to use knotplot
 Data analysis
 
 Pipelining support
+
 ## Contributors (ordered chronologically)
 Rob Schaerine, Reuben Brasher, Robert Stolz, Michelle Flanner, Zihao Zhu, Diwen Lu
 
-## Temp
+## Funding
+
 
 ## License
-All rights reserved. 2017. 
-
-This repository is currently private, and this source code is for internal use during development. A stable branch will be made public at an appropriate time.  
+We need to put this under a GPL or similar license.

@@ -16,7 +16,7 @@ OBJS = argprocessor.o autocorr.o bfacfProbabilities.o bfacfProbabilitiesFromZ.o 
 
 all: programs 
 
-programs: mmc zAnalyzer idknot homfly
+programs: mmc idknot homfly xinger
 
 bin:
 	mkdir -p bin

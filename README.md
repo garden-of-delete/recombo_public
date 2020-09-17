@@ -188,8 +188,9 @@ The `mmc` executable also has the ability to generate conformations and sample a
 
 This is <b>not</b> part of our example, but we might use a commmand like this to generate our same dataset above in composite markov chain mode.
 ```bash
-src/bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 100000 -mode s -bfs 5000 +s > 5_1_log.txt
+src/bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 5 -w 100000 -mode s -bfs 5000 +s > 5_1_log.txt
 ```
+NOTE: It is possible that up to `m-1` additional conformations will be saved above the `-n` conformations requested when running in CMC mode. Everything is ok. 
 
 ## Performing Topological Reconnection
 It may be desirable to modify the geometry of the generated conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection (see [this] or [this](https://www.nature.com/articles/s41598-017-12172-2) for more details). The `mmc` executable supports topological reconnection at the time of polygon generation through the `-mode f` (filter mode) and `-mode r` (reconnection mode). Filter mode saves only conformations that have sites meeting the arclength specified through both `-minarc` and `-maxarc`, and/or `-targetlength`. Reconnection mode saves conformations on the specified interval like `-mode s`, but also saves a post-reconnection version of any conformations that has a site meeting the specified criteria.

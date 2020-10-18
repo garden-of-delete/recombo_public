@@ -1,21 +1,22 @@
 # RECOMBO 
 
 ### Synopsis
-RECOMBO is the working title of the Topological Molecular Biology Recombination Tool Suite. The suite is made up of a number of different applications that share a mostly common code base and work well together. To provide a basic overview: these applications cover everything from generating and performing topological reconnection on SAP conformations of fixed topology (MMC), removing reidermeister crossings in knot shadows (xinger), computing homfly polynomials from extended gauss codes (homfly), and identifying homfly polynomials with a topology (idknot). RECOMBO also includes an integrated unit testing suite with ok-ish test coverage, and a thoroughly experimental fugacity parameter finder (zAnalyzer). The workflow is covered in a task centric way through the Guide section below. Below that, the Manual section provides more detail on the operation of each program. 
+RECOMBO is the working title of the Topological Molecular Biology Recombination Tool Suite. The suite is made up of a number of different applications that share a mostly common code base and work well together. A basic overview: these applications cover generating and performing topological reconnection on SAP conformations of fixed topology (MMC), removing Reidemeister crossings in knot projections (xinger), computing homfly polynomials from extended gauss codes (homfly), and identifying homfly polynomials with a topology (idknot). RECOMBO also includes an integrated unit testing suite with ok-ish test coverage, and a thoroughly experimental fugacity parameter finder (zAnalyzer). A task-oriented walkthrough is provided by the 'Guide' section below. Below that, the 'Manual' section provides an application-oriented look at the optional arguments of each program. 
 
 # Guide
-Updated Oct 17, 2020
+Updated Oct 18, 2020
 
 ### Introduction
-In this guide, we will walk through setup and all the steps the RECOMBO workflow. These steps are: generating randomized self-avoiding polygons, modifying the geometry of existing conformations, identifying knot and link-type, and analysis of the resulting transition data. For detailed information ab
+In this guide, we will walk through setup and all the steps in the RECOMBO workflow. These steps are: generating randomized self-avoiding polygons, modifying the geometry of existing conformations, identifying knot and link-type, and analysis of the resulting transition data.
 
-For our example, we will start where every project starts, a question: "What linktypes are possible outcomes of topological reconnection on the 5_1 knot, and which  is most likely to ocurr?" If some of those words or concepts are unfamiliar to you, I would recommend pausing to read [this] and [this](https://www.nature.com/articles/s41598-017-12172-2).
+For our example, we will start where every project starts, a question: "What linktypes are possible outcomes of topological reconnection on the 5_1 knot, and which  is most likely to occur?" If some of those words or concepts are unfamiliar to you, I would recommend pausing to read [this] and [this](https://www.nature.com/articles/s41598-017-12172-2).
 
 ### Installation (OSX)
+0. [Install and configure git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), and a C++ compiler (G++,GCC,etc). In OSX, both of these can be installed from Xcode (avaliable for free on the app store) [like so](https://www.embarcadero.com/starthere/xe5/mobdevsetup/ios/en/installing_the_commandline_tools.html).  
 1. Set up the directory structure and pull the repository using Git.
 Open the terminal. Start by navigating to the directory where you want to download the repository using the `cd` command. You can create a new directory using the `mkdir` command. 
 
-For example, if we wanted to create a new folder to host the repository called `recombo_public` in our home directory, we might type:
+    For example, if we wanted to create a new folder to host the repository called `recombo_public` in our home directory, we might type:
 ```bash
 cd ~
 mkdir recombo_public
@@ -24,7 +25,7 @@ git init
 ```
 2. Download the repository using the `git pull` command, as described in the Git documentation. Continuing the above example, we might use:
 ```bash
-git pull https://github.com/USER/recombo_public master
+git pull https://github.com/garden-of-delete/recombo_public master
 ```
 3. Change to the `/src` subdirectory, then compile and build the software using `make all`. You will see messages from the make process in the terminal. If compilation is not successful, examine the error messages in the terminal window and ensure your compiler and environment are treating the code appropriately.
 ```bash
@@ -40,13 +41,15 @@ ls .
 ...which should show four executables: `mmc`, `xinger`, `homfly`, and `idknot`.
 
 ### Generating randomized self-avoiding polygons
-The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. `mmc` requires a coordinate file specifying an initial SAP conformation to randomize. Initial conformations for many knot and link-types can be found in the `/initial` folder. The initial conformations are named according to the following scheme:  
+The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. `mmc` requires a coordinate file specifying an initial SAP conformation to randomize. Initial conformations for many knot and link-types can be found in the `/initial` folder. The initial conformations are named according to the following scheme, derived from [Robert Scharein's Knotplot](https://knotplot.com/):  
 - 2_2_1a : initial conformation in knotplot (load 3.1)  
 - 2_2_1b : initial conformation in knotplot with one component reversed  
 - 2_2_1c : initial cofnormation in knotplot reflected with one component reversed  
 - 2_2_1d : initial conformation in knotplot reflected  
 - 3_1 : initial conformtion in knotplot  
-- 3_1s : initial conformation in knotplot reflected  
+- 3_1s : initial conformation in knotplot reflected 
+
+There is also a [new biologically motivated notation](https://pdfs.semanticscholar.org/aac2/2f9e6d967d83991c5797f90fae26525ccd53.pdf) which resolves ambiguity around the 'default' chirality and orientation. A great project for a future undergraduate student would be to update or re-generate initial conformation directory with a new naming scheme based on this notation.
 
 `mmc` has many parameters that must be chosen, and the interested user should dig into the [RECOMBO appendix] to learn more about the theoretical significance of each one. Most importantly, we must choose:  
 - the fugacity parameter (`-zmax`: larger values increase average length)  
@@ -75,11 +78,11 @@ src/bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -
 NOTE: It is possible that up to `m-1` additional conformations will be saved above the `-n` conformations requested when running in CMC mode. Everything is ok. 
 
 ### Performing Topological Reconnection
-It may be desirable to modify the geometry of the generated conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection (see [this] or [this](https://www.nature.com/articles/s41598-017-12172-2) for more details). The `mmc` executable supports topological reconnection at the time of polygon generation through the `-mode f` (filter mode) and `-mode r` (reconnection mode). Filter mode saves only conformations that have sites meeting the arclength specified through both `-minarc` and `-maxarc`, and/or `-targetlength`. Reconnection mode saves conformations on the specified interval like `-mode s`, but also saves a post-reconnection version of any conformations that has a site meeting the specified criteria.
+It may be desirable to modify the geometry of the generated conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection (see [this](https://www.nature.com/articles/s41598-017-12172-2) for more details). The `mmc` executable supports topological reconnection at the time of polygon generation through the `-mode f` (filter mode) and `-mode r` (reconnection mode). Filter mode saves only conformations that have sites meeting the arclength specified through both `-minarc` and `-maxarc`, and/or `-targetlength`. Reconnection mode saves conformations on the specified interval like `-mode s`, but also saves a post-reconnection version of any conformations that has a site meeting the specified criteria.
 
-To continue our example, suppose we wanted to generate a larger version of the datasetwe made above, but also perform reconnection in inverted repeat. For our arclength criteria, we will require that at least 6 edges fall on one side of the reconnection site, and we will require the conformation to be exactly 120 edges long.
+To continue our example, suppose we wanted to generate a larger collection of 5_1 knots, but also perform reconnection in inverted repeat when able. For our arclength criteria, we will require that at least 6 edges fall on one side of the reconnection site, and we will require the conformation to be exactly 120 edges long.
 ```bash
-`mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 50000 -c 20000 -m 1 -w 100000 -mode r -minarc 6 -maxarc 114 -targetlength 120 -seed 42 +s > 3_1_log.txt
+src/bin/mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 50000 -c 20000 -m 1 -w 100000 -mode r -seed 42 +s > 5_1_log.txt
 ```
 
 ### Identifying Knot and Link-type

@@ -53,7 +53,7 @@ There is also a [new biologically motivated notation](https://pdfs.semanticschol
 
 `mmc` has many parameters that must be chosen, and the interested user should dig into the [RECOMBO appendix] to learn more about the theoretical significance of each one. Most importantly, we must choose:  
 - the fugacity parameter (`-zmax`: larger values increase average length)  
-- the number of conformations to be sampled (`-n`)  
+- the number of conformations to be sampled (`-n`)
 - the number of BFACF moves between samples (`-c`: larger values decrease the statistical dependence of sequential samples)  
 - the number of BFACF moves to take as a warmup to randomize the initial conformation (`-w`: larger values decrease the statistical dependence between the first sample and the initial conformation)  
 - the sampling mode (`-mode`: controls what is saved / output from `mmc`).  
@@ -64,7 +64,7 @@ To start our example, we would like to generate a collection of random 5_1 knots
 ```bash
 cd ~/recombo_public
 mkdir results
-src/bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 100000 -mode s -bfs 5000 +s > 5_1_log.txt
+src/bin/mmc initial/5_1 results/5_1 -zmin 0.1800 -zmax 0.1800 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 100000 -mode f -minarc 6 -maxarc 254  -bfs 5000 +s > 5_1_log.txt
 ```
 When `mmc` finishes, 5000 5_1 knot conformations should have been deposited in a file called `5_1n1.b` in our `results/` sub-directory.
 

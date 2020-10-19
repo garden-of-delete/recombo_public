@@ -3,7 +3,7 @@ using namespace std;
 
 void print_usage(){
 	cout << "Usage:" << endl;
-	cout << "mmc input_file initial_output_file_name [operators/options]" << endl;
+	cout << "mmc input_file initial_output_file_name [options]" << endl;
 	cout << "mmc sets up a composite markov chain sampling process using the provided initial clk file." << endl;
 	cout << "mmc operators:" << endl;
 	cout << "-zmin\tlowest z-value" << endl;
@@ -199,7 +199,7 @@ int main(int argc, char* argv[]){
 				supress_output = true;
 			}
 			else{
-				cout << "unrecognized operator/option. Terminating program...";
+				cout << "unrecognized option " << argv[i] << ", Terminating program...\n";
 				return 0;
 			}
 		}

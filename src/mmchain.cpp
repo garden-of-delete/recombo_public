@@ -81,7 +81,7 @@ bool mmchain::add_initial_conformation_from_file(string& filename){
 	ifstream in;
 	in.open(filename.c_str(), ios::in);
 	if (!in){
-		cout << "ERROR: UNABLE TO OPEN FILE" << endl;
+		cout << "ERROR: UNABLE TO OPEN INITIAL FILE" << endl;
 		return false;
 	}
 	if (add_initial_conformation(in))

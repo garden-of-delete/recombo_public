@@ -124,16 +124,17 @@ Until now, we have not been particularly concerned about wether or not the SAP c
 1. ensure that our samples are likely identically and independently distributed
 2. compensate for the correlated samples through a batch-mean approach
 
-Option 1 is best accessed through the `-mode a` or `-mode b` option in `mmc`. Both modes run an autocorrelation and length analysis on each chain after warmup. Let's run a few to get a sense for how `mmc`'s parameters impact sample autocoorelation.
+Option 1 is best accessed through the `-mode a` or `-mode b` option in `mmc`. Both modes run an autocorrelation and length analysis on each chain after warmup. An example:
 
 ```bash
 cd ~/recombo_public
-src/bin/mmc initial/5_1 results/5_1 -zmin 0.1800 -zmax 0.1800 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 1000000 -mode a -bfs 5000
+src/bin/mmc initial/5_1 results/5_1 -zmin 0.1800 -zmax 0.1800 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 1000000 -mode a -bfs 5000 -seed 42 +s
 ```
 Output:
 ```bash
+s 5000 -seed 42 +s
 filename= results/5_1
-start_time= 2020-10-19-06-53
+start_time= 2020-10-19-08-26
 zmin= 0.18
 zmax= 0.18
 q= 1
@@ -144,22 +145,28 @@ steps_between_samples= 20000
 initial_n_chains= 1
 warmup= 1000000
 sample_mode= a
-seed= 1603115585
+seed= 42
 block_file_size= 5000
 time_limit= 0
 
 Warming up 1 chains: (1000000 steps)
-Current Progress: 1000000/1000000
+
 Starting calibration...
 Testing chains... 
 
 Starting sampling with 1 chains...
 
 Estimating average lengths with swapping... (crude estimate)
-0.1858 137
+
+0.18 0.5 0.00316228 58.8855 0.0517601
+
+0.18 58.8855 133
 ```
-Here, `0.1858 137` is the result. The first number is an estimate of integrated autocorrelation time, where there closer the value is to .5 
-Option 2 has the advantage of allowing the use of correlated samples with the drawback of requiring 
+First we see that the run parameters have been output. Here, `0.18 0.519492 0.00734673 58.9078 0.0532237` is the result. From left to right, the values displayed are: fugacity parameter, estimated integrated autocorrelation time, standard error in estimated integrated autocorrelation time, mean length, and standard error in the mean length. An estimated integrated autocorrelation time close to .5 indicates statistical independence. On the next line, `0.18 58.8855 133` is an the fugacity parameter, independent estimate of the average length made without using the autocorrelation module, and a display of the raw variance in length. The second line provides a sanity check on rather opaque code behind the first, and one should expect the average length values to agree exactly.  
+
+Option 1 is most suitable for exploratory work, when the relationship between fugacity parameter and length is unclear, or when limited on disk space for generating a large dataset. 
+
+Option 2 has the advantage of allowing the use of correlated samples with the drawback of requiring substantial additional information to be saved during the sampling process. It is therefore most suitable for large studies with a well explored BFACF parameter set. The `mmc` executable only saves this data when running in `-mode m`. See `scripts/batch_mean_analysis.py` to get a sense of what to do with the output from this mode. 
 
 # Manual
 ### Installation

@@ -492,8 +492,8 @@ void mmchain::display_statistics(){
 	autocorrInfo info;
 	cout << endl;
 	for (int i = 0; i < m; i++){
-	info = ac.autocorrelation(chains[i].data,false);
-	cout << chains[i].z << " " << info << endl;
+        info = ac.autocorrelation(chains[i].data,false);
+        cout << chains[i].z << " " << info << endl;
 	}
 	cout << endl << endl;
 	//compute and report average lengths w/ variance

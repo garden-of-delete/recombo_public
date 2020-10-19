@@ -80,15 +80,19 @@ NOTE: It is possible that up to `m-1` additional conformations will be saved abo
 ### Performing Topological Reconnection
 It may be desirable to modify the geometry of the generated conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection (see [this](https://www.nature.com/articles/s41598-017-12172-2) for more details). The `mmc` executable supports topological reconnection at the time of polygon generation through the `-mode f` (filter mode) and `-mode r` (reconnection mode). Filter mode saves only conformations that have sites meeting the arclength specified through both `-minarc` and `-maxarc`, and/or `-targetlength`. Reconnection mode saves conformations on the specified interval like `-mode s`, but also saves a post-reconnection version of any conformations that has a site meeting the specified criteria.
 
-To continue our example, suppose we wanted to generate a larger collection of 5_1 knots, but also perform reconnection in inverted repeat when able. For our arclength criteria, we will require that at least 6 edges fall on one side of the reconnection site, and we will require the conformation to be exactly 120 edges long.
+To continue our example, suppose we wanted to generate a larger collection of 5_1 knots, but also perform reconnection in inverted repeat when able. For our arclength criteria, we will require that at least 6 edges fall on one side of the reconnection site, and we will require the conformation to be exactly 120 edges long. (This may take a while)
 ```bash
-src/bin/mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 50000 -c 20000 -m 1 -w 100000 -mode r -seed 42 +s > 5_1_log.txt
+src/bin/mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 50000 -c 20000 -m 1 -w 100000 -mode f -minarc 4 -maxarc 240 -seed 42 +s > 5_1_log.txt
 ```
 
 ### Identifying Knot and Link-type
-The conformation identification pathway relies on an existing installation of Knotplot with BFACF functionality enabled. Knotplot is commercial software that can be purchased [here](https://knotplot.com/download/). Its creator, Rob scharein, must be contacted via email to provide instructions and a special license which enables the needed special functionality. Once knotplot is installed, the we must locate the stand-alone knotplot executable included in the installation (default location is `/Applications/KnotPlot/utilities/knotplot`), and copy/paste it into the `/knotplot` subdirectory of your local repository.
+The conformation identification pathway relies on an existing installation of Knotplot with BFACF functionality enabled. Knotplot is commercial software that can be purchased [here](https://knotplot.com/download/). Its creator, Rob scharein, must be contacted via email to provide instructions and a special license which enables the BFACF engine. Once knotplot is installed, the we must locate the stand-alone knotplot executable included in the installation (default location is `/Applications/KnotPlot/utilities/knotplot`), and copy/paste it into the `/knotplot` subdirectory of our local repository.
 
-The first step in the identification pathway is to use knotplot to carry out a sequence of critical tasks. First, the conformation is loaded into knotplot's BFACF engine. Then, a number of BFACF moves is performed allowing only moves that maintain or reduce the size of the conformation. This has the effect of reducing the conformation's compplexity, which . The conformation is taken off the lattice and embedded in R3, and an energy minimization algorithm straightens the conformation out to disambiguate the crossings in the projection. Finally, a projection of the conformation is taken onto the plane and the extended gauss code is computed. We will carry out all these tasks in sequence using a knotplot script. It is neccisary to know the number of components in our conformations of interest, as knot and two-component link conformations require different treatment. 
+```bash
+cp /Applications/KnotPlot/utilities/knotplot knotplot/
+```
+
+The first step in the identification pathway uses knotplot to carry out a sequence of critical tasks. First, the conformation is loaded into knotplot's BFACF engine. Then, a number of BFACF moves are performed allowing only moves that maintain or reduce the size of the conformation. This has the effect of reducing the conformation's length . The conformation is taken off the lattice and embedded in R3, and an energy minimization algorithm straightens the conformation out to disambiguate the crossings in the projection. Finally, a projection of the conformation is taken onto the plane and the extended Gauss code is computed. We will carry out all these tasks in sequence using a knotplot script. It is neccisary to know the number of components in our conformations of interest, as knot and two-component link conformations require different treatment. 
 
 To continue our example, the following knotplot script would be suitable for identifying the post-reconnection conformations we generated in the previous section:
 ```
@@ -108,12 +112,54 @@ cd ~/recombo_public
 knotplot/knotplot 
 ```
 
-The above knotplot script and another example for knotted conformations have been included in the `/knotplot` subdirectory of this repository. I recommend contacting Rob Scharein with questions about KnotPlot's built-in scripting functionality.
+The above knotplot script and another example for knotted conformations have been included in the `/knotplot` subdirectory of this repository. I recommend contacting Rob Scharein with any questions about KnotPlot's built-in scripting functionality.
 
-### Pipelining
-Programs in a terminal environment can be "piped" togehter when executed. 
+After the extended Gauss codes are computed, we can remove Reidemeister crossings (if applicable), compute the HOMFLY-PT polynomial, and identify the results. Using the piping feature in the terminal, we can do this with one commaqnd. :
+```bash
+cat 5_1.egc > scr/bin/homfly -- | src/bin/idknot -- -nz -u -P > results/5_1_after.txt
+```
 
 ### Analysis of statistical dependence in sampled conformations
+Until now, we have not been particularly concerned about wether or not the SAP conformations we generate are correlated statistically. However, when the goal is to make an unbiased estimation that reflects the population of 5_1 conformations, we must either:
+1. ensure that our samples are likely identically and independently distributed
+2. compensate for the correlated samples through a batch-mean approach
+
+Option 1 is best accessed through the `-mode a` or `-mode b` option in `mmc`. Both modes run an autocorrelation and length analysis on each chain after warmup. Let's run a few to get a sense for how `mmc`'s parameters impact sample autocoorelation.
+
+```bash
+cd ~/recombo_public
+src/bin/mmc initial/5_1 results/5_1 -zmin 0.1800 -zmax 0.1800 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 1000000 -mode a -bfs 5000
+```
+Output:
+```bash
+filename= results/5_1
+start_time= 2020-10-19-06-53
+zmin= 0.18
+zmax= 0.18
+q= 1
+target_swap_ratio= 0.8
+swap_interval= 5
+n_samples= 5000
+steps_between_samples= 20000
+initial_n_chains= 1
+warmup= 1000000
+sample_mode= a
+seed= 1603115585
+block_file_size= 5000
+time_limit= 0
+
+Warming up 1 chains: (1000000 steps)
+Current Progress: 1000000/1000000
+Starting calibration...
+Testing chains... 
+
+Starting sampling with 1 chains...
+
+Estimating average lengths with swapping... (crude estimate)
+0.1858 137
+```
+Here, `0.1858 137` is the result. The first number is an estimate of integrated autocorrelation time, where there closer the value is to .5 
+Option 2 has the advantage of allowing the use of correlated samples with the drawback of requiring 
 
 # Manual
 ### Installation
@@ -318,8 +364,6 @@ Seqconvert is a generally useful application that efficiently converts files fil
 
 Knotplot is a wonderful knot computation and visualization software developed and maintained by Rob Scharein. In the context of reconnection studies, it is useful for computing the extended gauss codes for each Polygon. Knotplot can be purchased for a small fee at http://knotplot.com/ .
 
-
-
 ---
 
 ## Contributors (ordered chronologically)
@@ -328,7 +372,7 @@ Rob Schaerine, Reuben Brasher, Robert Stolz, Michelle Flanner, Zihao Zhu, Diwen 
 Repository currently maintained by Robert Stolz. 
 
 ## Funding
-
+This research was supported by the following: Japan Society for the Promotion of Science KAKENHI grant numbers 25400080, 26310206, 16H03928, 16K13751, 17H06463(to K.S.), 26800081 (to K.I.); National Science Foundation DMS1716987 (MF, MV) and CAREER Grant DMS1057284 (MV, RS, MF, RB) and NIH-R01GM109457 (MV); Welcome Trust SIA 099204/Z/12Z and 200782/Z/16/Z (DJS). We are grateful to Rob Scharein for providing assistance with Knotplot and for his work on the first version of the reconnection software; C. Soteros, M. Szafron and M. Schmirler for contributing their statistical expertise; J. Arsuaga, D.W. Sumners and S. Witte for helpful discussions.
 
 ## License
-We need to put this under a GPL or similar license.
+This software is under a GPL 3.0 License. 

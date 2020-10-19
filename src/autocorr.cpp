@@ -284,7 +284,7 @@ autocorrInfo& autocorrInfo::operator=(const autocorrInfo& aci)
 
 ostream &operator<<(ostream& os, const autocorrInfo& aci)
 {
-   return os << aci.autocorr << "\t" << aci.error_autocorr << "\t"
-           << aci.mean << "\t" << aci.error_mean;
+   return os << aci.autocorr << " " << aci.error_autocorr << " "
+           << aci.mean << " " << aci.error_mean;
 }
 

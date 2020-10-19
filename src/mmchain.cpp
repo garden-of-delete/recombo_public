@@ -495,11 +495,12 @@ void mmchain::display_statistics(){
         info = ac.autocorrelation(chains[i].data,false);
         cout << chains[i].z << " " << info << endl;
 	}
-	cout << endl << endl;
+	cout << endl;
 	//compute and report average lengths w/ variance
 		//print header
+
 	for (int i = 0; i < m; i++){
-		int mean = 0;
+		float mean = 0;
 		int var = 0;
 		//expected value
 		for (int j = 0; j < chains[i].data.size(); j++){
@@ -512,8 +513,7 @@ void mmchain::display_statistics(){
 		}
 		var /= (chains[i].data.size() - 1);
 		//display results
-		cout << chains[i].z << mean << ' ' << var << endl;
-
+		cout << chains[i].z << ' ' << mean << ' ' << var << endl;
 	}
 }
 /* //DELETE

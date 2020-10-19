@@ -166,7 +166,7 @@ First we see that the run parameters have been output. Here, `0.18 0.519492 0.00
 
 Option 1 is most suitable for exploratory work, when the relationship between fugacity parameter and length is unclear, or when limited on disk space for generating a large dataset. 
 
-Option 2 has the advantage of allowing the use of correlated samples with the drawback of requiring substantial additional information to be saved during the sampling process. It is therefore most suitable for large studies with a well explored BFACF parameter set. The `mmc` executable only saves this data when running in `-mode m`. See `scripts/batch_mean_analysis.py` to get a sense of what to do with the output from this mode. 
+Option 2 has the advantage of allowing the use of correlated samples with the drawback of requiring substantial additional information to be saved during the sampling process. It is therefore most suitable for large studies with a well explored BFACF parameter set and lots of storage. The `mmc` executable only saves this data when running in `-mode m`. See `scripts/batch_mean_analysis.py` to get a sense of what to do with the output from this mode. 
 
 # Manual
 ### Installation

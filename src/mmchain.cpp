@@ -488,14 +488,14 @@ int mmchain::do_recombo_links(int current_chain, int& Para_site, int& Anti_site)
 }
 
 void mmchain::display_statistics(){
-	/*autocorr ac;
+	autocorr ac;
 	autocorrInfo info;
 	cout << endl;
 	for (int i = 0; i < m; i++){
 	info = ac.autocorrelation(chains[i].data,false);
 	cout << chains[i].z << " " << info << endl;
 	}
-	cout << endl << endl;*/
+	cout << endl << endl;
 	//compute and report average lengths w/ variance
 		//print header
 	for (int i = 0; i < m; i++){

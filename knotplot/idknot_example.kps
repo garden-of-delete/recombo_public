@@ -1,0 +1,10 @@
+alias idknot "bfacf load; bfacf prob 1 1 0; bfacf step 20000; ago 200; centre; align axes; gauss
+alias idlink "save |tmp; sequence +; load combine |tmp"
+gauss noblank yes
+
+gauss open 4_2_1c.egc
+sequence open 4_2_1c_after.b
+until seqend "idknot; sequence +"
+sequence close
+gauss close
+exit

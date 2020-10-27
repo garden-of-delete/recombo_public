@@ -4,7 +4,7 @@
 RECOMBO is the working title of the Topological Molecular Biology Recombination Tool Suite. The suite is made up of a number of different applications that share a mostly common code base and work well together. A basic overview: these applications cover generating and performing topological reconnection on SAP conformations of fixed topology (MMC), removing Reidemeister crossings in knot projections (xinger), computing homfly polynomials from extended gauss codes (homfly), and identifying homfly polynomials with a topology (idknot). RECOMBO also includes an integrated unit testing suite with ok-ish test coverage, and a thoroughly experimental fugacity parameter finder (zAnalyzer). A task-oriented walkthrough is provided by the 'Guide' section below. Below that, the 'Manual' section provides an application-oriented look at the optional arguments of each program. 
 
 # Guide
-Updated Oct 18, 2020
+Updated Oct 27, 2020
 
 ### Introduction
 In this guide, we will walk through setup and all the steps in the RECOMBO workflow. These steps are: generating randomized self-avoiding polygons, modifying the geometry of existing conformations, identifying knot and link-type, and analysis of the resulting transition data.
@@ -41,11 +41,11 @@ ls .
 ...which should show four executables: `mmc`, `xinger`, `homfly`, and `idknot`.
 
 ### Generating randomized self-avoiding polygons
-The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. `mmc` requires a coordinate file specifying an initial SAP conformation to randomize. Initial conformations for many knot and link-types can be found in the `/initial` folder. The initial conformations are named according to the following scheme, derived from [Robert Scharein's Knotplot](https://knotplot.com/):  
-- 2_2_1a : initial conformation in knotplot (load 3.1)  
+The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. `mmc` requires a coordinate file specifying an initial SAP conformation to randomize. Initial conformations for many knot and link-types can be found in the `/initial` folder. The initial conformations are named according to the following scheme, derived from [Robert Scharein's Knotplot](https://knotplot.com/):
+- 2_2_1a : initial conformation in knotplot (type `load 3.1` in the KnotPlot console)  
 - 2_2_1b : initial conformation in knotplot with one component reversed  
 - 2_2_1c : initial cofnormation in knotplot reflected with one component reversed  
-- 2_2_1d : initial conformation in knotplot reflected  
+- 2_2_1d : initial conformation in knotplot reflected 
 - 3_1 : initial conformtion in knotplot  
 - 3_1s : initial conformation in knotplot reflected 
 
@@ -64,25 +64,31 @@ To start our example, we would like to generate a collection of random 5_1 knots
 ```bash
 cd ~/recombo_public
 mkdir results
-src/bin/mmc initial/5_1 results/5_1 -zmin 0.1800 -zmax 0.1800 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 100000 -mode f -minarc 6 -maxarc 254  -bfs 5000 +s > 5_1_log.txt
+src/bin/mmc initial/5_1 results/5_1 -zmin 0.1800 -zmax 0.1800 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 100000 -mode s -bfs 5000 +s > 5_1_log.txt
 ```
-When `mmc` finishes, 5000 5_1 knot conformations should have been deposited in a file called `5_1n1.b` in our `results/` sub-directory.
+The log for the run can be found (with non-verbose output)can be found in the file `5_1_log.txt`. The `+s` option should be used to supress progress output when sending stdout to a file. The `-bfs 5000` option tells `mmc` to save up to 5000 samples per output file, and since we are asking for 5000 samples with the `-n 5000` option, all the conformations we sample will go to a single output file.  
+
+When `mmc` finishes, 5000 5_1 knot conformations should have been deposited in a file called `5_1n1.b` in our `results/` sub-directory. 
 
 ### CMC Mode (Optional)
 The `mmc` executable also has the ability to generate conformations and sample as a composite Markov chain. One might be motivated to use this functionality if sampling a wide range of lengths, or if randomization of a particular knot or link-type is too slow in serial BFACF mode. The software orders the BFACF Markov chains by their fugacity parameter, which provides a concept of 'adjacency' between two chains. To run `mmc` in composite Markov chain mode, the `-m` parameter, which specifies the initial number of Markov chains, should be set to an integer value larger than 1. The `-zmin` parameter must also be specified as a value lower than `-zmax`. Any Markov chains beyond 2 will have their fugacity parameter specified automatically by equidistantly chosen points on a linear curve between `-zmin` and `-zmax`. During the warmup, `mmc` will check if the swap-ratio `-sr` (the proportion of attempted conformation exchanges between adjacent chains) is at or above the specified frequency. Failure to swap conformations frequently enough is a consequence of adjacent Markov chains with fugacity parameters too far apart, so new Markov chains will be added as needed with fugacity parameters between them. The user must also choose a number of BFACF moves between attempted conformation swaps with the `-s` option. Small integer values work best, as the goal of MMC is to swap information as frequently as possible within performance limitations.
 
-This is <b>not</b> part of our example, but we might use a commmand like this to generate our same dataset above in composite markov chain mode.
+This is <b>not</b> part of our example, but we might use a commmand like this to generate a similar dataset to the above in composite markov chain mode.
 ```bash
-src/bin/mmc initial/5_1 results/5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 5 -w 100000 -mode s -bfs 5000 +s > 5_1_log.txt
+src/bin/mmc initial/5_1 results/5_1 -zmin 0.1750 -zmax 0.1850 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 5 -w 100000 -mode s -bfs 5000 +s > 5_1_cmc_log.txt
 ```
 NOTE: It is possible that up to `m-1` additional conformations will be saved above the `-n` conformations requested when running in CMC mode. Everything is ok. 
 
 ### Performing Topological Reconnection
 It may be desirable to modify the geometry of the generated conformations in a controlled way. The RECOMBO suite in its current form was assembled to carry out one such modification, called topological reconnection (see [this](https://www.nature.com/articles/s41598-017-12172-2) for more details). The `mmc` executable supports topological reconnection at the time of polygon generation through the `-mode f` (filter mode) and `-mode r` (reconnection mode). Filter mode saves only conformations that have sites meeting the arclength specified through both `-minarc` and `-maxarc`, and/or `-targetlength`. Reconnection mode saves conformations on the specified interval like `-mode s`, but also saves a post-reconnection version of any conformations that has a site meeting the specified criteria.
 
-To continue our example, suppose we wanted to generate a larger collection of 5_1 knots, but also perform reconnection in inverted repeat when able. For our arclength criteria, we will require that at least 6 edges fall on one side of the reconnection site, and we will require the conformation to be exactly 120 edges long. (This may take a while)
+To continue our example, suppose we wanted to generate a larger collection of 5_1 knots, but also perform reconnection in inverted repeat when able. For our arclength criteria, we will require that at least 6 edges fall on one side of the reconnection site, and we will require the conformation to be exactly 120 edges long.
 ```bash
-src/bin/mmc initial/5_1 5_1 -zmin 0.2000 -zmax 0.2100 -q 1 -sr .8 -s 5 -n 50000 -c 20000 -m 1 -w 100000 -mode f -minarc 4 -maxarc 240 -seed 42 +s > 5_1_log.txt
+src/bin/mmc initial/5_1 5_1 -zmin 0.1800 -zmax 0.1800 -q 1 -sr .8 -s 5 -n 5000 -c 20000 -m 1 -w 100000 -mode f -minarc 4 -maxarc 240 -seed 42 +s > 5_1_log.txt
+```
+Note: Conformations with valid reconnection sites range from relatively rare to supremely rare. The above command can be expted to take multiple days to finish. A pre-computed output file from a similar run can be found at `demo/5_1_after.b`. Copy it to the results directory with the following command:
+```bash
+cp demo/5_1_after.b results/
 ```
 
 ### Identifying Knot and Link-type
@@ -109,15 +115,17 @@ gauss close
 To execute this script, we should make sure we are in the main directory of our local repository, then invoke knotplot like so:
 ```bash
 cd ~/recombo_public
-knotplot/knotplot 
+knotplot/knotplot -nog < knotplot/idlink_example.kps
 ```
 
-The above knotplot script and another example for knotted conformations have been included in the `/knotplot` subdirectory of this repository. I recommend contacting Rob Scharein with any questions about KnotPlot's built-in scripting functionality.
+The above knotplot script and another example for knotted conformations have been included in the `/knotplot` subdirectory of this repository. More information about knotplot's command line interface can be found [here](https://knotplot.com/KPman/commands.html).
 
 After the extended Gauss codes are computed, we can remove Reidemeister crossings (if applicable), compute the HOMFLY-PT polynomial, and identify the results. Using the piping feature in the terminal, we can do this with one commaqnd. :
 ```bash
-cat 5_1.egc > scr/bin/homfly -- | src/bin/idknot -- -nz -u -P > results/5_1_after.txt
-```
+cat results/5_1_after.egc | src/bin/homfly -- | src/bin/idknot -- -nz -u -P > results/5_1_after.txt
+```  
+
+Now open `results/5_1_after.txt` and behold, a distribution of resulting link-types. 
 
 ### Analysis of statistical dependence in sampled conformations
 Until now, we have not been particularly concerned about wether or not the SAP conformations we generate are correlated statistically. However, when the goal is to make an unbiased estimation that reflects the population of 5_1 conformations, we must either:

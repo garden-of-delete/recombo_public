@@ -146,6 +146,9 @@ ModelManifest.xml
 Thumbs.db
 ehthumbs.db
 
+# Visual Studio Code
+.vscode
+
 # Folder config file
 Desktop.ini
 

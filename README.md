@@ -382,9 +382,60 @@ Knotplot is a wonderful knot computation and visualization software developed an
 ---
 
 ## Contributors (ordered chronologically)
-Rob Schaerine, Reuben Brasher, Robert Stolz, Michelle Flanner, Zihao Zhu, Diwen Lu
+Rob Scharein, Reuben Brasher, Robert Stolz, Michelle Flanner, Zihao Zhu, Diwen Lu
 
 Repository currently maintained by Robert Stolz. 
+
+## Citations
+
+### Pathways of DNA unlinking: A story of stepwise simplification
+
+```
+@article{stolz2017pathways,
+  title={Pathways of DNA unlinking: A story of stepwise simplification},
+  author={Stolz, Robert and Yoshida, Masaaki and Brasher, Reuben and Flanner, Michelle and Ishihara, Kai and Sherratt, David J and Shimokawa, Koya and Vazquez, Mariel},
+  journal={Scientific reports},
+  volume={7},
+  number={1},
+  pages={1--11},
+  year={2017},
+  publisher={Nature Publishing Group}
+}
+```
+
+### New biologically motivated knot table
+Initial conformations in directory initial/ the convention from this paper.
+
+```
+@misc{brasher2013new,
+  title={New biologically motivated knot table},
+  author={Brasher, Reuben and Scharein, Rob G and Vazquez, Mariel},
+  year={2013},
+  publisher={Portland Press Ltd.}
+}
+```
+
+### KnotPlot
+Much of the work related to this project would not have been feasible without use of Rob Scharein's KnotPlot tool. Works using KnotPlot should cite the following two:
+
+```
+@PhdThesis{SchareinPhD,
+  author={Robert G. Scharein},
+  title={Interactive Topological Drawing},
+  school={Department of Computer Science,
+The University of British Columbia},
+  year=1998}
+```
+
+```
+@book{borwein2002multimedia,
+  title={Multimedia Tools for Communicating Mathematics:[presentations at an International Workshop MTCM2000, Organized at the Centro de Matem{\'a}tica E Aplica{\c{c}}oes Fundamentais at the University of Lisbon, in November 2000]},
+  author={Borwein, Jonathan and Morales, Maria H and Polthier, Konrad and Rodrigues, Jose F},
+  year={2002},
+  publisher={Springer Science \& Business Media}
+}
+```
+
 
 ## Funding
 This research was supported by the following: Japan Society for the Promotion of Science KAKENHI grant numbers 25400080, 26310206, 16H03928, 16K13751, 17H06463(to K.S.), 26800081 (to K.I.); National Science Foundation DMS1716987 (MF, MV) and CAREER Grant DMS1057284 (MV, RS, MF, RB) and NIH-R01GM109457 (MV); Welcome Trust SIA 099204/Z/12Z and 200782/Z/16/Z (DJS). We are grateful to Rob Scharein for providing assistance with Knotplot and for his work on the first version of the reconnection software; C. Soteros, M. Szafron and M. Schmirler for contributing their statistical expertise; J. Arsuaga, D.W. Sumners and S. Witte for helpful discussions.

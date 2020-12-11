@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([recombo], [0.1], [rkbrasher@gmail.com])
+AC_INIT([recombo], [0.2], [rkbrasher@gmail.com])
 AC_CONFIG_SRCDIR([src/mmchain.cpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([build-aux])

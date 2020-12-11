@@ -177,6 +177,7 @@ homfly
 config.txt
 mmc
 recomboFromFile
-testrecombo
+testRecombo
+sampleTests
 xinger
 zAnalyzer

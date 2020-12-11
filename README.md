@@ -4,7 +4,7 @@
 RECOMBO is the working title of the Topological Molecular Biology Recombination Tool Suite. The suite is made up of a number of different applications that share a mostly common code base and work well together. A basic overview: these applications cover generating and performing topological reconnection on SAP conformations of fixed topology (MMC), removing Reidemeister crossings in knot projections (xinger), computing homfly polynomials from extended gauss codes (homfly), and identifying homfly polynomials with a topology (idknot). RECOMBO also includes an integrated unit testing suite with ok-ish test coverage, and a thoroughly experimental fugacity parameter finder (zAnalyzer). A task-oriented walkthrough is provided by the 'Guide' section below. Below that, the 'Manual' section provides an application-oriented look at the optional arguments of each program. 
 
 # Guide
-Updated Oct 27, 2020
+Updated Dec 10, 2020
 
 ### Introduction
 In this guide, we will walk through setup and all the steps in the RECOMBO workflow. These steps are: generating randomized self-avoiding polygons, modifying the geometry of existing conformations, identifying knot and link-type, and analysis of the resulting transition data.
@@ -13,6 +13,7 @@ For our example, we will start where every project starts, a question: "What lin
 
 ### Installation (OSX)
 0. [Install and configure git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git), and a C++ compiler (G++,GCC,etc). In OSX, both of these can be installed from Xcode (avaliable for free on the app store) [like so](https://www.embarcadero.com/starthere/xe5/mobdevsetup/ios/en/installing_the_commandline_tools.html).  
+
 1. Set up the directory structure and pull the repository using Git.
 Open the terminal. Start by navigating to the directory where you want to download the repository using the `cd` command. You can create a new directory using the `mkdir` command. 
 
@@ -23,22 +24,19 @@ mkdir recombo_public
 cd recombo_public
 git init
 ```
+
 2. Download the repository using the `git pull` command, as described in the Git documentation. Continuing the above example, we might use:
 ```bash
 git pull https://github.com/garden-of-delete/recombo_public master
 ```
-3. Change to the `/src` subdirectory, then compile and build the software using `make all`. You will see messages from the make process in the terminal. If compilation is not successful, examine the error messages in the terminal window and ensure your compiler and environment are treating the code appropriately.
+
+3. Building requires `autotools`. From the project root directory type the following
 ```bash
-cd src/
-make all
+./configure
+make
 ```
 
-4. Assuming compilation is successful, navigate to the /src/bin subdirectory to find the executables. Continuing our example, the commands would be:
-```bash
-cd src/bin
-ls .
-```
-...which should show four executables: `mmc`, `xinger`, `homfly`, and `idknot`.
+4. Assuming compilation is successful, project root directory will contain these four executables: `mmc`, `xinger`, `homfly`, and `idknot`.
 
 ### Generating randomized self-avoiding polygons
 The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. `mmc` requires a coordinate file specifying an initial SAP conformation to randomize. Initial conformations for many knot and link-types can be found in the `/initial` folder. The initial conformations are named according to the following scheme, derived from [Robert Scharein's Knotplot](https://knotplot.com/):

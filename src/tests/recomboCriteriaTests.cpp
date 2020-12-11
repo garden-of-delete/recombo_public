@@ -69,7 +69,8 @@ bool testParallelRecombination()
     //result.translate(v);
     //clkConformationBfacf3 postConformation(reclass.postConformationList);
     char orientation = 'p';
-    sites=rctc.preConformation.countRecomboSites(18,22,orientation);
+    // TODO: RB had to comment out next line to build tests
+    // sites=rctc.preConformation.countRecomboSites(18,22,orientation);
     rctc.preConformation.performRecombination(sitechoice);
     ASSERT_EQUAL(rctc.preConformation.size(),1);
     ASSERT(rctc.preConformation.getComponent(0)==rctc.postConformation.getComponent(0));

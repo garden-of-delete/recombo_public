@@ -18,7 +18,7 @@ homfly_SOURCES = $(obj_src) src/cross.c src/polynomesAZ.c src/homfly1_21.c
 
 xinger_SOURCES = src/xinger/main.cpp src/xinger/random.cpp src/xinger/util.cpp src/xinger/xinger.cpp
 
-testRecombo_SOURCES = $(obj_src) src/recomboArgprocessor.cpp src/runRecombo.cpp src/tests/testFramework.cpp src/tests/argprocessorTests.cpp src/tests/autocorrTests.cpp src/tests/basicTests.cpp src/tests/clkTests.cpp src/tests/randomTests.cpp src/tests/recomboCriteriaTests.cpp src/tests/unitTestMain.cpp
+testRecombo_SOURCES = $(obj_src) src/tests/testFramework.cpp src/tests/argprocessorTests.cpp src/tests/autocorrTests.cpp src/tests/clkTests.cpp src/tests/randomTests.cpp src/tests/recomboCriteriaTests.cpp src/tests/unitTestMain.cpp
 testRecombo_CXXFLAGS = $(AM_CXXFLAGS) -Isrc
 
 sampleTests_SOURCES = $(obj_src) src/tests/testFramework.cpp src/tests/sampleUnitTestMain.cpp src/tests/sampleUnitTests.cpp 

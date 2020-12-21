@@ -176,12 +176,9 @@ am__objects_3 = src/testRecombo-argprocessor.$(OBJEXT) \
 	src/testRecombo-zAnalyzer.$(OBJEXT) \
 	src/testRecombo-id.$(OBJEXT)
 am_testRecombo_OBJECTS = $(am__objects_3) \
-	src/testRecombo-recomboArgprocessor.$(OBJEXT) \
-	src/testRecombo-runRecombo.$(OBJEXT) \
 	src/tests/testRecombo-testFramework.$(OBJEXT) \
 	src/tests/testRecombo-argprocessorTests.$(OBJEXT) \
 	src/tests/testRecombo-autocorrTests.$(OBJEXT) \
-	src/tests/testRecombo-basicTests.$(OBJEXT) \
 	src/tests/testRecombo-clkTests.$(OBJEXT) \
 	src/tests/testRecombo-randomTests.$(OBJEXT) \
 	src/tests/testRecombo-recomboCriteriaTests.$(OBJEXT) \
@@ -267,9 +264,7 @@ am__depfiles_remade = src/$(DEPDIR)/argprocessor.Po \
 	src/$(DEPDIR)/testRecombo-legacyBfacf.Po \
 	src/$(DEPDIR)/testRecombo-mmchain.Po \
 	src/$(DEPDIR)/testRecombo-pseudorandom.Po \
-	src/$(DEPDIR)/testRecombo-recomboArgprocessor.Po \
 	src/$(DEPDIR)/testRecombo-regularNgon.Po \
-	src/$(DEPDIR)/testRecombo-runRecombo.Po \
 	src/$(DEPDIR)/testRecombo-zAnalyzer.Po \
 	src/$(DEPDIR)/zAnalyzer.Po src/$(DEPDIR)/zAnalyzerMain.Po \
 	src/tests/$(DEPDIR)/sampleTests-sampleUnitTestMain.Po \
@@ -277,7 +272,6 @@ am__depfiles_remade = src/$(DEPDIR)/argprocessor.Po \
 	src/tests/$(DEPDIR)/sampleTests-testFramework.Po \
 	src/tests/$(DEPDIR)/testRecombo-argprocessorTests.Po \
 	src/tests/$(DEPDIR)/testRecombo-autocorrTests.Po \
-	src/tests/$(DEPDIR)/testRecombo-basicTests.Po \
 	src/tests/$(DEPDIR)/testRecombo-clkTests.Po \
 	src/tests/$(DEPDIR)/testRecombo-randomTests.Po \
 	src/tests/$(DEPDIR)/testRecombo-recomboCriteriaTests.Po \
@@ -470,7 +464,7 @@ zAnalyzer_SOURCES = $(obj_src) src/zAnalyzerMain.cpp
 idknot_SOURCES = $(obj_src) src/idknot.cpp
 homfly_SOURCES = $(obj_src) src/cross.c src/polynomesAZ.c src/homfly1_21.c
 xinger_SOURCES = src/xinger/main.cpp src/xinger/random.cpp src/xinger/util.cpp src/xinger/xinger.cpp
-testRecombo_SOURCES = $(obj_src) src/recomboArgprocessor.cpp src/runRecombo.cpp src/tests/testFramework.cpp src/tests/argprocessorTests.cpp src/tests/autocorrTests.cpp src/tests/basicTests.cpp src/tests/clkTests.cpp src/tests/randomTests.cpp src/tests/recomboCriteriaTests.cpp src/tests/unitTestMain.cpp
+testRecombo_SOURCES = $(obj_src) src/tests/testFramework.cpp src/tests/argprocessorTests.cpp src/tests/autocorrTests.cpp src/tests/clkTests.cpp src/tests/randomTests.cpp src/tests/recomboCriteriaTests.cpp src/tests/unitTestMain.cpp
 testRecombo_CXXFLAGS = $(AM_CXXFLAGS) -Isrc
 sampleTests_SOURCES = $(obj_src) src/tests/testFramework.cpp src/tests/sampleUnitTestMain.cpp src/tests/sampleUnitTests.cpp 
 sampleTests_CXXFLAGS = $(AM_CXXFLAGS) -Isrc
@@ -732,18 +726,12 @@ src/testRecombo-zAnalyzer.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/testRecombo-id.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/testRecombo-recomboArgprocessor.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/testRecombo-runRecombo.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/tests/testRecombo-testFramework.$(OBJEXT):  \
 	src/tests/$(am__dirstamp) src/tests/$(DEPDIR)/$(am__dirstamp)
 src/tests/testRecombo-argprocessorTests.$(OBJEXT):  \
 	src/tests/$(am__dirstamp) src/tests/$(DEPDIR)/$(am__dirstamp)
 src/tests/testRecombo-autocorrTests.$(OBJEXT):  \
 	src/tests/$(am__dirstamp) src/tests/$(DEPDIR)/$(am__dirstamp)
-src/tests/testRecombo-basicTests.$(OBJEXT): src/tests/$(am__dirstamp) \
-	src/tests/$(DEPDIR)/$(am__dirstamp)
 src/tests/testRecombo-clkTests.$(OBJEXT): src/tests/$(am__dirstamp) \
 	src/tests/$(DEPDIR)/$(am__dirstamp)
 src/tests/testRecombo-randomTests.$(OBJEXT):  \
@@ -852,9 +840,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/testRecombo-legacyBfacf.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/testRecombo-mmchain.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/testRecombo-pseudorandom.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/testRecombo-recomboArgprocessor.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/testRecombo-regularNgon.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/testRecombo-runRecombo.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/testRecombo-zAnalyzer.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/zAnalyzer.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/zAnalyzerMain.Po@am__quote@ # am--include-marker
@@ -863,7 +849,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/sampleTests-testFramework.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/testRecombo-argprocessorTests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/testRecombo-autocorrTests.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/testRecombo-basicTests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/testRecombo-clkTests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/testRecombo-randomTests.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/tests/$(DEPDIR)/testRecombo-recomboCriteriaTests.Po@am__quote@ # am--include-marker
@@ -1514,34 +1499,6 @@ src/testRecombo-id.obj: src/id.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -c -o src/testRecombo-id.obj `if test -f 'src/id.cpp'; then $(CYGPATH_W) 'src/id.cpp'; else $(CYGPATH_W) '$(srcdir)/src/id.cpp'; fi`
 
-src/testRecombo-recomboArgprocessor.o: src/recomboArgprocessor.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -MT src/testRecombo-recomboArgprocessor.o -MD -MP -MF src/$(DEPDIR)/testRecombo-recomboArgprocessor.Tpo -c -o src/testRecombo-recomboArgprocessor.o `test -f 'src/recomboArgprocessor.cpp' || echo '$(srcdir)/'`src/recomboArgprocessor.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/testRecombo-recomboArgprocessor.Tpo src/$(DEPDIR)/testRecombo-recomboArgprocessor.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/recomboArgprocessor.cpp' object='src/testRecombo-recomboArgprocessor.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -c -o src/testRecombo-recomboArgprocessor.o `test -f 'src/recomboArgprocessor.cpp' || echo '$(srcdir)/'`src/recomboArgprocessor.cpp
-
-src/testRecombo-recomboArgprocessor.obj: src/recomboArgprocessor.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -MT src/testRecombo-recomboArgprocessor.obj -MD -MP -MF src/$(DEPDIR)/testRecombo-recomboArgprocessor.Tpo -c -o src/testRecombo-recomboArgprocessor.obj `if test -f 'src/recomboArgprocessor.cpp'; then $(CYGPATH_W) 'src/recomboArgprocessor.cpp'; else $(CYGPATH_W) '$(srcdir)/src/recomboArgprocessor.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/testRecombo-recomboArgprocessor.Tpo src/$(DEPDIR)/testRecombo-recomboArgprocessor.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/recomboArgprocessor.cpp' object='src/testRecombo-recomboArgprocessor.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -c -o src/testRecombo-recomboArgprocessor.obj `if test -f 'src/recomboArgprocessor.cpp'; then $(CYGPATH_W) 'src/recomboArgprocessor.cpp'; else $(CYGPATH_W) '$(srcdir)/src/recomboArgprocessor.cpp'; fi`
-
-src/testRecombo-runRecombo.o: src/runRecombo.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -MT src/testRecombo-runRecombo.o -MD -MP -MF src/$(DEPDIR)/testRecombo-runRecombo.Tpo -c -o src/testRecombo-runRecombo.o `test -f 'src/runRecombo.cpp' || echo '$(srcdir)/'`src/runRecombo.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/testRecombo-runRecombo.Tpo src/$(DEPDIR)/testRecombo-runRecombo.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/runRecombo.cpp' object='src/testRecombo-runRecombo.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -c -o src/testRecombo-runRecombo.o `test -f 'src/runRecombo.cpp' || echo '$(srcdir)/'`src/runRecombo.cpp
-
-src/testRecombo-runRecombo.obj: src/runRecombo.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -MT src/testRecombo-runRecombo.obj -MD -MP -MF src/$(DEPDIR)/testRecombo-runRecombo.Tpo -c -o src/testRecombo-runRecombo.obj `if test -f 'src/runRecombo.cpp'; then $(CYGPATH_W) 'src/runRecombo.cpp'; else $(CYGPATH_W) '$(srcdir)/src/runRecombo.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/testRecombo-runRecombo.Tpo src/$(DEPDIR)/testRecombo-runRecombo.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/runRecombo.cpp' object='src/testRecombo-runRecombo.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -c -o src/testRecombo-runRecombo.obj `if test -f 'src/runRecombo.cpp'; then $(CYGPATH_W) 'src/runRecombo.cpp'; else $(CYGPATH_W) '$(srcdir)/src/runRecombo.cpp'; fi`
-
 src/tests/testRecombo-testFramework.o: src/tests/testFramework.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -MT src/tests/testRecombo-testFramework.o -MD -MP -MF src/tests/$(DEPDIR)/testRecombo-testFramework.Tpo -c -o src/tests/testRecombo-testFramework.o `test -f 'src/tests/testFramework.cpp' || echo '$(srcdir)/'`src/tests/testFramework.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/tests/$(DEPDIR)/testRecombo-testFramework.Tpo src/tests/$(DEPDIR)/testRecombo-testFramework.Po
@@ -1583,20 +1540,6 @@ src/tests/testRecombo-autocorrTests.obj: src/tests/autocorrTests.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/tests/autocorrTests.cpp' object='src/tests/testRecombo-autocorrTests.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -c -o src/tests/testRecombo-autocorrTests.obj `if test -f 'src/tests/autocorrTests.cpp'; then $(CYGPATH_W) 'src/tests/autocorrTests.cpp'; else $(CYGPATH_W) '$(srcdir)/src/tests/autocorrTests.cpp'; fi`
-
-src/tests/testRecombo-basicTests.o: src/tests/basicTests.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -MT src/tests/testRecombo-basicTests.o -MD -MP -MF src/tests/$(DEPDIR)/testRecombo-basicTests.Tpo -c -o src/tests/testRecombo-basicTests.o `test -f 'src/tests/basicTests.cpp' || echo '$(srcdir)/'`src/tests/basicTests.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/tests/$(DEPDIR)/testRecombo-basicTests.Tpo src/tests/$(DEPDIR)/testRecombo-basicTests.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/tests/basicTests.cpp' object='src/tests/testRecombo-basicTests.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -c -o src/tests/testRecombo-basicTests.o `test -f 'src/tests/basicTests.cpp' || echo '$(srcdir)/'`src/tests/basicTests.cpp
-
-src/tests/testRecombo-basicTests.obj: src/tests/basicTests.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -MT src/tests/testRecombo-basicTests.obj -MD -MP -MF src/tests/$(DEPDIR)/testRecombo-basicTests.Tpo -c -o src/tests/testRecombo-basicTests.obj `if test -f 'src/tests/basicTests.cpp'; then $(CYGPATH_W) 'src/tests/basicTests.cpp'; else $(CYGPATH_W) '$(srcdir)/src/tests/basicTests.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/tests/$(DEPDIR)/testRecombo-basicTests.Tpo src/tests/$(DEPDIR)/testRecombo-basicTests.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/tests/basicTests.cpp' object='src/tests/testRecombo-basicTests.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -c -o src/tests/testRecombo-basicTests.obj `if test -f 'src/tests/basicTests.cpp'; then $(CYGPATH_W) 'src/tests/basicTests.cpp'; else $(CYGPATH_W) '$(srcdir)/src/tests/basicTests.cpp'; fi`
 
 src/tests/testRecombo-clkTests.o: src/tests/clkTests.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testRecombo_CXXFLAGS) $(CXXFLAGS) -MT src/tests/testRecombo-clkTests.o -MD -MP -MF src/tests/$(DEPDIR)/testRecombo-clkTests.Tpo -c -o src/tests/testRecombo-clkTests.o `test -f 'src/tests/clkTests.cpp' || echo '$(srcdir)/'`src/tests/clkTests.cpp
@@ -1990,9 +1933,7 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/testRecombo-legacyBfacf.Po
 	-rm -f src/$(DEPDIR)/testRecombo-mmchain.Po
 	-rm -f src/$(DEPDIR)/testRecombo-pseudorandom.Po
-	-rm -f src/$(DEPDIR)/testRecombo-recomboArgprocessor.Po
 	-rm -f src/$(DEPDIR)/testRecombo-regularNgon.Po
-	-rm -f src/$(DEPDIR)/testRecombo-runRecombo.Po
 	-rm -f src/$(DEPDIR)/testRecombo-zAnalyzer.Po
 	-rm -f src/$(DEPDIR)/zAnalyzer.Po
 	-rm -f src/$(DEPDIR)/zAnalyzerMain.Po
@@ -2001,7 +1942,6 @@ distclean: distclean-am
 	-rm -f src/tests/$(DEPDIR)/sampleTests-testFramework.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-argprocessorTests.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-autocorrTests.Po
-	-rm -f src/tests/$(DEPDIR)/testRecombo-basicTests.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-clkTests.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-randomTests.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-recomboCriteriaTests.Po
@@ -2120,9 +2060,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/testRecombo-legacyBfacf.Po
 	-rm -f src/$(DEPDIR)/testRecombo-mmchain.Po
 	-rm -f src/$(DEPDIR)/testRecombo-pseudorandom.Po
-	-rm -f src/$(DEPDIR)/testRecombo-recomboArgprocessor.Po
 	-rm -f src/$(DEPDIR)/testRecombo-regularNgon.Po
-	-rm -f src/$(DEPDIR)/testRecombo-runRecombo.Po
 	-rm -f src/$(DEPDIR)/testRecombo-zAnalyzer.Po
 	-rm -f src/$(DEPDIR)/zAnalyzer.Po
 	-rm -f src/$(DEPDIR)/zAnalyzerMain.Po
@@ -2131,7 +2069,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/tests/$(DEPDIR)/sampleTests-testFramework.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-argprocessorTests.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-autocorrTests.Po
-	-rm -f src/tests/$(DEPDIR)/testRecombo-basicTests.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-clkTests.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-randomTests.Po
 	-rm -f src/tests/$(DEPDIR)/testRecombo-recomboCriteriaTests.Po

@@ -2,7 +2,6 @@
 
 #include "argprocessorTests.h"
 #include "autocorrTests.h"
-#include "basicTests.h"
 #include "clkTests.h"
 #include "randomTests.h"
 #include "recomboCriteriaTests.h"

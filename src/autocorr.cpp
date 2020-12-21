@@ -15,8 +15,6 @@ autocorr::autocorr(const autocorr& orig) : why3(orig.why3), why30(orig.why30), m
 
 autocorr::~autocorr() { }
 
-// TODO: rewrite to make better use of templates
-
 double autocorr::computeMean(const vector<double>& data) const
 {
    double mean = 0.0;

@@ -17,8 +17,8 @@ struct autocorrInfo;
 
 /**
  * A C++ class using modified by Reuben Brasher from code modified by Rob 
- * Scharein from the original Stu Whittington program.
- * 
+ * Scharein from the original C program by Buks van Rensburg and Enzo Orlandini in Stu Whittington's research group.
+ *
  * </p>
  * Computes windowed autocorrelation and mean of a stochastic variable.
  */

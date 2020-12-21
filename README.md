@@ -382,6 +382,8 @@ Knotplot is a wonderful knot computation and visualization software developed an
 ## Contributors (ordered chronologically)
 Rob Scharein, Reuben Brasher, Robert Stolz, Michelle Flanner, Zihao Zhu, Diwen Lu
 
+The code from `src/autoCorr.cpp` was extracted from a original C program by Buks van Rensburg and Enzo Orlandini in Stu Whittington's research group.
+
 Repository currently maintained by Robert Stolz. 
 
 ## Citations

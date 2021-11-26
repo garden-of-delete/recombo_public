@@ -28,4 +28,4 @@ ACLOCAL_AMFLAGS = -I m4 --install
 EXTRA_DIST = m4/NOTES
 
 test: 
-	@echo "Would it not be nice if we knew that this worked?"
+	./testRecombo

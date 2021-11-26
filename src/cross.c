@@ -77,6 +77,7 @@ Lit_croisement * (), lit_croisement2 ()
 **************************************************************************/
 #define			CODES_SIGNES
 #include		"cross.h"
+#include    <string.h>
 char			option_affichage;
 /*****************************************************************************
 * FONCTIONS DIVERSES DE GESTION DES CHAINES DE CROISEMENTS POUR LIENS

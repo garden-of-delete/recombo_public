@@ -20,4 +20,4 @@ bool testBfacf3Run();
 bool testBfacf3CountEdges();
 
 bool testPrecomputedBfacf3Probs();
-
+bool testBfacf3ProbsHandComputed();

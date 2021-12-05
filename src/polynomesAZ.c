@@ -149,7 +149,7 @@ polySimplifie(p1,n1)
 	return i2;
 }
 
-polyTrie(p1,n1)
+void polyTrie(p1,n1)
 	MONOME		p1[];
 	int			n1;
 {

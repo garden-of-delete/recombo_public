@@ -169,7 +169,6 @@ public:
     */
 
    int countRecomboSites(int minarclength, int maxarclength, int Sequence_type, int Recombo_type, int& Total_para_site, int& Total_anti_site, int& Para_site, int& Anti_site);
-   int countRecomboSites(int minarclength, int maxarclength);
    
    /**
     * Perform a recombination between one of the edge pairs found by most 

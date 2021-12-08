@@ -2119,8 +2119,8 @@ uninstall-am: uninstall-binPROGRAMS
 
 all: mmc zAnalyzer idknot homfly xinger testRecombo sampleTests test 
 
-test: 
-	@echo "Would it not be nice if we knew that this worked?"
+test: testRecombo 
+	./testRecombo
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

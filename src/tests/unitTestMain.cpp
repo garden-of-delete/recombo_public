@@ -37,7 +37,7 @@ int main(void)
 	suite.add_test(testRandomInteger, "pseudorandom integers");
 	suite.add_test(testPrecomputedBfacf3Probs, "Precomputed BFACF probabilities");
 	// TODO: RB had to comment next line because of Segmentation fault 11
-	// suite.add_test(testParallelRecombination, "Recombination between unknots");
+	suite.add_test(testParallelRecombination, "Recombination between unknots");
 
 	suite.run_suite();
 }

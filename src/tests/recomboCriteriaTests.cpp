@@ -54,6 +54,8 @@ bool testParallelRecombination()
 {
     recomboCriteriaTestClass rctc;
 
+    ostringstream out;
+
     int sites = 0;
     int sitechoice = 0;
     int min_arc = 18, max_arc = 22;
@@ -62,7 +64,7 @@ bool testParallelRecombination()
     int n_components = 1;
     int total_para_site, total_anti_site, Para_site, Anti_site;
     sites=rctc.preConformation.countRecomboSites(min_arc, max_arc, sequence_type, recombo_type, total_para_site, total_anti_site, Para_site, Anti_site);
-    rctc.preConformation.performRecombination(cout, sequence_type, recombo_type, n_components, sitechoice);
+    rctc.preConformation.performRecombination(sitechoice);
     ASSERT_EQUAL(rctc.preConformation.size(),1);
     ASSERT(rctc.preConformation.getComponent(0)==rctc.postConformation.getComponent(0));
     

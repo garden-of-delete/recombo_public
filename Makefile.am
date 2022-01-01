@@ -27,5 +27,5 @@ sampleTests_CXXFLAGS = $(AM_CXXFLAGS) -Isrc
 ACLOCAL_AMFLAGS = -I m4 --install
 EXTRA_DIST = m4/NOTES
 
-test: all 
+test: testRecombo 
 	./testRecombo

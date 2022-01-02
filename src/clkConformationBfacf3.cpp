@@ -790,11 +790,11 @@ void clkConformationBfacf3::step(int n)
       perform_move(implementation->clkp);
 }
 
-void clkConformationBfacf3::init_Q(double z, double q) //these probabilities are suspect
+void clkConformationBfacf3::init_Q(double z, double q)
 {
 	for (int i=4; i < MAX_PRECOMPUTE_LENGTH; i++){
 		probMap[i].p_plus2 = (pow((i+2),(q-1))*(z * z)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
-		probMap[i].p_minus2 = pow(i,(q-1)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
+		probMap[i].p_minus2 = pow(i-2, (q - 1)) / (pow(i-2, (q - 1)) + 3.0*pow(i, q - 1) * z * z);
 		probMap[i].p_0 = .5*(probMap[i].p_plus2 + probMap[i].p_minus2);
 	}
 }
@@ -843,7 +843,6 @@ void clkConformationBfacf3::stepQ(long int c, int q, double z)
 {
 	for (long int i = 0; i < c; i++)
 		stepQ(q, z);
-		//perform_move_q(implementation->clkp); //see above
 }
 
 

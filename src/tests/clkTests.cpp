@@ -711,23 +711,21 @@ bool testPrecomputedBfacf3Probs(){
 	//compare precomputed probabilities with directly computed probabilities
 	for (int n = 4; n < MAX_PRECOMPUTE_LENGTH; n++){
 		ASSERT(knot.probMap[n].p_plus2 == (pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
-		ASSERT(knot.probMap[n].p_minus2 == pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
-		ASSERT(knot.probMap[n].p_0 == .5*((pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z) +
-			pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z)));
+		ASSERT(knot.probMap[n].p_minus2 == pow(n-2, (q - 1)) / (pow(n-2, (q - 1)) + 3.0*pow(n, q - 1) * z * z));
+		ASSERT(knot.probMap[n].p_0 == .5 * (knot.probMap[n].p_plus2 + knot.probMap[n].p_minus2));
 	}
 	//select a different z with q=3
 	z = .1812; q = 3;
 	//precompute
 	knot.init_Q(z, q);
 	//compare
-	for (int n = 4; n < MAX_PRECOMPUTE_LENGTH; n++){
-		ASSERT(knot.probMap[n].p_plus2 == (pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
-		ASSERT(knot.probMap[n].p_minus2 == pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
-		ASSERT(knot.probMap[n].p_0 == .5*((pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z) +
-			pow(n, (q - 1)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z)));
-	}
-	
-	return true;
+	for (int n = 4; n < MAX_PRECOMPUTE_LENGTH; n++) {
+        ASSERT(knot.probMap[n].p_plus2 ==
+               (pow((n + 2), (q - 1)) * (z * z)) / (pow(n, (q - 1)) + 3.0 * pow((n + 2), q - 1) * z * z));
+        ASSERT(knot.probMap[n].p_minus2 == pow(n - 2, (q - 1)) / (pow(n - 2, (q - 1)) + 3.0 * pow(n, q - 1) * z * z));
+        ASSERT(knot.probMap[n].p_0 == .5 * (knot.probMap[n].p_plus2 + knot.probMap[n].p_minus2));
+    }
+    return true;
 }
 
 bool testBfacf3ProbsHandComputed() {

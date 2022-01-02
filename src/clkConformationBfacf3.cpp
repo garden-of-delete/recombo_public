@@ -790,11 +790,11 @@ void clkConformationBfacf3::step(int n)
       perform_move(implementation->clkp);
 }
 
-void clkConformationBfacf3::init_Q(double z, double q) //these probabilities are suspect
+void clkConformationBfacf3::init_Q(double z, double q)
 {
 	for (int i=4; i < MAX_PRECOMPUTE_LENGTH; i++){
 		probMap[i].p_plus2 = (pow((i+2),(q-1))*(z * z)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
-		probMap[i].p_minus2 = pow(i,(q-1)) / (pow(i,(q-1)) + 3.0*pow((i+2),q-1) * z * z);
+		probMap[i].p_minus2 = pow(i-2, (q - 1)) / (pow(i-2, (q - 1)) + 3.0*pow(i, q - 1) * z * z);
 		probMap[i].p_0 = .5*(probMap[i].p_plus2 + probMap[i].p_minus2);
 	}
 }
@@ -815,13 +815,6 @@ void clkConformationBfacf3::stepQ(int current_q, double z)
 	for (int i=0; i < n_comps; i++){
 		n += getComponent(i).size();
 	}
-	/*
-	//direct computation
-	double p_plus2 = (pow((n+2),(q-1))*(z * z)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
-	double p_minus2 = pow(n,(q-1)) / (pow(n,(q-1)) + 3.0*pow((n+2),q-1) * z * z);
-	double p_0 = .5*(p_plus2 + p_minus2);
-	bfacf_set_probabilities(comp, p_minus2, p_0, p_plus2);*/
-
 	if (getZ() != z || current_q != q){
 		q = current_q;
 		setZ(z);
@@ -843,7 +836,6 @@ void clkConformationBfacf3::stepQ(long int c, int q, double z)
 {
 	for (long int i = 0; i < c; i++)
 		stepQ(q, z);
-		//perform_move_q(implementation->clkp); //see above
 }
 
 

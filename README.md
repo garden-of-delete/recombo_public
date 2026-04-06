@@ -30,13 +30,13 @@ git init
 git pull https://github.com/garden-of-delete/recombo_public master
 ```
 
-3. Building requires `autotools`. From the project root directory type the following
+3. Building requires CMake. From the project root directory type the following
 ```bash
-./configure
-make
+cmake -B build
+cmake --build build
 ```
 
-4. Assuming compilation is successful, project root directory will contain these four executables: `mmc`, `xinger`, `homfly`, and `idknot`.
+4. Assuming compilation is successful, executables will be located in `build/src/bin/`.
 
 ### Generating randomized self-avoiding polygons
 The Multiple Markov Chain BFACF executable (`mmc`) is the most direct path to generating randomized self avoiding polygons of known knot or link-type from scratch. `mmc` is often the starting point for the RECOMBO workflow. `mmc` requires a coordinate file specifying an initial SAP conformation to randomize. Initial conformations for many knot and link-types can be found in the `/initial` folder. The initial conformations are named according to the following scheme, derived from [Robert Scharein's Knotplot](https://knotplot.com/):
@@ -178,9 +178,9 @@ Option 2 has the advantage of allowing the use of correlated samples with the dr
 ### Installation
 This software suite is intended for use on Linux and OSX. Install by following these steps:
 1. Download and extract this repository.
-2. In the terminal, navigate inside the repository's `src/` subdirectory. (`cd /path/to/extracted/directory')
-3. Execute `make all`. Warnings may be generated from the use of depricated language features and syntax.
-4. Assuming compilation is successful and all unit tests pass, navigate to the `/src/bin` subdirectory to find the executables.
+2. In the terminal, navigate to the repository root directory.
+3. Build with CMake: `cmake -B build && cmake --build build`
+4. Assuming compilation is successful, executables will be located in `build/src/bin/`.
 5. If compilation is not successful, examine the error messages and ensure your compiler and environment are treating the code appropriately.
 
 ### MMC

@@ -71,8 +71,7 @@ set(SHARED_SOURCE_FILES
         src/runRecombo.h
         src/threevector.h
         src/zAnalyzer.cpp
-        src/zAnalyzer.h
-        config.h)
+        src/zAnalyzer.h)
 set(XINGER_SOURCE_FILES
         src/xinger/random.cpp
         src/xinger/random.h

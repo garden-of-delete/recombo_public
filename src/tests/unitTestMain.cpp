@@ -1,4 +1,4 @@
-#include "testFramework.h"
+#include <gtest/gtest.h>
 
 #include "argprocessorTests.h"
 #include "autocorrTests.h"
@@ -6,40 +6,24 @@
 #include "randomTests.h"
 #include "recomboCriteriaTests.h"
 
-using namespace std;
+TEST(AutocorrTest, Autocorr) { EXPECT_TRUE(testAutocorr()); }
 
-int main(void)
-{
-	test_suite suite;
+TEST(ClkTest, Data) { EXPECT_TRUE(testData()); }
+TEST(ClkTest, CopyScalarToVector) { EXPECT_TRUE(testCopyScalarToVector()); }
+TEST(ClkTest, GenericOutput) { EXPECT_TRUE(testGenericOutput()); }
+TEST(ClkTest, Rog) { EXPECT_TRUE(testRog()); }
+TEST(ClkTest, WrAcn) { EXPECT_TRUE(testWrAcn()); }
+TEST(ClkTest, ReadFromText) { EXPECT_TRUE(testReadFromText()); }
+TEST(ClkTest, ReadFromCoords) { EXPECT_TRUE(testReadFromCoords()); }
+TEST(ClkTest, RandomReset) { EXPECT_TRUE(testRandomReset()); }
+TEST(ClkTest, Bfacf3) { EXPECT_TRUE(testBfacf3()); }
+TEST(ClkTest, Bfacf3SetZ) { EXPECT_TRUE(testBfacf3SetZ()); }
+TEST(ClkTest, Bfacf3Run) { EXPECT_TRUE(testBfacf3Run()); }
 
-	suite.add_test(testAutocorr, "autocorr");
+TEST(RandomTest, RawSequence) { EXPECT_TRUE(testRandom()); }
+TEST(RandomTest, Integers) { EXPECT_TRUE(testRandomInteger()); }
 
-	suite.add_test(testData, "data");
-	suite.add_test(testCopyScalarToVector, "testCopyScalarToVector");
+TEST(BfacfProbsTest, Precomputed) { EXPECT_TRUE(testPrecomputedBfacf3Probs()); }
+TEST(BfacfProbsTest, HandComputed) { EXPECT_TRUE(testBfacf3ProbsHandComputed()); }
 
-	suite.add_test(testGenericOutput, "testGenericOutput");
-
-	suite.add_test(testRog, "testRog");
-
-	suite.add_test(testWrAcn, "testWrAcn");
-
-	suite.add_test(testReadFromText, "testReadFromText");
-	suite.add_test(testReadFromCoords, "testReadFromCoords");
-
-	suite.add_test(testRandomReset, "testRandomReset");
-	suite.add_test(testBfacf3, "testBfacf3");
-	suite.add_test(testBfacf3SetZ, "testBfacf3SetZ");
-	suite.add_test(testBfacf3Run, "testBfacf3Run");
-	//suite.add_test(testBfacf3CountEdges, "testBfacf3CountEdges"); //incomplete 
-
-	suite.add_test(testRandom, "raw sequence for pseudorandom number generator", "", 
-		"Random number generator fails to produce expected sequence.");
-	suite.add_test(testRandomInteger, "pseudorandom integers");
-	suite.add_test(testPrecomputedBfacf3Probs, "Precomputed BFACF probabilities");
-	suite.add_test(testBfacf3ProbsHandComputed, "Compare computed BFACF probabilities vs hand computed");
-	// TODO: RB had to comment next line because of Segmentation fault 11
-	suite.add_test(testParallelRecombination, "Recombination between unknots");
-
-	suite.run_suite();
-}
-
+TEST(RecomboTest, ParallelRecombination) { EXPECT_TRUE(testParallelRecombination()); }

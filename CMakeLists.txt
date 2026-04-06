@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.16)
 project(recombo)
 include_directories(src)
 set(CMAKE_CXX_STANDARD 11)
+
+include(FetchContent)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.14.0
+)
+FetchContent_MakeAvailable(googletest)
 set(EXECUTABLE_OUTPUT_PATH src/bin)
 set(TEST_SOURCE_FILES
         src/tests/argprocessorTests.cpp
@@ -72,6 +80,7 @@ set(XINGER_SOURCE_FILES
 add_executable(xinger ${XINGER_SOURCE_FILES} src/xinger/main.cpp)
 add_executable(zAnalyzer ${SHARED_SOURCE_FILES} src/zAnalyzerMain.cpp)
 add_executable(unitTest ${SHARED_SOURCE_FILES} ${TEST_SOURCE_FILES} src/tests/unitTestMain.cpp)
+target_link_libraries(unitTest gtest gtest_main)
 add_executable(mmc ${SHARED_SOURCE_FILES} src/mmcMain.cpp)
 add_executable(homfly ${SHARED_SOURCE_FILES} src/homfly1_21.c src/cross.c src/cross.h)
 # Legacy K&R C files need relaxed compiler settings

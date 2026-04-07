@@ -84,7 +84,12 @@ target_link_libraries(unitTest gtest gtest_main)
 add_executable(mmc ${SHARED_SOURCE_FILES} src/mmcMain.cpp)
 add_executable(homfly ${SHARED_SOURCE_FILES} src/homfly1_21.c src/cross.c src/cross.h)
 # Legacy K&R C files need relaxed compiler settings
-set_source_files_properties(src/cross.c src/homfly1_21.c PROPERTIES
-        COMPILE_OPTIONS "-Wno-deprecated-non-prototype;-Wno-implicit-int")
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    set_source_files_properties(src/cross.c src/homfly1_21.c PROPERTIES
+            COMPILE_OPTIONS "-Wno-implicit-int;-fcommon")
+elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
+    set_source_files_properties(src/cross.c src/homfly1_21.c PROPERTIES
+            COMPILE_OPTIONS "-Wno-deprecated-non-prototype;-Wno-implicit-int")
+endif()
 add_executable(idknot ${SHARED_SOURCE_FILES} src/idknot.cpp)
 

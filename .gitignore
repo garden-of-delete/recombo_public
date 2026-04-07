@@ -158,26 +158,12 @@ $RECYCLE.BIN/
 # Mac desktop service store files
 .DS_Store
 
-# Results from makefile
+# JetBrains IDEs
+.idea/
+
+# CMake build artifacts
+cmake-build-*/
+
+# Compiled objects
 *.o
 *.a
-
-# autotools
-.deps
-Makefile
-config.h
-config.status
-.dirstamp
-stamp-h1
-autom4te.cache
-
-# executables and libraries
-idknot
-homfly
-config.txt
-mmc
-recomboFromFile
-testRecombo
-sampleTests
-xinger
-zAnalyzer

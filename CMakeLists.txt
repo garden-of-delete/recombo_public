@@ -12,8 +12,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 set(EXECUTABLE_OUTPUT_PATH src/bin)
 set(TEST_SOURCE_FILES
-        src/tests/argprocessorTests.cpp
-        src/tests/argprocessorTests.h
         src/tests/autocorrTests.cpp
         src/tests/autocorrTests.h
         src/tests/clkTests.cpp
@@ -25,8 +23,6 @@ set(TEST_SOURCE_FILES
         src/tests/testFramework.cpp
         src/tests/testFramework.h)
 set(SHARED_SOURCE_FILES
-        src/argprocessor.cpp
-        src/argprocessor.h
         src/autocorr.cpp
         src/autocorr.h
         src/bfacfProbabilities.cpp

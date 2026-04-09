@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(recombo)
-include_directories(src)
 set(CMAKE_CXX_STANDARD 11)
+set(EXECUTABLE_OUTPUT_PATH src/bin)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -10,75 +10,47 @@ FetchContent_Declare(
         GIT_TAG v1.14.0
 )
 FetchContent_MakeAvailable(googletest)
-set(EXECUTABLE_OUTPUT_PATH src/bin)
-set(TEST_SOURCE_FILES
-        src/tests/autocorrTests.cpp
-        src/tests/autocorrTests.h
-        src/tests/clkTests.cpp
-        src/tests/clkTests.h
-        src/tests/randomTests.cpp
-        src/tests/randomTests.h
-        src/tests/recomboCriteriaTests.cpp
-        src/tests/recomboCriteriaTests.h
-        src/tests/testFramework.cpp
-        src/tests/testFramework.h)
-set(SHARED_SOURCE_FILES
-        src/autocorr.cpp
-        src/autocorr.h
-        src/bfacfProbabilities.cpp
-        src/bfacfProbabilities.h
-        src/bfacfProbabilitiesFromZ.cpp
-        src/bfacfProbabilitiesFromZ.h
-        src/bfacfProbabilitiesFromZFixed.cpp
-        src/bfacfProbabilitiesFromZFixed.h
-        src/clk.cpp
-        src/clk.h
-        src/clkCigar.cpp
-        src/clkCigar.h
-        src/clkConformationAsList.cpp
-        src/clkConformationAsList.h
-        src/clkConformationBfacf3.cpp
-        src/clkConformationBfacf3.h
-        src/clkConformationSeqconvert.cpp
-        src/clkConformationSeqconvert.h
-        src/conformation.cpp
-        src/conformation.h
-        src/conformationAsList.cpp
-        src/conformationAsList.h
-        src/conformationWlc.cpp
-        src/conformationWlc.h
-        src/genericConformation.h
-        src/id.cpp
-        src/id.h
-        src/legacy.cpp
-        src/legacy.h
-        src/legacyBfacf.cpp
-        src/legacyBfacf.h
-        src/mmchain.cpp
-        src/mmchain.h
-        src/polynomesAZ.c
-        src/polynomesAZ.h
-        src/pseudorandom.cpp
-        src/pseudorandom.h
-        src/regularNgon.cpp
-        src/regularNgon.h
-        src/threevector.h
-        src/zAnalyzer.cpp
-        src/zAnalyzer.h)
-set(XINGER_SOURCE_FILES
-        src/xinger/random.cpp
-        src/xinger/random.h
-        src/xinger/util.cpp
-        src/xinger/util.h
-        src/xinger/xinger.cpp
-        src/xinger/xinger.h)
 
-add_executable(xinger ${XINGER_SOURCE_FILES} src/xinger/main.cpp)
-add_executable(zAnalyzer ${SHARED_SOURCE_FILES} src/zAnalyzerMain.cpp)
-add_executable(unitTest ${SHARED_SOURCE_FILES} ${TEST_SOURCE_FILES} src/tests/unitTestMain.cpp)
-target_link_libraries(unitTest gtest gtest_main)
-add_executable(mmc ${SHARED_SOURCE_FILES} src/mmcMain.cpp)
-add_executable(homfly ${SHARED_SOURCE_FILES} src/homfly1_21.c src/cross.c src/cross.h)
+# Core library shared by all executables and tests
+add_library(recombo_core STATIC
+        src/autocorr.cpp
+        src/bfacfProbabilities.cpp
+        src/bfacfProbabilitiesFromZ.cpp
+        src/bfacfProbabilitiesFromZFixed.cpp
+        src/clk.cpp
+        src/clkCigar.cpp
+        src/clkConformationAsList.cpp
+        src/clkConformationBfacf3.cpp
+        src/clkConformationSeqconvert.cpp
+        src/conformation.cpp
+        src/conformationAsList.cpp
+        src/conformationWlc.cpp
+        src/id.cpp
+        src/legacy.cpp
+        src/legacyBfacf.cpp
+        src/mmchain.cpp
+        src/polynomesAZ.c
+        src/pseudorandom.cpp
+        src/regularNgon.cpp
+        src/zAnalyzer.cpp)
+target_include_directories(recombo_core PUBLIC src)
+
+# Executables
+add_executable(xinger
+        src/xinger/main.cpp
+        src/xinger/random.cpp
+        src/xinger/util.cpp
+        src/xinger/xinger.cpp)
+target_include_directories(xinger PRIVATE src/xinger)
+
+add_executable(zAnalyzer src/zAnalyzerMain.cpp)
+target_link_libraries(zAnalyzer recombo_core)
+
+add_executable(mmc src/mmcMain.cpp)
+target_link_libraries(mmc recombo_core)
+
+add_executable(homfly src/homfly1_21.c src/cross.c)
+target_link_libraries(homfly recombo_core)
 # Legacy K&R C files need relaxed compiler settings
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     set_source_files_properties(src/cross.c src/homfly1_21.c PROPERTIES
@@ -87,5 +59,20 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
     set_source_files_properties(src/cross.c src/homfly1_21.c PROPERTIES
             COMPILE_OPTIONS "-Wno-deprecated-non-prototype;-Wno-implicit-int")
 endif()
-add_executable(idknot ${SHARED_SOURCE_FILES} src/idknot.cpp)
 
+add_executable(idknot src/idknot.cpp)
+target_link_libraries(idknot recombo_core)
+
+# Legacy unit tests
+add_executable(legacyUnitTest
+        src/tests/unitTestMain.cpp
+        src/tests/autocorrTests.cpp
+        src/tests/clkTests.cpp
+        src/tests/randomTests.cpp
+        src/tests/recomboCriteriaTests.cpp
+        src/tests/testFramework.cpp)
+target_link_libraries(legacyUnitTest recombo_core gtest gtest_main)
+add_test(NAME legacyUnitTest COMMAND $<TARGET_FILE:legacyUnitTest>)
+
+enable_testing()
+add_subdirectory(test)

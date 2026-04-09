@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include "argprocessorTests.h"
 #include "autocorrTests.h"
 #include "clkTests.h"
 #include "randomTests.h"

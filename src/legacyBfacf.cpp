@@ -4011,22 +4011,6 @@ bool freeze_component(CubicLatticeKnotPtr clkp, int ID, bool freeze)
    return false;
 }
 
-#ifdef INCLUDED_FROM_KnotPlot
-
-int bfacf_save_stick(int nsticks, CubicLatticeKnotPtr clkp)
-{
-   int dirchanges = bfacf_number_sticks(clkp);
-   if (dirchanges <= nsticks)
-   {
-      decode_line("bfacf news");
-      return dirchanges;
-   }
-   return 0;
-}
-
-
-#endif
-
 int clk_minedges = 0;
 int clk_maxedges = HUGE_NUMBER;
 
@@ -5472,41 +5456,6 @@ void clear_lattice(CubicLatticeKnotPtr clkp, ivector min, ivector max)
    set_lattice(clkp, (char) EMPTY, min, max);
 }
 
-void bfacf_set_lattice_sphere(CubicLatticeKnotPtr clkp, int what, double radius, double xcen, double ycen, double zcen, char *blurt)
-{
-#ifdef INCLUDED_FROM_KnotPlot
-   if (!clkp) return;
-   char action [14];
-   if (blurt)
-   {
-      if (what == OCCUPIED)
-         sprintf(action, "filling");
-      else
-         sprintf(action, "clearing");
-      sprintf(blurt, "%s lattice with sphere of radius %.2f centered at (%.2f, %.2f, %.2f)\n", action, radius, xcen, ycen, zcen);
-   }
-
-   ivector pos;
-   vector3 cen;
-   set_vector(cen, xcen + (double) clkp->loffset [0], ycen + (double) clkp->loffset [1], zcen + (double) clkp->loffset [2]);
-   double r2 = radius * radius;
-
-   for (pos [2] = 1; pos [2] < LATTICE_SIZE - 1; pos [2]++)
-   { // unnecessesary brace to make VC++ indenter happy
-      for (pos [1] = 1; pos [1] < LATTICE_SIZE - 1; pos [1]++)
-      {
-         for (pos [0] = 1; pos [0] < LATTICE_SIZE - 1; pos [0]++)
-         {
-            vector3 rpos;
-            copy_vector(rpos, pos);
-            if (diff_distance_SQ(rpos, cen) < r2)
-               clkp->lattice [lat(pos)] = what;
-         }
-      }
-   }
-#endif
-}
-
 void get_NEWS(char *news, CubicLatticeKnotPtr clkp)
 {
    if (!clkp) return;
@@ -5835,38 +5784,6 @@ void bfacf_lattice_info(CubicLatticeKnotPtr knot)
    printf("%d, min value of %d at %d, max value of %d at %d\n", knot->nedges_total, min, minloc, max, maxloc);
 }
 
-//  
-#ifdef INCLUDED_FROM_KnotPlot
-
-void showem_obsolete(CubicLatticeKnotPtr clkp, int kount)
-{
-   extern void decode_line(char *);
-   char com [44];
-   decode_line("txt delete group 999");
-   decode_line("txt group 999");
-   decode_line("txt font 4");
-   decode_line("txt fill off");
-   decode_line("mode l");
-   decode_line("show none");
-   extern void output_it(char *);
-   decode_line("scen dscal .2");
-   sprintf(com, "nfrozen is %d\n", clkp->nfrozen);
-   output_it(com);
-   for (int i = 0; i < clkp->nfrozen + kount; i++)
-   {
-      vector3 v;
-      EdgePtr ep = clkp->edgepool [i];
-      ivector a, b;
-      sub_ivector(a, ep->start, clkp->loffset);
-      sub_ivector(b, ep->next->start, clkp->loffset);
-      midpoint(v, a, b);
-      sprintf(com, "txt %f %f %f e%d", v [0], v [1], v[2], ep->locpool);
-      decode_line(com);
-   }
-   decode_line("txt group 0");
-}
-#endif
-
 void pexit(char *s)
 {
    fprintf(stderr, "%s\n", s);
@@ -5952,9 +5869,6 @@ bool perform_recombination(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgePtr ep2)
 {
    if (!ep1 || !ep2)
    {
-#ifdef INCLUDED_FROM_KnotPlot
-      complain("!perform_recombination (): null pointer");
-#endif
       fprintf(stderr, " *** perform_recombination (): null pointer");
       if (!ep1) fprintf(stderr, "ep1 is null ");
       if (!ep2) fprintf(stderr, "ep2 is null ");
@@ -6065,118 +5979,6 @@ bool perform_recombination(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgePtr ep2)
    return true;
 }
 
-//static int recombo_pair_index = 0;
-//static EdgePairPtr recombo_pair = (EdgePairPtr) NULL;
-//#define DEFAULT_RECOMBO_MAX 108
-//static int recombo_max = 0;
-//static bool recomboInitialized = false;
-//
-//int getNumberAvailableRecomboPairs(void)
-//{
-//   return recombo_pair_index;
-//}
-//
-//void initRecombo(void)
-//{
-//   recombo_pair_index = 0;
-//   if (!recomboInitialized)
-//   {
-//      recombo_pair = (EdgePairPtr) calloc(DEFAULT_RECOMBO_MAX, sizeof (EdgePair));
-//      recombo_max = DEFAULT_RECOMBO_MAX;
-//      recomboInitialized = true;
-//   }
-//}
-//
-//EdgePairPtr getAvailableRecomboPairs(void)
-//{
-//   return recombo_pair;
-//}
-//
-//void recombo_record_pair(EdgePtr ep1, EdgePtr ep2)
-//{
-//   if (!ep1)
-//   {
-//#ifdef INCLUDED_FROM_KnotPlot
-//      complain("!recombo_record_pair(): ep1 NULL POINTER!");
-//#endif
-//      fprintf(stderr, " *** recombo_record_pair(): ep1 NULL POINTER! recombo_max = %d, recombo_pair_index = %d", recombo_max, recombo_pair_index);
-//      return;
-//   }
-//   if (!ep2)
-//   {
-//#ifdef INCLUDED_FROM_KnotPlot
-//      complain("!recombo_record_pair(): ep2 NULL POINTER!");
-//#endif
-//      fprintf(stderr, " *** recombo_record_pair(): ep2 NULL POINTER! recombo_max = %d, recombo_pair_index = %d", recombo_max, recombo_pair_index);
-//      return;
-//   }
-//   if (recombo_pair_index == recombo_max)
-//   {
-//      int new_size = (140 * recombo_max) / 100 + 108;
-//      EdgePairPtr epp = (EdgePairPtr) calloc(new_size, sizeof (EdgePair));
-//      if (recombo_pair)
-//      {
-//         fprintf(stderr, "recombo_record_pair(): %d\n", new_size);
-//         for (int i = 0; i < recombo_max; i++)
-//         {
-//            epp [i].ep1 = recombo_pair [i].ep1;
-//            epp [i].ep2 = recombo_pair [i].ep2;
-//         }
-//         free(recombo_pair);
-//      }
-//      recombo_pair = epp;
-//      recombo_max = new_size;
-//      ++recombo_pair_index;
-//      return;
-//   }
-//   if (ep1 == ep2)
-//      pexit("recombo_record_pair()");
-//   recombo_pair [recombo_pair_index].ep1 = ep1;
-//   recombo_pair [recombo_pair_index].ep2 = ep2;
-//   ++recombo_pair_index;
-//}
-//
-//int bfacf_perform_recombination(CubicLatticeKnotPtr clkp)
-//{
-//   recombo_pair_index = 0;
-//   // find all the pairs of edges involved in recombo sites and record them
-//   int numb = bfacf_perform_recombination(clkp, recombo_record_pair);
-//   if (numb < 1) return 0; // no recombo sites
-//
-//   // choose a pair at random
-//   int pair = rand_integer(0, numb);
-//   if (pair < 0 || pair >= numb)
-//   {
-//#ifdef INCLUDED_FROM_KnotPlot
-//      complain("!bad selection!");
-//#endif
-//      fprintf(stderr, "pair = 0, numb = %d\n", pair, numb);
-//      return 0;
-//   }
-//   perform_recombination(clkp, recombo_pair [pair].ep1, recombo_pair [pair].ep2);
-//
-//   return numb;
-//}
-
-void clk_fill_path_alt(CubicLatticeKnotPtr clkp, bool fill)
-{
-   // fill knot path with edge pool location 
-   int mask = 0xffffff;
-   if (!fill)
-      mask = 0;
-   ComponentCLKPtr comp = clkp->fcomp;
-   while (comp)
-   {
-      EdgePtr ep = comp->first_edge;
-      for (int i = 0; i < comp->nedges; i++)
-      {
-         clkp->alt_lattice [lat(ep->start)] = (ep->locpool + 1) & mask;
-         ep = ep->next;
-      }
-      comp = comp->next;
-   }
-}
-
 bool clk_allocation_alt_lattice(CubicLatticeKnotPtr clkp)
 {
    if (!clkp) return false;
@@ -6281,47 +6083,5 @@ int bfacf_perform_recombination(CubicLatticeKnotPtr clkp, void mark(EdgePtr, Edg
       comp = comp->next;
    }
 
-   //  validate (clkp, "end of A");
-
    return kount;
 }
-
-bool clk_verbose_knot_path_info(CubicLatticeKnotPtr clkp, char *filename)
-{
-   FILE *fp = fopen(filename, "w");
-   if (!fp) return false;
-
-   ComponentCLKPtr comp = clkp->fcomp;
-   EdgePtr ep, epc;
-
-   fprintf(fp, "ID, component, xstart, ystart, zstart, direction, locpool, prev, next, tclasp, parsite\n");
-
-   while (comp)
-   {
-      ep = comp->first_edge;
-      int tc, ps;
-      for (int i = 0; i < comp->nedges; i++)
-      {
-         ivector loc;
-         sub_ivector(loc, ep->start, clkp->loffset);
-         tc = ps = -1;
-         epc = is_tight_clasp(clkp, ep);
-         if (epc) tc = epc->ID;
-         epc = is_parsite(clkp, ep);
-         if (epc) ps = epc->ID;
-
-         fprintf(fp, "%d, %d, %d, %d, %d, %s, %d, %d, %d, %d, %d\n",
-                 ep->ID, comp->ID,
-                 loc [0], loc [1], loc [2],
-                 clk_dir_name [ep->dir],
-                 ep->locpool, ep->prev->ID, ep->next->ID,
-                 tc, ps);
-         ep = ep->next;
-      }
-      comp = comp->next;
-   }
-
-   fclose(fp);
-   return true;
-}
-

@@ -251,7 +251,6 @@ void MMC_prob_report (char *knot);
 bool MMC_swap (double &prob, double zi, int lengthi, double zip1, int lengthip1);
 char *get_known_lengths (char *knot);
 
-void  bfacf_set_lattice_sphere (CubicLatticeKnotPtr clkp, int what, double radius, double xcen, double ycen, double zcen, char *blurt);
 int bfacf_info_filled (CubicLatticeKnotPtr knot);
 bool clkp_always_turns (CubicLatticeKnotPtr clkp);
 

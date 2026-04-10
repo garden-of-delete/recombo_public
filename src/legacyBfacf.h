@@ -138,9 +138,6 @@ CubicLatticeKnotPtr bfacf_input_start_configuration (FILE *fp, bool ignore_mid, 
 void bfacf_init_pool_and_lattice (CubicLatticeKnotPtr clkp, bool ignore_mid, int poolsize, ivector min, ivector max);
 bool perform_move (CubicLatticeKnotPtr knot);
 bool perform_move_q (CubicLatticeKnotPtr knot);
-bool perform_move_kjc (CubicLatticeKnotPtr knot);
-bool perform_move_move0_only (CubicLatticeKnotPtr knot);
-bool perform_move_pivot (CubicLatticeKnotPtr knot);
 
 int bfacf_save_stick (int nsticks, CubicLatticeKnotPtr clkp);
 bool type_minus2_moves_possible (CubicLatticeKnotPtr clkp);

@@ -32,12 +32,13 @@ public:
 	friend class testClkConformationBfacf3;
 };
 
-class clktestclass
+// --- Fixtures ---
+
+class ClkTestFixture : public ::testing::Test
 {
-public:
-	clktestclass();
-	virtual ~clktestclass();
-	void setUp();
+protected:
+	void SetUp() override;
+	void TearDown() override;
 
 	vector<double> expectedWr;
 	vector<double> expectedAcn;
@@ -54,18 +55,37 @@ public:
 	clk* clkTrefoil2;
 	clk* clkTrefoil3;
 	clk* clkTrefoil4;
-
 };
 
-clktestclass::clktestclass() : expectedAcn(NUMBER_OF_TREFOILS),
-expectedRog(NUMBER_OF_TREFOILS), expectedWr(NUMBER_OF_TREFOILS),
-trefoilCoords(NUMBER_OF_TREFOILS, vector<int>(3 * TREFOIL_LENGTH)),
-trefoilCoordsAsThreevectors(NUMBER_OF_TREFOILS, vector<threevector<int> >(TREFOIL_LENGTH))
+class Bfacf3TestFixture : public ::testing::Test
 {
-	setUp();
-}
+protected:
+	void SetUp() override {
+		square2 = clkConformationAsList(square);
+		square2.translate(0, 0, 1);
+	}
 
-clktestclass::~clktestclass()
+	clkCigar square;
+	clkConformationAsList square2;
+};
+
+class BfacfProbsTestFixture : public ::testing::Test
+{
+protected:
+	void SetUp() override {
+		clkConformationAsList square1(square);
+		knot = new testClkConformationBfacf3(square1);
+	}
+
+	void TearDown() override {
+		delete knot;
+	}
+
+	clkCigar square;
+	testClkConformationBfacf3* knot;
+};
+
+void ClkTestFixture::TearDown()
 {
    delete clkTrefoil0;
    delete clkTrefoil1;
@@ -74,8 +94,13 @@ clktestclass::~clktestclass()
    delete clkTrefoil4;
 }
 
-void clktestclass::setUp()
+void ClkTestFixture::SetUp()
 {
+   expectedAcn.resize(NUMBER_OF_TREFOILS);
+   expectedRog.resize(NUMBER_OF_TREFOILS);
+   expectedWr.resize(NUMBER_OF_TREFOILS);
+   trefoilCoords.assign(NUMBER_OF_TREFOILS, vector<int>(3 * TREFOIL_LENGTH));
+   trefoilCoordsAsThreevectors.assign(NUMBER_OF_TREFOILS, vector<threevector<int> >(TREFOIL_LENGTH));
    double arrayExpectedROG[] = {3.345594,
       3.949506,
       3.158006,
@@ -171,29 +196,28 @@ static bool vectorsEqual(const vector<int>& u, const vector<threevector<int> >& 
    return true;
 }
 
-// --- ClkTest suite: conformation data and geometry ---
+// --- ClkTestFixture suite: conformation data and geometry ---
 
-TEST(ClkTest, Data)
+TEST_F(ClkTestFixture, Data)
 {
-	clktestclass clk;
-	ASSERT_EQ(clk.expectedAcn.size(), NUMBER_OF_TREFOILS) << "Wrong length for expectedAcn.";
+	ASSERT_EQ(expectedAcn.size(), NUMBER_OF_TREFOILS) << "Wrong length for expectedAcn.";
 
-	ASSERT_EQ(clk.expectedRog.size(), NUMBER_OF_TREFOILS) << "Wrong length for expectedWr.";
-	ASSERT_EQ(clk.expectedWr.size(), NUMBER_OF_TREFOILS) << "Wrong length for expectedRog.";
+	ASSERT_EQ(expectedRog.size(), NUMBER_OF_TREFOILS) << "Wrong length for expectedWr.";
+	ASSERT_EQ(expectedWr.size(), NUMBER_OF_TREFOILS) << "Wrong length for expectedRog.";
 
-	ASSERT_EQ(clk.trefoilCoords.size(), NUMBER_OF_TREFOILS) << "Wrong number of trefoils.";
-	for (vector<vector<int> >::const_iterator j = clk.trefoilCoords.begin();
-	   j != clk.trefoilCoords.end(); j++)
+	ASSERT_EQ(trefoilCoords.size(), NUMBER_OF_TREFOILS) << "Wrong number of trefoils.";
+	for (vector<vector<int> >::const_iterator j = trefoilCoords.begin();
+	   j != trefoilCoords.end(); j++)
 	{
 		ASSERT_EQ(j->size(), 3u * TREFOIL_LENGTH) << "Wrong length of trefoil.";
 	}
 
-	ASSERT_EQ(clk.trefoilCoordsAsThreevectors.size(), NUMBER_OF_TREFOILS) << "Wrong number of trefoils as threevectors.";
+	ASSERT_EQ(trefoilCoordsAsThreevectors.size(), NUMBER_OF_TREFOILS) << "Wrong number of trefoils as threevectors.";
 	for (int j = 0; j < NUMBER_OF_TREFOILS; j++)
 	{
-		ASSERT_EQ(clk.trefoilCoordsAsThreevectors[j].size(), (size_t)TREFOIL_LENGTH) << "Wrong length of trefoil as threevectors.";
+		ASSERT_EQ(trefoilCoordsAsThreevectors[j].size(), (size_t)TREFOIL_LENGTH) << "Wrong length of trefoil as threevectors.";
 
-		ASSERT_TRUE(vectorsEqual(clk.trefoilCoords[j], clk.trefoilCoordsAsThreevectors[j])) << "Trefoil as threevectors do not have expected coords.";
+		ASSERT_TRUE(vectorsEqual(trefoilCoords[j], trefoilCoordsAsThreevectors[j])) << "Trefoil as threevectors do not have expected coords.";
 	}
 }
 
@@ -218,12 +242,10 @@ static void testCopyScalarToVectorHelper(const vector<int>& u)
    ASSERT_TRUE(equal(v.begin(), v.end(), l.begin())) << "List copy does not match original.";
 }
 
-TEST(ClkTest, CopyScalarToVector)
+TEST_F(ClkTestFixture, CopyScalarToVector)
 {
-	clktestclass clk;
-
-   for (size_t i = 0; i < clk.trefoilCoords.size(); i++)
-      testCopyScalarToVectorHelper(clk.trefoilCoords[i]);
+   for (size_t i = 0; i < trefoilCoords.size(); i++)
+      testCopyScalarToVectorHelper(trefoilCoords[i]);
 }
 
 static void testGenericOutputHelper(const vector<threevector<int> >& u)
@@ -243,10 +265,8 @@ static void testGenericOutputHelper(const vector<threevector<int> >& u)
    ASSERT_EQ(expected, strforlist.str());
 }
 
-TEST(ClkTest, GenericOutput)
+TEST_F(ClkTestFixture, GenericOutput)
 {
-	clktestclass clk;
-
    stringstream str1, str2, str3, str4;
    string expected1("1 2 3"), expected2("(1, 2, 3)"),
            expected3("1 2 3 1 1 3"), expected4("[(1, 2, 3); (1, 1, 3)]");
@@ -264,26 +284,22 @@ TEST(ClkTest, GenericOutput)
    ASSERT_EQ(expected3, str3.str());
    ASSERT_EQ(expected4, str4.str());
 
-   for (size_t i = 0; i < clk.trefoilCoordsAsThreevectors.size(); i++)
-      testGenericOutputHelper(clk.trefoilCoordsAsThreevectors[i]);
+   for (size_t i = 0; i < trefoilCoordsAsThreevectors.size(); i++)
+      testGenericOutputHelper(trefoilCoordsAsThreevectors[i]);
 }
 
-TEST(ClkTest, Rog)
+TEST_F(ClkTestFixture, Rog)
 {
-	clktestclass clk;
-
-   for (size_t i = 0; i < clk.trefoilCoordsAsThreevectors.size(); i++)
+   for (size_t i = 0; i < trefoilCoordsAsThreevectors.size(); i++)
    {
-      double r2 = computeRog(clk.trefoilCoordsAsThreevectors[i].begin(), clk.trefoilCoordsAsThreevectors[i].end());
+      double r2 = computeRog(trefoilCoordsAsThreevectors[i].begin(), trefoilCoordsAsThreevectors[i].end());
       double r = sqrt(r2);
-      ASSERT_NEAR(clk.expectedRog[i], r, DELTA);
+      ASSERT_NEAR(expectedRog[i], r, DELTA);
    }
 }
 
-TEST(ClkTest, WrAcn)
+TEST_F(ClkTestFixture, WrAcn)
 {
-	clktestclass clk;
-
    // First test that findLast works correctly.
    ASSERT_EQ(0, findLast(0, 1));
    for (int i = -10; i < 10; i++)
@@ -292,68 +308,64 @@ TEST(ClkTest, WrAcn)
       for (int j = i; j < i + 15; j++)
          ASSERT_EQ(j, findLast(i, j + 1));
 
-   for (size_t i = 0; i < clk.trefoilCoordsAsThreevectors.size(); i++)
+   for (size_t i = 0; i < trefoilCoordsAsThreevectors.size(); i++)
    {
       double Wr, Acn;
-      computeWrAcn(clk.trefoilCoordsAsThreevectors[i].begin(), clk.trefoilCoordsAsThreevectors[i].end(), Wr, Acn);
-      ASSERT_NEAR(clk.expectedWr[i], Wr, DELTA);
-      ASSERT_NEAR(clk.expectedAcn[i], Acn, DELTA);
+      computeWrAcn(trefoilCoordsAsThreevectors[i].begin(), trefoilCoordsAsThreevectors[i].end(), Wr, Acn);
+      ASSERT_NEAR(expectedWr[i], Wr, DELTA);
+      ASSERT_NEAR(expectedAcn[i], Acn, DELTA);
    }
 }
 
-TEST(ClkTest, ReadFromText)
+TEST_F(ClkTestFixture, ReadFromText)
 {
-	clktestclass clk;
-
    stringstream stream;
-   stream << clk.manyTrefoilString;
+   stream << manyTrefoilString;
    clkConformationAsList knot;
 
    ASSERT_TRUE(knot.readFromText(stream)) << "Could not read trefoil0";
-   ASSERT_TRUE(knot == *clk.clkTrefoil0) << "trefoil0 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil0) << "trefoil0 does not match expected conformation.";
 
    ASSERT_TRUE(knot.readFromText(stream)) << "Could not read trefoil1";
-   ASSERT_TRUE(knot == *clk.clkTrefoil1) << "trefoil1 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil1) << "trefoil1 does not match expected conformation.";
 
    ASSERT_TRUE(knot.readFromText(stream)) << "Could not read trefoil2";
-   ASSERT_TRUE(knot == *clk.clkTrefoil2) << "trefoil2 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil2) << "trefoil2 does not match expected conformation.";
 
    ASSERT_TRUE(knot.readFromText(stream)) << "Could not read trefoil3";
-   ASSERT_TRUE(knot == *clk.clkTrefoil3) << "trefoil3 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil3) << "trefoil3 does not match expected conformation.";
 
    ASSERT_TRUE(knot.readFromText(stream)) << "Could not read trefoil4";
-   ASSERT_TRUE(knot == *clk.clkTrefoil4) << "trefoil4 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil4) << "trefoil4 does not match expected conformation.";
 
    ASSERT_FALSE(knot.readFromText(stream)) << "There should only be five conformations to read.";
 }
 
-TEST(ClkTest, ReadFromCoords)
+TEST_F(ClkTestFixture, ReadFromCoords)
 {
-	clktestclass clk;
-
    stringstream stream;
-   stream << clk.manyTrefoilCoordString;
+   stream << manyTrefoilCoordString;
    clkConformationAsList knot;
 
    ASSERT_TRUE(knot.readFromCoords(stream)) << "Could not read trefoil0";
-   ASSERT_TRUE(knot == *clk.clkTrefoil0) << "trefoil0 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil0) << "trefoil0 does not match expected conformation.";
 
    ASSERT_TRUE(knot.readFromCoords(stream)) << "Could not read trefoil1";
-   ASSERT_TRUE(knot == *clk.clkTrefoil1) << "trefoil1 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil1) << "trefoil1 does not match expected conformation.";
 
    ASSERT_TRUE(knot.readFromCoords(stream)) << "Could not read trefoil2";
-   ASSERT_TRUE(knot == *clk.clkTrefoil2) << "trefoil2 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil2) << "trefoil2 does not match expected conformation.";
 
    ASSERT_TRUE(knot.readFromCoords(stream)) << "Could not read trefoil3";
-   ASSERT_TRUE(knot == *clk.clkTrefoil3) << "trefoil3 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil3) << "trefoil3 does not match expected conformation.";
 
    ASSERT_TRUE(knot.readFromCoords(stream)) << "Could not read trefoil4";
-   ASSERT_TRUE(knot == *clk.clkTrefoil4) << "trefoil4 does not match expected conformation.";
+   ASSERT_TRUE(knot == *clkTrefoil4) << "trefoil4 does not match expected conformation.";
 
    ASSERT_FALSE(knot.readFromText(stream)) << "There should only be five conformations to read.";
 }
 
-// --- Bfacf3Test suite: BFACF algorithm construction, configuration, and execution ---
+// --- Bfacf3TestFixture suite: BFACF algorithm construction, configuration, and execution ---
 
 extern void set_sRand_seed_to_clocktime();
 extern int rand_integer(int, int);
@@ -361,13 +373,12 @@ extern double rand_double(double low, double high);
 extern double rand_uniform();
 extern void sRandSimple(int seed);
 
-TEST(ClkTest, RandomReset)
+TEST_F(Bfacf3TestFixture, RandomReset)
 {
    int expected[] = {2, 46, 10, 80, 33, 41, 50, 1, 66, 80, 20, 71, 4, 41, 73, 71, 99, 70, 25, 4};
    list<int> l;
 
    // First verify that random number generator used by legacy is same as pseudorandom class.
-   clkCigar square;
    clkConformationBfacf3 knot(square);
    knot.setSeed(42);
    pseudorandom r(42);
@@ -426,11 +437,10 @@ TEST(ClkTest, RandomReset)
    }
 }
 
-TEST(ClkTest, Bfacf3)
+TEST_F(Bfacf3TestFixture, Bfacf3)
 {
    threevector<int> v;
 
-   clkCigar square;
    clkConformationBfacf3 knot(square);
    ASSERT_EQ(1, knot.size());
    list<clkConformationAsList> components;
@@ -444,8 +454,6 @@ TEST(ClkTest, Bfacf3)
    comp0.translate(v);
    ASSERT_TRUE(square == comp0);
 
-   clkConformationAsList square2(square);
-   square2.translate(0, 0, 1);
    clkConformationBfacf3 twoComponentLink(square, square2);
    ASSERT_EQ(2, twoComponentLink.size());
    list<clkConformationAsList> components2;
@@ -486,16 +494,12 @@ static void assertBfacfProbabilitiesConsistent(const bfacfProbabilities& p)
    ASSERT_NEAR(2.0 * p.p0() + 2.0 * p.p2(), p.p2p02p2(), EPSILON);
 }
 
-TEST(ClkTest, Bfacf3SetZ)
+TEST_F(Bfacf3TestFixture, Bfacf3SetZ)
 {
-   clkCigar square0;
-   clkConformationAsList square1(square0);
-   square1.translate(0, 0, 1);
-
    double expectedDefaultZ = 0.20815;
 
    // First try a knot.
-   clkConformationBfacf3 knot(square1);
+   clkConformationBfacf3 knot(square2);
    ASSERT_EQ(expectedDefaultZ, DEFAULT_Z);
    ASSERT_EQ(DEFAULT_Z, knot.getZ());
    ASSERT_EQ(DEFAULT_Z, knot.getComponent(0).getZ());
@@ -538,7 +542,7 @@ TEST(ClkTest, Bfacf3SetZ)
    assertBfacfProbabilitiesEqual(p21, knot.getComponent(0).getProbabilities());
 
    // Next try similar tests for a two-component link.
-   clkConformationBfacf3 link(square0, square1);
+   clkConformationBfacf3 link(square, square2);
    ASSERT_EQ(DEFAULT_Z, link.getZ());
    ASSERT_EQ(DEFAULT_Z, link.getComponent(0).getZ());
    ASSERT_EQ(DEFAULT_Z, link.getComponent(1).getZ());
@@ -562,12 +566,11 @@ TEST(ClkTest, Bfacf3SetZ)
    assertBfacfProbabilitiesEqual(p21, link.getComponent(1).getProbabilities());
 }
 
-TEST(ClkTest, Bfacf3Run)
+TEST_F(Bfacf3TestFixture, Bfacf3Run)
 {
    threevector<int> v;
 
    string targetUnkot("0 1 0 -1 1 0 -1 1 -1 -1 2 -1 -1 3 -1 0 3 -1 0 3 0 0 2 0 -1 2 0 -2 2 0 -2 1 0 -3 1 0 -3 0 0 -2 0 0 -1 0 0 0 0 0");
-   clkCigar square;
    clkConformationAsList targetConformation;
    targetConformation.readFromText(targetUnkot);
    targetConformation.getVertex(0, v);
@@ -619,66 +622,59 @@ TEST(ClkTest, Bfacf3Run)
    ASSERT_TRUE(secondTargetCoformation == actualConformation);
 }
 
-// --- BfacfProbsTest suite: precomputed probability tables ---
+// --- BfacfProbsTestFixture suite: precomputed probability tables ---
 
-TEST(BfacfProbsTest, Precomputed)
+TEST_F(BfacfProbsTestFixture, Precomputed)
 {
-	clkCigar square;
-	clkConformationAsList square1(square);
-	testClkConformationBfacf3 knot(square1);
 	double z = .2000, q = 1;
-	knot.init_Q(z, q);
+	knot->init_Q(z, q);
 	for (int n = 4; n < MAX_PRECOMPUTE_LENGTH; n++){
-		ASSERT_EQ(knot.probMap[n].p_plus2, (pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
-		ASSERT_EQ(knot.probMap[n].p_minus2, pow(n-2, (q - 1)) / (pow(n-2, (q - 1)) + 3.0*pow(n, q - 1) * z * z));
-		ASSERT_EQ(knot.probMap[n].p_0, .5 * (knot.probMap[n].p_plus2 + knot.probMap[n].p_minus2));
+		ASSERT_EQ(knot->probMap[n].p_plus2, (pow((n + 2), (q - 1))*(z * z)) / (pow(n, (q - 1)) + 3.0*pow((n + 2), q - 1) * z * z));
+		ASSERT_EQ(knot->probMap[n].p_minus2, pow(n-2, (q - 1)) / (pow(n-2, (q - 1)) + 3.0*pow(n, q - 1) * z * z));
+		ASSERT_EQ(knot->probMap[n].p_0, .5 * (knot->probMap[n].p_plus2 + knot->probMap[n].p_minus2));
 	}
 	z = .1812; q = 3;
-	knot.init_Q(z, q);
+	knot->init_Q(z, q);
 	for (int n = 4; n < MAX_PRECOMPUTE_LENGTH; n++) {
-        ASSERT_EQ(knot.probMap[n].p_plus2,
+        ASSERT_EQ(knot->probMap[n].p_plus2,
                (pow((n + 2), (q - 1)) * (z * z)) / (pow(n, (q - 1)) + 3.0 * pow((n + 2), q - 1) * z * z));
-        ASSERT_EQ(knot.probMap[n].p_minus2, pow(n - 2, (q - 1)) / (pow(n - 2, (q - 1)) + 3.0 * pow(n, q - 1) * z * z));
-        ASSERT_EQ(knot.probMap[n].p_0, .5 * (knot.probMap[n].p_plus2 + knot.probMap[n].p_minus2));
+        ASSERT_EQ(knot->probMap[n].p_minus2, pow(n - 2, (q - 1)) / (pow(n - 2, (q - 1)) + 3.0 * pow(n, q - 1) * z * z));
+        ASSERT_EQ(knot->probMap[n].p_0, .5 * (knot->probMap[n].p_plus2 + knot->probMap[n].p_minus2));
     }
 }
 
-TEST(BfacfProbsTest, HandComputed)
+TEST_F(BfacfProbsTestFixture, HandComputed)
 {
-   clkCigar square;
-   clkConformationAsList square1(square);
-   testClkConformationBfacf3 knot(square1);
-
-   knot.init_Q(0.2, 1);
-   ASSERT_NEAR(knot.probMap[4].p_plus2, 0.03571428571428572, EPSILON);
-   ASSERT_NEAR(knot.probMap[4].p_minus2, 0.8928571428571428, EPSILON);
-   ASSERT_NEAR(knot.probMap[4].p_0, 0.46428571428571425, EPSILON);
-   knot.init_Q(0.2135, 1);
-   ASSERT_NEAR(knot.probMap[4].p_plus2, 0.04009886106997887, EPSILON);
-   ASSERT_NEAR(knot.probMap[4].p_minus2, 0.8797034167900635, EPSILON);
-   ASSERT_NEAR(knot.probMap[4].p_0, 0.45990113893002116, EPSILON);
-   knot.init_Q(0.2, 2);
-   ASSERT_NEAR(knot.probMap[4].p_plus2, 0.05084745762711865, EPSILON);
-   ASSERT_NEAR(knot.probMap[4].p_minus2, 0.8064516129032259, EPSILON);
-   ASSERT_NEAR(knot.probMap[4].p_0, 0.42864953526517224, EPSILON);
-   knot.init_Q(0.2135, 2);
-   ASSERT_NEAR(knot.probMap[4].p_plus2, 0.05673573412443012, EPSILON);
-   ASSERT_NEAR(knot.probMap[4].p_minus2, 0.7852415422615034, EPSILON);
-   ASSERT_NEAR(knot.probMap[4].p_0, 0.4209886381929668, EPSILON);
-   knot.init_Q(0.2, 1);
-   ASSERT_NEAR(knot.probMap[100].p_plus2, 0.03571428571428572, EPSILON);
-   ASSERT_NEAR(knot.probMap[100].p_minus2, 0.8928571428571428, EPSILON);
-   ASSERT_NEAR(knot.probMap[100].p_0, 0.46428571428571425, EPSILON);
-   knot.init_Q(0.2135, 1);
-   ASSERT_NEAR(knot.probMap[100].p_plus2, 0.04009886106997887, EPSILON);
-   ASSERT_NEAR(knot.probMap[100].p_minus2, 0.8797034167900635, EPSILON);
-   ASSERT_NEAR(knot.probMap[100].p_0, 0.45990113893002116, EPSILON);
-   knot.init_Q(0.2, 2);
-   ASSERT_NEAR(knot.probMap[100].p_plus2, 0.03635067712045617, EPSILON);
-   ASSERT_NEAR(knot.probMap[100].p_minus2, 0.8909090909090909, EPSILON);
-   ASSERT_NEAR(knot.probMap[100].p_0, 0.4636298840147735, EPSILON);
-   knot.init_Q(0.2135, 2);
-   ASSERT_NEAR(knot.probMap[100].p_plus2, 0.04080266985598808, EPSILON);
-   ASSERT_NEAR(knot.probMap[100].p_minus2, 0.877549005627283, EPSILON);
-   ASSERT_NEAR(knot.probMap[100].p_0, 0.45917583774163556, EPSILON);
+   knot->init_Q(0.2, 1);
+   ASSERT_NEAR(knot->probMap[4].p_plus2, 0.03571428571428572, EPSILON);
+   ASSERT_NEAR(knot->probMap[4].p_minus2, 0.8928571428571428, EPSILON);
+   ASSERT_NEAR(knot->probMap[4].p_0, 0.46428571428571425, EPSILON);
+   knot->init_Q(0.2135, 1);
+   ASSERT_NEAR(knot->probMap[4].p_plus2, 0.04009886106997887, EPSILON);
+   ASSERT_NEAR(knot->probMap[4].p_minus2, 0.8797034167900635, EPSILON);
+   ASSERT_NEAR(knot->probMap[4].p_0, 0.45990113893002116, EPSILON);
+   knot->init_Q(0.2, 2);
+   ASSERT_NEAR(knot->probMap[4].p_plus2, 0.05084745762711865, EPSILON);
+   ASSERT_NEAR(knot->probMap[4].p_minus2, 0.8064516129032259, EPSILON);
+   ASSERT_NEAR(knot->probMap[4].p_0, 0.42864953526517224, EPSILON);
+   knot->init_Q(0.2135, 2);
+   ASSERT_NEAR(knot->probMap[4].p_plus2, 0.05673573412443012, EPSILON);
+   ASSERT_NEAR(knot->probMap[4].p_minus2, 0.7852415422615034, EPSILON);
+   ASSERT_NEAR(knot->probMap[4].p_0, 0.4209886381929668, EPSILON);
+   knot->init_Q(0.2, 1);
+   ASSERT_NEAR(knot->probMap[100].p_plus2, 0.03571428571428572, EPSILON);
+   ASSERT_NEAR(knot->probMap[100].p_minus2, 0.8928571428571428, EPSILON);
+   ASSERT_NEAR(knot->probMap[100].p_0, 0.46428571428571425, EPSILON);
+   knot->init_Q(0.2135, 1);
+   ASSERT_NEAR(knot->probMap[100].p_plus2, 0.04009886106997887, EPSILON);
+   ASSERT_NEAR(knot->probMap[100].p_minus2, 0.8797034167900635, EPSILON);
+   ASSERT_NEAR(knot->probMap[100].p_0, 0.45990113893002116, EPSILON);
+   knot->init_Q(0.2, 2);
+   ASSERT_NEAR(knot->probMap[100].p_plus2, 0.03635067712045617, EPSILON);
+   ASSERT_NEAR(knot->probMap[100].p_minus2, 0.8909090909090909, EPSILON);
+   ASSERT_NEAR(knot->probMap[100].p_0, 0.4636298840147735, EPSILON);
+   knot->init_Q(0.2135, 2);
+   ASSERT_NEAR(knot->probMap[100].p_plus2, 0.04080266985598808, EPSILON);
+   ASSERT_NEAR(knot->probMap[100].p_minus2, 0.877549005627283, EPSILON);
+   ASSERT_NEAR(knot->probMap[100].p_0, 0.45917583774163556, EPSILON);
 }

@@ -1502,7 +1502,6 @@ see run-test.tcsh for examples of usage
 #define PLAIN_TEXT         2
 #define LENGTH             3
 #define WRITHE             4
-#define ENERGY             5
 #define NEWSUD             6
 #define ROG                7
 #define BBOX               8
@@ -1524,10 +1523,6 @@ int current_line = 1;
 //char comment [108];
 double writhe_mult = 1.0;
 char *output_filename = (char *) NULL;
-int energy_model;
-double energy_parameter;
-bool filter_energies = false;
-double energy_scale = 1.0e21; // used only for values printed out, not used to compare energies
 
 static ivector UofS_incr [7] = {
    {0, 0, 0}, // not used
@@ -1600,69 +1595,13 @@ ivector global_max = {-HUGE, -HUGE, -HUGE};
 ivector global_min = {HUGE, HUGE, HUGE};
 
 ivector *coord;
-ivector *coord_last;
 
-bool save_last_knot = false;
 
 int value [MAXSIZE * 3];
 int num_vertices;
 int num_converted = 0;
 
 int num_rejected = 0, num_tested = 0;
-bool debug_energy = false;
-
-//bool reject_knot_energy_aux () {
-//  if (!filter_energies) return false;
-//
-//  static double previous_energy;
-//  static bool first_call = true;
-//  static double X;
-//
-//  double current_energy = energy (coord, num_vertices);
-//  num_tested++;
-//
-//  if (first_call) {
-//    previous_energy = current_energy;
-//    first_call = false;
-//    X = 1.0 / (B * T);
-//    return false;
-//  }
-//  if (debug_energy)
-//    printf ("current %f, previous %f  ", current_energy * energy_scale, previous_energy * energy_scale);
-//
-//  if (current_energy > previous_energy) {
-//    double p = exp ((previous_energy - current_energy) * X);  // probability of acceptance
-//    if (debug_energy)
-//      printf (" p = %f ", p );
-//    if (rand_uniform () > p) {
-//      if (debug_energy)
-//        printf ("reject\n");
-//      num_rejected++;
-//      return true;                        // reject it
-//    }
-//  }
-//  if (debug_energy)
-//    printf ("accept\n");
-//  previous_energy = current_energy;
-//  return false;
-//}
-//
-//bool reject_knot_energy () {
-//  bool reject = reject_knot_energy_aux ();
-//  if (!save_last_knot) return reject;
-//  static int last_nvert;
-//  if (reject) {
-//    num_vertices = last_nvert;
-//    for (int i = 0; i < num_vertices; i++)
-//      copy_ivector (coord [i], coord_last [i]);
-//  }
-//  else {
-//    last_nvert = num_vertices;
-//    for (int i = 0; i < num_vertices; i++)
-//      copy_ivector (coord_last [i], coord [i]);
-//  }
-//  return false;
-//}
 
 void offset_knot(ivector offset)
 {
@@ -1703,24 +1642,6 @@ void process_knot(int flags)
    min_ivector(global_min, global_min, min);
 }
 
-/*
-bool energy_allow (double &energy, int model, double param) {
-switch (model) {
-case 1:
-return energy_model1 (energy, param, num_vertices, coord);
-case 2:
-return energy_model1 (energy, param, num_vertices, coord);
-case 3:
-return energy_model1 (energy, param, num_vertices, coord);
-case 4:
-return energy_model1 (energy, param, num_vertices, coord);
-case 5:
-return energy_model1 (energy, param, num_vertices, coord);
-case 108:
-return energy_model108 (energy, param, num_vertices, coord);
-}
-}
- */
 
 void (*put_a_knot) (FILE *fp, int flags);
 
@@ -1729,7 +1650,6 @@ void put_a_knot_PPM(FILE *fp, int flags) { }
 void put_a_knot_NEWSUD_or_UofS(FILE *fp, int flags)
 {
    if (num_vertices > max_length || num_vertices < min_length) return; // ignore this knot
-   //  if (reject_knot_energy ()) return;
    process_knot(flags);
    if (north [0] == '3') // UofS format
       fprintf(fp, "%d %d %d\n", coord [0][0], coord [0][1], coord [0][2]);
@@ -1767,7 +1687,6 @@ void put_a_knot_NEWSUD_or_UofS(FILE *fp, int flags)
 void put_a_knot_text(FILE *fp, int flags)
 {
    if (num_vertices > max_length || num_vertices < min_length) return; // ignore this knot
-   //  if (reject_knot_energy ()) return;
 
    process_knot(flags);
    if (flags & WRITE_NUM_VERTICES)
@@ -1791,7 +1710,6 @@ char* separator = "\n";
 void put_a_knot_length(FILE *fp, int flags)
 {
    if (num_vertices > max_length || num_vertices < min_length) return; // ignore this knot
-   //  if (reject_knot_energy ()) return;
 
    process_knot(flags);
 
@@ -1807,7 +1725,6 @@ ivector bbox_max_range = {0, 0, 0};
 void put_a_knot_bbox(FILE *fp, int flags)
 {
    if (num_vertices > max_length || num_vertices < min_length) return; // ignore this knot
-   //  if (reject_knot_energy ()) return;
 
    process_knot(flags);
    int volume;
@@ -1828,18 +1745,6 @@ void put_a_knot_bbox(FILE *fp, int flags)
    num_converted++;
 }
 
-//int energy_number_skipped = 0;
-//
-//void put_a_knot_energy (FILE *fp, int flags) {
-//  if (num_vertices > max_length || num_vertices < min_length) return;  // ignore this knot
-////  if (reject_knot_energy ()) return;
-//
-//  process_knot (flags);
-//
-////  printf ("%f%s", energy_scale * energy (coord, num_vertices), separator);
-//
-//  num_converted++;
-//}
 
 #define DEFAULT_WRITHE_JITTER 0.0
 
@@ -1848,7 +1753,6 @@ double writhe_jitter = DEFAULT_WRITHE_JITTER;
 void put_a_knot_writhe(FILE *fp, int flags)
 {
    if (num_vertices > max_length || num_vertices < min_length) return; // ignore this knot
-   //  if (reject_knot_energy ()) return;
 
    double ignore;
    process_knot(flags);
@@ -1859,7 +1763,6 @@ void put_a_knot_writhe(FILE *fp, int flags)
 void put_a_knot_ACN(FILE *fp, int flags)
 {
    if (num_vertices > max_length || num_vertices < min_length) return; // ignore this knot
-   //  if (reject_knot_energy ()) return;
 
    process_knot(flags);
    double acn;
@@ -1871,7 +1774,6 @@ void put_a_knot_ACN(FILE *fp, int flags)
 void put_a_knot_rog(FILE *fp, int flags)
 {
    if (num_vertices > max_length || num_vertices < min_length) return; // ignore this knot
-   //  if (reject_knot_energy ()) return;
 
    process_knot(flags);
    fprintf(fp, "%f%s", radius_of_gyration(num_vertices, coord), separator);
@@ -1914,7 +1816,6 @@ void put_a_knot_multiple_binary(FILE *ignore, int flags)
 void put_a_knot_binary(FILE *fp, int flags)
 {
    if (num_vertices > max_length || num_vertices < min_length) return; // ignore this knot
-   //  if (reject_knot_energy ()) return;
 
    if (num_vertices < 2)
       error_exit("absurd value for number of vertices!");
@@ -2153,12 +2054,6 @@ void usage(char *s)
    blurt;
    fprintf(stderr, "           -r MIN MAX    specify a range for binning\n");
    blurt;
-   fprintf(stderr, "           -f            filter knots according to energy\n");
-   blurt;
-   fprintf(stderr, "           -fr           filter knots according to energy and repeat knots\n");
-   blurt;
-   fprintf(stderr, "           -E            write only the energies to stdout\n");
-   blurt;
    fprintf(stderr, "           -L            write only the lengths to stdout\n");
    blurt;
    fprintf(stderr, "           -W            write only the writhes to stdout\n");
@@ -2170,11 +2065,6 @@ void usage(char *s)
    fprintf(stderr, "           -R            write only the radii of gyration to stdout\n");
    blurt;
    fprintf(stderr, "           -j VALUE      set writhe jitter to VALUE (default is %f)\n", DEFAULT_WRITHE_JITTER);
-   //  blurt;fprintf (stderr, "           -kappa KAPPA  set kappa value to KAPPA (default is %f)\n", DEFAULT_KAPPA);
-   //  blurt;fprintf (stderr, "           -F  FACTOR    set f-factor value to FACTOR (default is %f)\n", DEFAULT_FUDGE_FACTOR);
-   blurt;
-   fprintf(stderr, "           -de           turn on energy debugging option (writes to stdout)\n");
-   //  blurt;fprintf (stderr, "           -T TEMP       set temperature to TEMP degrees (default is %f)\n", DEFAULT_KELVINS);
    blurt;
    fprintf(stderr, "           -h            print this usage information\n");
    blurt;
@@ -2276,13 +2166,6 @@ int legacy_main(int argc, char **argv)
       else if (!strcmp(argv [index], "-q"))
          flags &= ~PROVIDE_INFO;
 
-      else if (!strcmp(argv [index], "-E"))
-      {
-         error_exit("option `%s' currently broken\n", argv [index]);
-         energy_model = 108;
-         output_format = ENERGY;
-      }
-
       else if (!strcmp(argv [index], "-L"))
          output_format = LENGTH;
 
@@ -2361,28 +2244,8 @@ int legacy_main(int argc, char **argv)
          //      energy_set_fudge_factor (atof (argv [++index]));
          //    }
 
-      else if (!strcmp(argv [index], "-f"))
-      {
-         error_exit("option `%s' currently broken\n", argv [index]);
-         filter_energies = true;
-      }
-
-      else if (!strcmp(argv [index], "-fr"))
-      {
-         error_exit("option `%s' currently broken\n", argv [index]);
-         filter_energies = true;
-         save_last_knot = true;
-      }
-
       else if (!strcmp(argv [index], "-h"))
          usage("");
-
-      else if (!strcmp(argv [index], "-de"))
-      {
-         error_exit("option `%s' currently broken\n", argv [index]);
-         debug_energy = filter_energies = true;
-         output_format = ENERGY;
-      }
 
       else
       {
@@ -2394,11 +2257,7 @@ int legacy_main(int argc, char **argv)
       index++;
    }
 
-   if (save_last_knot)
-      coord_last = (ivector *) calloc(MAXSIZE, sizeof (ivector));
 
-   //  if (filter_energies)
-   //    energy_blurt_values ();
 
    // if no more arguments, then read from stdin instead of opening file
 
@@ -2520,9 +2379,6 @@ int legacy_main(int argc, char **argv)
       case ROG:
          put_a_knot = put_a_knot_rog;
          break;
-         //  case ENERGY:
-         //    put_a_knot = put_a_knot_energy;
-         //    break;
       case BBOX:
          put_a_knot = put_a_knot_bbox;
          break;
@@ -2535,11 +2391,6 @@ int legacy_main(int argc, char **argv)
          put_a_knot = put_a_knot_NEWSUD_or_UofS;
    }
 
-   /*
-   if (output_format == ENERGY && (flags & PROVIDE_INFO))
-   fprintf (stderr, "filtering knots according to energy model %d with parameter %f\n",
-   energy_model, energy_parameter);
-    */
 
    while (get_a_knot(fpin))
       put_a_knot(fpout, flags);
@@ -2564,10 +2415,6 @@ int legacy_main(int argc, char **argv)
 
    if (flags & PROVIDE_INFO)
    {
-      /*
-      if (output_format == ENERGY)
-      fprintf (stderr, "%d knots skipped because outside energy range\n", energy_number_skipped);
-       */
 
       if (min_length != 0 || max_length != HUGE)
          fprintf(stderr, "binning knots in length range %d <= length <= %d\n", min_length, max_length);
@@ -2593,9 +2440,6 @@ int legacy_main(int argc, char **argv)
             break;
          case WRITHE:
             fprintf(stderr, "writhes only\n");
-            break;
-         case ENERGY:
-            fprintf(stderr, "energies only\n");
             break;
          case BBOX:
             fprintf(stderr, "bounding box information\n");

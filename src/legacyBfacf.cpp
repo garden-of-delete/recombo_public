@@ -3462,20 +3462,6 @@ bool enlarge_pool(CubicLatticeKnotPtr knot)
    //  exit (102);
 }
 
-bool reject_via_energy(double previous_energy, double current_energy)
-{
-   if (current_energy > previous_energy)
-   {
-      double p = exp(previous_energy - current_energy); // probability of acceptance
-      if (rand_uniform() > p)
-      {
-         return true; // reject it
-      }
-   }
-
-   return false;
-}
-
 // the three moves below assume that that move is legal locally, but maybe not globally
 
 bool perform_plus2_move(CubicLatticeKnotPtr knot, ComponentCLKPtr comp, EdgePtr ep, ivector increment, int dir)
@@ -3510,21 +3496,6 @@ bool perform_plus2_move(CubicLatticeKnotPtr knot, ComponentCLKPtr comp, EdgePtr 
    if (knot->lattice [lat(test_locationA)] == OCCUPIED) return false;
    add_ivector(test_locationB, ep->next->start, increment);
    if (knot->lattice [lat(test_locationB)] == OCCUPIED) return false;
-
-   // rejection by energy should go here (+2 move)
-   if (knot->filter_by_energy)
-   {
-      double E_before =
-              energy(ep->start, knot, ep->next->next, ep->prev->prev) +
-              energy(ep->next->start, knot, ep->next->next->next, ep->prev);
-      double E_after =
-              energy(ep->start, test_locationB) +
-              energy(ep->start, knot, ep->next, ep->prev->prev) +
-              energy(test_locationA, knot, ep->next, ep->prev) +
-              energy(test_locationB, knot, ep->next->next, ep->prev) +
-              energy(ep->next->start, knot, ep->next->next->next, ep->prev);
-      if (reject_via_energy(E_before, E_after)) return false;
-   }
 
    // choose the first two unused edges in edge pool
    EdgePtr ep_prev = knot->edgepool [knot->nedges_total]; // note: not nedges - 1 as in above
@@ -3608,34 +3579,12 @@ bool perform_0_move(CubicLatticeKnotPtr knot, ComponentCLKPtr comp, EdgePtr ep)
    // type 0 moves are only possible if this edge and the next edge
    // are perpendicular
 
-#ifdef TESTING
-   if (!perp [ep->dir][ep->next->dir])
-   {
-      fprintf(stderr,
-              "\nperform_0_move (): edges are not perpendicular as expected!  Panicking!!\n\n");
-      fprintf(stderr, "offending edge is %d (%d <--> %d <--> %d)\n",
-              ep->ID, ep->prev->ID, ep->ID, ep->next->ID);
-      for (int i = 0; i < 22; i++)
-         fprintf(stderr, "%d ", knot->edgepool [i]->ID);
-      exit(102);
-   }
-#endif
-
    if (ep->frozen || ep->next->frozen) return false; // NEW!!
 
    // also the new lattice location needs to be empty
    ivector test_location;
    add_ivector(test_location, ep->start, ep->next->increment);
    if (knot->lattice [lat(test_location)] == OCCUPIED) return false;
-
-   // rejection by energy should go here (0 move)
-
-   if (knot->filter_by_energy)
-   {
-      if (reject_via_energy(
-              energy(ep->next->start, knot, ep->next->next->next, ep->prev),
-              energy(test_location, knot, ep->next->next->next, ep->prev))) return false;
-   }
 
    ivector tmp;
    // simply swap increments between this edge and next
@@ -3701,41 +3650,7 @@ bool perform_minus2_move(CubicLatticeKnotPtr knot, ComponentCLKPtr comp, EdgePtr
    if (comp->nedges < comp->minedges) return false;
    if (ep->next->frozen || ep->prev->frozen) return false;
 
-#ifdef TESTING
-
-   // type -2 moves are only possible if previous edge and next edge are anti-parallel
-   if (!anti [ep->prev->dir][ep->next->dir])
-   {
-      fprintf(stderr,
-              "\nAdjacent edges are not anti-parallel as expected!  Panicking!!\n\n");
-      exit(102);
-   }
-
-   // also edge and next edge need to be perpendicular
-   if (!perp [ep->dir][ep->next->dir])
-   {
-      fprintf(stderr, "\nEdges are not perpendicular as expected!  Panicking!!\n\n");
-      exit(102);
-   }
-
-   knot->pm2dir [ep->next->dir]++;
-#endif
-
-   // rejection by energy should go here (-2 move)
-   if (knot->filter_by_energy)
-   {
-      double E_before =
-              energy(ep->prev->start, knot, ep->next, ep->prev->prev->prev) +
-              energy(ep->start, knot, ep->next->next, ep->prev->prev) +
-              energy(ep->next->start, knot, ep->next->next->next, ep->prev->prev) +
-              energy(ep->next->next->start, knot, ep->next->next->next->next, ep->prev->prev);
-      double E_after =
-              energy(ep->prev->start, knot, ep->next->next->next, ep->prev->prev->prev) +
-              energy(ep->next->next->start, knot, ep->next->next->next->next, ep->prev->prev);
-      if (reject_via_energy(E_before, E_after)) return false;
-   }
-
-   // clear lattice 
+   // clear lattice
    knot->lattice [lat(ep->start)] = EMPTY;
    knot->lattice [lat(ep->next->start)] = EMPTY;
 
@@ -5559,7 +5474,7 @@ void clear_lattice(CubicLatticeKnotPtr clkp, ivector min, ivector max)
 
 void bfacf_set_lattice_sphere(CubicLatticeKnotPtr clkp, int what, double radius, double xcen, double ycen, double zcen, char *blurt)
 {
-#ifdef INCLUDED_FROM_KnotPlot 
+#ifdef INCLUDED_FROM_KnotPlot
    if (!clkp) return;
    char action [14];
    if (blurt)
@@ -5591,14 +5506,6 @@ void bfacf_set_lattice_sphere(CubicLatticeKnotPtr clkp, int what, double radius,
    }
 #endif
 }
-
-/*
-void compute_energy (CubicLatticeKnotPtr clkp) {
-  double energy = 0.0;
-  EdgePtr ep1 = clkp->first_edge;
-  
-}
- */
 
 void get_NEWS(char *news, CubicLatticeKnotPtr clkp)
 {
@@ -5783,136 +5690,7 @@ char *get_known_lengths(char *knot)
    return s;
 }
 
-static double kappa = DEFAULT_KAPPA; // a value used in the paper
-static double nu = -0.26; // a value used in the paper
-static double A = DEFAULT_A; // change 0.01 to 0.1 and 1.0   
-
 #define ABS(X)      ((X) < 0 ? -(X) : (X))
-
-
-double T = DEFAULT_KELVINS; // approximately body temperature
-
-void energy_set_nu(double value)
-{
-   nu = value;
-}
-
-void energy_set_T(double value)
-{
-   T = value;
-}
-
-void energy_set_kappa(double value)
-{
-   kappa = value;
-}
-
-void energy_set_A(double value)
-{
-   A = value;
-}
-
-void energy_blurt_values(char *s)
-{
-   sprintf(s, "A = %f, kappa = %f, nu = %f", A, kappa, nu);
-}
-
-double energy(ivector *currentKnot, int length)
-{
-   int i, j;
-   int distance; // distance is back to being an int 
-   double total_energy = 0.0;
-
-   int last = length - 1;
-
-   for (i = 0; i < length - 1; i++)
-   {
-      for (j = i + 2; j < last; j++)
-      { // RGS: i + 2 because we don't want adjacent vertices
-         distance = ABS(currentKnot [i][0] - currentKnot [j][0]) +
-                 ABS(currentKnot [i][1] - currentKnot [j][1]) +
-                 ABS(currentKnot [i][2] - currentKnot [j][2]);
-
-         total_energy += A * exp(-kappa * (double) distance) / distance;
-
-         if (distance == 1)
-            total_energy += nu;
-
-      }
-      last = length;
-   }
-
-   return total_energy;
-}
-
-static double *expd;
-
-void bfacf_initialize_expd()
-{
-   printf("initializing with A = %f and kappa = %f\n", A, kappa);
-   expd = (double *) calloc(3 * LATTICE_SIZE, sizeof (double));
-   for (int distance = 1; distance < 3 * LATTICE_SIZE; distance++)
-      expd [distance] = A * exp(-kappa * (double) distance) / (double) distance;
-}
-
-double energy(ivector location, CubicLatticeKnotPtr clkp, EdgePtr beg, EdgePtr end)
-{
-   // compare `location' to the starting location of each edge from `beg' to `end'
-
-   EdgePtr ep = beg;
-   double energy = 0.0;
-
-   while (true)
-   {
-      int distance =
-              ABS(location [0] - ep->start [0]) +
-              ABS(location [1] - ep->start [1]) +
-              ABS(location [2] - ep->start [2]);
-
-      energy += expd [distance];
-
-      if (distance == 1)
-         energy += nu;
-
-      if (ep == end) break;
-      ep = ep->next;
-   }
-
-   return energy;
-}
-
-double energy(ivector locationA, ivector locationB)
-{
-   double energy = 0.0;
-
-   int distance =
-           ABS(locationA [0] - locationB [0]) +
-           ABS(locationA [1] - locationB [1]) +
-           ABS(locationA [2] - locationB [2]);
-
-   energy = expd [distance];
-
-   if (distance == 1)
-      energy += nu;
-
-   return energy;
-}
-
-void energy_report(CubicLatticeKnotPtr clkp, char *report)
-{
-   if (!clkp) return;
-   ComponentCLKPtr comp = clkp->fcomp;
-   ivector *loc = (ivector *) calloc(comp->nedges, sizeof (ivector));
-   EdgePtr ep = comp->first_edge;
-   for (int i = 0; i < comp->nedges; i++)
-   {
-      copy_ivector(loc [i], ep->start);
-      ep = ep->next;
-   }
-   sprintf(report, "A = %f, kappa = %f, nu = %f, E = %f\n", A, kappa, nu,
-           energy(loc, comp->nedges));
-   free(loc);
-}
 
 bool MMC_swap(double &prob, double zi, int lengthi, double zip1, int lengthip1)
 {

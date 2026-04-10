@@ -83,7 +83,6 @@ typedef struct {
                          // (this allows for open-ended strings or the inclusion
                          // of topological obstructions)
   bool auto_recentre;    // whether or not to recentre after an edge hit
-  bool filter_by_energy;
 
   char *lattice;         // lattice used for self-avoidance checking
   int  *alt_lattice;     // alternate lattice, allocated on demand
@@ -114,10 +113,6 @@ typedef struct {
   qProb *q_prob;
   int q_prob_size;
 
-  // related to knot energy
-  // double T;              // absolute temperature
-  //double kappa;
-
   // related to Multiple Markov Chain (MMC)
   int swaps, attempted_swaps;
 
@@ -125,10 +120,6 @@ typedef struct {
 
 typedef CubicLatticeKnot *CubicLatticeKnotPtr;
 
-
-
-#define Boltzmann_constant  1.3806503e-23
-#define Tesi_v             -0.26
 #define Z_CRITICAL          0.2134
 
 bool add_edge_to_knot (CubicLatticeKnotPtr clkp, ComponentCLKPtr comp, ivector start, ivector end);
@@ -252,33 +243,10 @@ extern int clk_min_arc_length_distance;
 
 int clk_arc_length_distance (CubicLatticeKnotPtr clkp, ivector s1, ivector s2);
 int clk_arc_length_distance (EdgePtr ep1, EdgePtr ep2);
-void energy_report (CubicLatticeKnotPtr, char *);
-
-double energy (ivector *currentKnot, int length);
-double energy (ivector A, ivector B);
-
-extern double T;
-
-#define B  1.3806503e-23    // the Boltzmann constant in units of J K^-1
-
-void energy_set_nu (double value);
-void energy_set_A (double value);
-void energy_set_kappa (double value);
-void energy_set_T (double value);
 
 void set_recombo_direct (bool);
-double energy (ivector location, CubicLatticeKnotPtr clkp, EdgePtr beg, EdgePtr end);
 
-#define DEFAULT_KAPPA 0.32
-#define DEFAULT_KELVINS 310.0
-#define DEFAULT_A 0.01
-#define DEFAULT_NU  -0.26
-
-void energy_blurt_values (char *);
-
-void save_knot_energy (FILE *fp, CubicLatticeKnotPtr clkp);
 void clk_bounding_box (int &X, int &Y, int &Z, CubicLatticeKnotPtr knot);
-void bfacf_initialize_expd ();
 void MMC_prob_report (char *knot);
 bool MMC_swap (double &prob, double zi, int lengthi, double zip1, int lengthip1);
 char *get_known_lengths (char *knot);

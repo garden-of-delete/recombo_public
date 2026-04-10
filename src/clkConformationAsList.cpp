@@ -8,6 +8,7 @@
 #include "clkConformationAsList.h"
 
 #include "genericConformation.h"
+#include "newsud.h"
 
 #include <iostream>
 #include <sstream>
@@ -189,23 +190,12 @@ string clkConformationAsList::writeAsNewsud() const
 
 bool clkConformationAsList::readFromNewsud(const string& s, int x0, int y0, int z0)
 {
+   vector<threevector<int> > vertices = newsudToVertices(s, x0, y0, z0);
+   if (vertices.empty() && !s.empty())
+      return false;
    clear();
-   int x = x0, y = y0, z = z0;
-   addVertexBack(x, y, z);
-   for (size_t i = 0; i + 1 < s.length(); i++)
-   {
-      switch (s[i])
-      {
-         case 'n': y++; break;
-         case 's': y--; break;
-         case 'e': x++; break;
-         case 'w': x--; break;
-         case 'u': z++; break;
-         case 'd': z--; break;
-         default: return false;
-      }
-      addVertexBack(x, y, z);
-   }
+   for (size_t i = 0; i < vertices.size(); i++)
+      addVertexBack(vertices[i]);
    return true;
 }
 

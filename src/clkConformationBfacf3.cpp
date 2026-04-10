@@ -779,6 +779,12 @@ void clkConformationBfacf3::setSeed(int seed)
    sRandSimple(seed);
 }
 
+string clkConformationBfacf3::writeAsNewsud(int component)
+{
+   clkConformationAsList asList(getComponent(component));
+   return asList.writeAsNewsud();
+}
+
 void clkConformationBfacf3::step()
 {
    perform_move(implementation->clkp);

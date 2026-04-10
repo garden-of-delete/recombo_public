@@ -36,6 +36,15 @@ public:
    clkConformationAsList(const int* coords, int numVerts);
 
    /**
+    * Constructor that reads vertices from a newsud direction string.
+    * @param newsud a string of direction characters (n, e, w, s, u, d).
+    * @param x0 starting x-coordinate (default 0).
+    * @param y0 starting y-coordinate (default 0).
+    * @param z0 starting z-coordinate (default 0).
+    */
+   clkConformationAsList(const std::string& newsud, int x0 = 0, int y0 = 0, int z0 = 0);
+
+   /**
     * Copy constructor.
     * @param orig new conformation will have same coordinates as orig.
     */
@@ -108,9 +117,10 @@ public:
     */
    virtual std::string writeAsText() const;
 
+   virtual std::string writeAsNewsud() const;
+
    // TODO:
    //  virtual void writeAsUofS(std::ostream& os) const;
-   //  virtual void writeAsNewsud(std::ostream& os) const;
 
    // TODO: should throw exception for io error
    /**
@@ -150,9 +160,10 @@ public:
     */
    virtual bool readFromText(const std::string& text);
 
+   virtual bool readFromNewsud(const std::string& s, int x0 = 0, int y0 = 0, int z0 = 0);
+
    // TODO:
    //  virtual bool readFromUofS(std::istream& is);
-   //  virtual bool readFromNewsud(std::istream& is);
 
    /**
     * Inputs conformation in Rob Scharein's cube format. This formation is a

@@ -29,6 +29,7 @@ add_library(recombo_core STATIC
         src/legacy.cpp
         src/legacyBfacf.cpp
         src/mmchain.cpp
+        src/newsud.cpp
         src/polynomesAZ.c
         src/pseudorandom.cpp
         src/regularNgon.cpp

@@ -8,6 +8,7 @@
 #include "clkConformationAsList.h"
 
 #include "genericConformation.h"
+#include "newsud.h"
 
 #include <iostream>
 #include <sstream>
@@ -16,6 +17,13 @@
 using namespace std;
 
 clkConformationAsList::clkConformationAsList() { }
+
+clkConformationAsList::clkConformationAsList(const string& newsud, int x0, int y0, int z0)
+{
+   vector<threevector<int> > vertices = newsudToVertices(newsud, x0, y0, z0);
+   for (size_t i = 0; i < vertices.size(); i++)
+      data.push_back(vertices[i]);
+}
 
 clkConformationAsList::clkConformationAsList(const clk& orig)
 {
@@ -156,6 +164,46 @@ bool clkConformationAsList::readFromText(const string& text)
    stringstream str;
    str << text;
    return readFromText(str);
+}
+
+string clkConformationAsList::writeAsNewsud() const
+{
+   string result;
+   int n = size();
+   if (n < 2) return result;
+
+   threevector<int> prev, curr, first;
+   getVertex(0, first);
+   prev = first;
+   for (int i = 1; i <= n; i++)
+   {
+      if (i < n)
+         getVertex(i, curr);
+      else
+         curr = first;
+      int dx = curr.getX() - prev.getX();
+      int dy = curr.getY() - prev.getY();
+      int dz = curr.getZ() - prev.getZ();
+      if (dx == 1) result += 'e';
+      else if (dx == -1) result += 'w';
+      else if (dy == 1) result += 'n';
+      else if (dy == -1) result += 's';
+      else if (dz == 1) result += 'u';
+      else if (dz == -1) result += 'd';
+      prev = curr;
+   }
+   return result;
+}
+
+bool clkConformationAsList::readFromNewsud(const string& s, int x0, int y0, int z0)
+{
+   vector<threevector<int> > vertices = newsudToVertices(s, x0, y0, z0);
+   if (vertices.empty() && !s.empty())
+      return false;
+   clear();
+   for (size_t i = 0; i < vertices.size(); i++)
+      addVertexBack(vertices[i]);
+   return true;
 }
 
 bool clkConformationAsList::lineIsVertex(std::string line)

@@ -113,9 +113,6 @@ typedef struct {
   qProb *q_prob;
   int q_prob_size;
 
-  // related to Multiple Markov Chain (MMC)
-  int swaps, attempted_swaps;
-
 } CubicLatticeKnot;
 
 typedef CubicLatticeKnot *CubicLatticeKnotPtr;
@@ -130,7 +127,6 @@ void bfacf_init_pool_and_lattice (CubicLatticeKnotPtr clkp, bool ignore_mid, int
 bool perform_move (CubicLatticeKnotPtr knot);
 bool perform_move_q (CubicLatticeKnotPtr knot);
 
-int bfacf_save_stick (int nsticks, CubicLatticeKnotPtr clkp);
 bool type_minus2_moves_possible (CubicLatticeKnotPtr clkp);
 int number_type0_moves (CubicLatticeKnotPtr clkp);
 void bfacf_number_moves (CubicLatticeKnotPtr clkp, int &nm2, int &n0, int &np2);
@@ -206,7 +202,6 @@ bool clk_check_for_edge_hits (CubicLatticeKnotPtr knot, int dir, ivector test_lo
 int clk_direction (ivector incr);
 int clk_direction (ivector end, ivector start);
 void clk_get_statistics (CubicLatticeKnotPtr clkp, int &n1, int &n2, int &n3, int &n4);
-void get_NEWS (char *news, CubicLatticeKnotPtr clkp);
 void init_lattice (CubicLatticeKnotPtr clkp, ivector mid);
 void fill_lattice (CubicLatticeKnotPtr clkp, ivector min, ivector max);
 void fill_lattice (CubicLatticeKnotPtr clkp);
@@ -216,14 +211,11 @@ void invert_lattice (CubicLatticeKnotPtr clkp);
 void dilate_lattice (CubicLatticeKnotPtr clkp);
 void clear_lattice (CubicLatticeKnotPtr clkp, ivector min, ivector max);
 bool recentre_knot_in_lattice (CubicLatticeKnotPtr knot);
-bool findz (int target_length, char *knotname, double &z);
 void copy_array_to_CLKP (ivector *coord, int nedges, CubicLatticeKnotPtr clkp);
-void copy_CLKP_to_array (ivector *coord, int &nedges, CubicLatticeKnotPtr clkp);
-bool bfacf_strand_pass (CubicLatticeKnotPtr clkp); 
+bool bfacf_strand_pass (CubicLatticeKnotPtr clkp);
 bool bfacf_parsite_pass (CubicLatticeKnotPtr clkp); 
 void clk_validate (CubicLatticeKnotPtr clkp, char *s); 
 int clk_validate(CubicLatticeKnotPtr clkp);
-bool clk_verbose_knot_path_info (CubicLatticeKnotPtr clkp, char *filename);
 extern bool clk_recombo_limit, clk_recombo_direct;
 extern int clk_min_arc_length_distance;
 
@@ -247,9 +239,6 @@ int clk_arc_length_distance (EdgePtr ep1, EdgePtr ep2);
 void set_recombo_direct (bool);
 
 void clk_bounding_box (int &X, int &Y, int &Z, CubicLatticeKnotPtr knot);
-void MMC_prob_report (char *knot);
-bool MMC_swap (double &prob, double zi, int lengthi, double zip1, int lengthip1);
-char *get_known_lengths (char *knot);
 
 int bfacf_info_filled (CubicLatticeKnotPtr knot);
 bool clkp_always_turns (CubicLatticeKnotPtr clkp);
@@ -266,13 +255,5 @@ EdgePtr is_parsite (CubicLatticeKnotPtr clkp, EdgePtr ep);
 
 bool clk_allocation_alt_lattice (CubicLatticeKnotPtr clkp);
 void init_probabilities_q (CubicLatticeKnotPtr clkp, int ni, double z, double q, bool blurt);
-
-void print_zknown (bool);
-void clk_fill_path_alt (CubicLatticeKnotPtr clkp, bool fill) ;
-//extern qProb *q_prob;
-//extern int q_prob_size;
-
-// from findz.h
-
 
 #endif

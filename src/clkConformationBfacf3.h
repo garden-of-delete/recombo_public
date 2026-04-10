@@ -10,6 +10,7 @@
 
 #include <list>
 #include <map>
+#include <string>
 #include <vector>
 
 #include "clk.h"
@@ -114,6 +115,13 @@ public:
     */
    void setSeed(int seed);
    
+   /**
+    * Returns the newsud direction string for a component.
+    * @param component index of component (default 0).
+    * @return newsud direction string.
+    */
+   std::string writeAsNewsud(int component = 0);
+
    /**
     * Attempt to perform a BFACF step on current conformation.
     */

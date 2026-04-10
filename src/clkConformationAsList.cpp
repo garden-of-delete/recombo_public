@@ -18,6 +18,13 @@ using namespace std;
 
 clkConformationAsList::clkConformationAsList() { }
 
+clkConformationAsList::clkConformationAsList(const string& newsud, int x0, int y0, int z0)
+{
+   vector<threevector<int> > vertices = newsudToVertices(newsud, x0, y0, z0);
+   for (size_t i = 0; i < vertices.size(); i++)
+      data.push_back(vertices[i]);
+}
+
 clkConformationAsList::clkConformationAsList(const clk& orig)
 {
    threevector<int> v;

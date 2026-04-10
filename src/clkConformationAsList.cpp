@@ -158,6 +158,57 @@ bool clkConformationAsList::readFromText(const string& text)
    return readFromText(str);
 }
 
+string clkConformationAsList::writeAsNewsud() const
+{
+   string result;
+   int n = size();
+   if (n < 2) return result;
+
+   threevector<int> prev, curr, first;
+   getVertex(0, first);
+   prev = first;
+   for (int i = 1; i <= n; i++)
+   {
+      if (i < n)
+         getVertex(i, curr);
+      else
+         curr = first;
+      int dx = curr.getX() - prev.getX();
+      int dy = curr.getY() - prev.getY();
+      int dz = curr.getZ() - prev.getZ();
+      if (dx == 1) result += 'e';
+      else if (dx == -1) result += 'w';
+      else if (dy == 1) result += 'n';
+      else if (dy == -1) result += 's';
+      else if (dz == 1) result += 'u';
+      else if (dz == -1) result += 'd';
+      prev = curr;
+   }
+   return result;
+}
+
+bool clkConformationAsList::readFromNewsud(const string& s, int x0, int y0, int z0)
+{
+   clear();
+   int x = x0, y = y0, z = z0;
+   addVertexBack(x, y, z);
+   for (size_t i = 0; i + 1 < s.length(); i++)
+   {
+      switch (s[i])
+      {
+         case 'n': y++; break;
+         case 's': y--; break;
+         case 'e': x++; break;
+         case 'w': x--; break;
+         case 'u': z++; break;
+         case 'd': z--; break;
+         default: return false;
+      }
+      addVertexBack(x, y, z);
+   }
+   return true;
+}
+
 bool clkConformationAsList::lineIsVertex(std::string line)
 {
    int count = 0;

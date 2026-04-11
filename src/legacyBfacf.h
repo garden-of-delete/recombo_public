@@ -127,10 +127,6 @@ void bfacf_init_pool_and_lattice (CubicLatticeKnotPtr clkp, bool ignore_mid, int
 bool perform_move (CubicLatticeKnotPtr knot);
 bool perform_move_q (CubicLatticeKnotPtr knot);
 
-bool type_minus2_moves_possible (CubicLatticeKnotPtr clkp);
-int number_type0_moves (CubicLatticeKnotPtr clkp);
-void bfacf_number_moves (CubicLatticeKnotPtr clkp, int &nm2, int &n0, int &np2);
-int bfacf_number_sticks (CubicLatticeKnotPtr clkp);
 bool freezeEdge (CubicLatticeKnotPtr knot, ivector start);
 void delete_Edge (CubicLatticeKnotPtr knot, ComponentCLKPtr comp, EdgePtr ep);
 

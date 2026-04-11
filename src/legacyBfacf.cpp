@@ -12,7 +12,6 @@ extern double rand_double(double low, double high);
 extern double rand_uniform();
 extern void sRandSimple(int seed);
 
-// from findz.h
 #define NUM_KNOTS 93
 
 #define UNKNOWN_Z 108.0
@@ -3350,12 +3349,6 @@ CubicLatticeKnotPtr bfacf_input_start_configuration(FILE *fp, bool ignore_mid, i
       ++line_number;
    }
    add_edge_to_knot(clkp, comp, vertex, first_vertex);
-   /*
-   if (number_vertices_read < 4) {
-     fprintf (stderr, " *** Knot has too few (%d) vertices\n", number_vertices_read);
-     return (CubicLatticeKnotPtr) NULL;
-   }
-    */
 
    ivector range;
    sub_ivector(range, max, min);
@@ -3455,8 +3448,6 @@ void bfacf_init_pool_and_lattice(CubicLatticeKnotPtr clkp, bool ignore_mid, int 
 bool enlarge_pool(CubicLatticeKnotPtr knot)
 {
    return false;
-   //  fprintf (stderr, "enlarge_pool() not implemented yet! Knot has %d edges\n", knot->nedges);
-   //  exit (102);
 }
 
 // the three moves below assume that that move is legal locally, but maybe not globally
@@ -3623,16 +3614,7 @@ void delete_Edge(CubicLatticeKnotPtr knot, ComponentCLKPtr comp, EdgePtr ep)
    --knot->nedges_total;
    --comp->nedges;
 
-#ifdef TESTING
-   if (comp->nedges < 4)
-   {
-      fprintf(stderr, "Absurd number of edges (%d) found in knot!  Panicking!\n", comp->nedges);
-      fflush(stderr);
-      exit(1);
-   }
-#endif
-
-   // update info contained in `comp', in the event we've 
+   // update info contained in `comp', in the event we've
    // deleted first or last edge in that component
 
    if (comp->first_edge == ep)
@@ -3680,7 +3662,6 @@ bool perform_move(CubicLatticeKnotPtr knot)
    // the two adjacent edges, ep->prev and ep->next.
 
    double p = rand_uniform(); // uniform number between 0 and 1
-//   printf("%f ", p);
    bool value = false; // assume move fails
 
    // NOTE: reordering the cases below may increase performance slightly
@@ -3760,156 +3741,6 @@ bool perform_move(CubicLatticeKnotPtr knot)
 #endif
 
    return value;
-}
-
-bool type0_moves_possible(CubicLatticeKnotPtr clkp)
-{
-   ComponentCLKPtr comp = clkp->fcomp;
-   while (comp)
-   {
-      EdgePtr ep = comp->first_edge;
-      for (int i = 0; i < comp->nedges; i++)
-      {
-         if (perp [ep->dir][ep->next->dir])
-         {
-            ivector test_location;
-            add_ivector(test_location, ep->start, ep->next->increment);
-            if (clkp->lattice [lat(test_location)] == EMPTY) return true;
-         }
-         ep = ep->next;
-      }
-      comp = comp->next;
-   }
-   return false;
-}
-
-int number_type0_moves(CubicLatticeKnotPtr clkp)
-{
-   int number;
-   ComponentCLKPtr comp = clkp->fcomp;
-   while (comp)
-   {
-      EdgePtr ep = comp->first_edge;
-      int number = 0;
-      for (int i = 0; i < comp->nedges; i++)
-      {
-         if (perp [ep->dir][ep->next->dir])
-         {
-            ivector test_location;
-            add_ivector(test_location, ep->start, ep->next->increment);
-            if (clkp->lattice [lat(test_location)] == EMPTY) ++number;
-         }
-         ep = ep->next;
-      }
-      comp = comp->next;
-   }
-   return number;
-}
-
-bool type_minus2_moves_possible(CubicLatticeKnotPtr clkp)
-{
-   ComponentCLKPtr comp = clkp->fcomp;
-   while (comp)
-   {
-      EdgePtr ep = comp->first_edge;
-      for (int i = 0; i < comp->nedges; i++)
-      {
-         if (perp [ep->dir][ep->next->dir] && anti [ep->dir][ep->next->next->dir]) return true;
-         ep = ep->next;
-      }
-      comp = comp->next;
-   }
-   return false;
-}
-
-int number_type_minus2_moves(CubicLatticeKnotPtr clkp)
-{
-   ComponentCLKPtr comp = clkp->fcomp;
-   int number = 0;
-   while (comp)
-   {
-      EdgePtr ep = comp->first_edge;
-      for (int i = 0; i < comp->nedges; i++)
-      {
-         if (perp [ep->dir][ep->next->dir] && anti [ep->dir][ep->next->next->dir]) ++number;
-         ep = ep->next;
-      }
-      comp = comp->next;
-   }
-   return number;
-}
-
-int count_plus2_moves(CubicLatticeKnotPtr clkp, EdgePtr ep)
-{
-   // in order for the move to be possible locally, direction of
-   // the move cannot be in the same direction as the next edge,
-   // and not in the opposite direction as the previous edge
-   int kount = 0;
-
-   for (int i = 0; i < 4; i++)
-   {
-      int dir = turn [ep->dir][i];
-      if (dir != ep->next->dir && dir != opposite [ep->prev->dir])
-      {
-         // move is possible locally, but maybe not globally
-         ivector test_location1, test_location2;
-         add_ivector(test_location1, ep->start, increment_NEWSUD [dir]);
-         add_ivector(test_location2, ep->next->start, increment_NEWSUD [dir]);
-         // move is possible globally if both test locations are empty
-         if (clkp->lattice [lat(test_location1)] == EMPTY && clkp->lattice [lat(test_location2)] == EMPTY) ++kount;
-      }
-   }
-
-   return kount;
-}
-
-void bfacf_number_moves(CubicLatticeKnotPtr clkp, int &nm2, int &n0, int &np2)
-{
-   nm2 = n0 = np2 = 0;
-   if (clkp->nedges_total == 4)
-   {
-      np2 = 12;
-      return;
-   }
-   ComponentCLKPtr comp = clkp->fcomp;
-   while (comp)
-   {
-      EdgePtr ep = comp->first_edge;
-      for (int i = 0; i < comp->nedges; i++)
-      {
-
-         np2 += count_plus2_moves(clkp, ep);
-
-         if (perp [ep->dir][ep->next->dir])
-         {
-            ivector test_location;
-            add_ivector(test_location, ep->start, ep->next->increment);
-            if (clkp->lattice [lat(test_location)] == EMPTY) ++n0;
-            if (anti [ep->dir][ep->next->next->dir]) ++nm2;
-         }
-         ep = ep->next;
-      }
-      comp = comp->next;
-   }
-}
-
-int bfacf_number_sticks(CubicLatticeKnotPtr clkp)
-{
-   int dirchanges = 0;
-   if (!clkp) return 0;
-   ComponentCLKPtr comp = clkp->fcomp;
-   while (comp)
-   {
-      EdgePtr ep = comp->first_edge;
-      for (int i = 0; i < comp->nedges; i++)
-      {
-         if (ep->dir != ep->next->dir)
-            dirchanges++;
-         ep = ep->next;
-      }
-      comp = comp->next;
-   }
-   return dirchanges;
 }
 
 EdgePtr clk_get_edge(CubicLatticeKnotPtr clkp, ivector start)
@@ -4710,19 +4541,11 @@ EdgePtr is_parsite_WRONG(CubicLatticeKnotPtr clkp, EdgePtr ep)
 bool clk_check_path(char *path, CubicLatticeKnotPtr clkp, ivector loc, int value)
 {
    ivector loco;
-   /*
-   printf ("checking path `%s' starting at (%d, %d, %d) for value %d\n",
-   path, loc [0] - 128, loc [1] - 128, loc [2] - 128, value); */
    int len = strlen(path);
    copy_ivector(loco, loc);
    for (int i = 0; i < len; i++)
    {
       add_ivector(loco, loco, increment_NEWSUD [(int) (path [i] - '0')]);
-      /*
-      printf ("moving %d (%s) and looking at (%d, %d, %d)\n", 
-         (int) (path [i] - '0'), 
-         clk_dir_name [(int) (path [i] - '0')], 
-         loco [0]  - 128, loco [1] - 128, loco [2] - 128); */
       if (clkp->lattice [lat(loco)] != value) return false;
    }
    return true;
@@ -4793,12 +4616,6 @@ EdgePtr is_parsite(CubicLatticeKnotPtr clkp, EdgePtr ep)
    return (EdgePtr) NULL; // should never get here
 }
 
-/*
-void mark_tight_clasp (EdgePtr ep1, EdgePtr ep2) {
-  vector3 p1, p2;
-  
-}
- */
 bool has_tight_clasp(CubicLatticeKnotPtr clkp)
 {
    ComponentCLKPtr comp = clkp->fcomp;
@@ -4946,29 +4763,14 @@ bool bfacf_parsite_pass(CubicLatticeKnotPtr clkp, ComponentCLKPtr comp, EdgePtr 
    if (ep->dir == MOVE_DOWN) panic_exit_parsite("bfacf_parsite_pass(): 5");
 
    edge_info("ep", ep);
-   /*
-     edge_info ("epp", ep->prev);
-    
-
-	
-
-	
- edge_info ("ep", ep);
-    edge_info ("epn", ep->next);
-    edge_info ("epcp", epc->prev);
-    edge_info ("epc", epc);
-    edge_info ("epcn", epc->next);
-    */
 
    ivector diff;
    bool found = false;
    sub_ivector(diff, epc->start, ep->start);
-   //printf ("diff = %d %d %d\n", diff [0], diff [1], diff [2]);
    for (xchange_dir = 0; xchange_dir < 6; xchange_dir++)
    {
       ivector incr;
       mult_ivector(incr, increment_NEWSUD [xchange_dir], 2);
-      //printf ("incr %d = %d %d %d\n", xchange_dir, incr [0], incr [1], incr [2]);
       if (equal_ivector(incr, diff))
       {
          found = true;
@@ -4982,7 +4784,6 @@ bool bfacf_parsite_pass(CubicLatticeKnotPtr clkp, ComponentCLKPtr comp, EdgePtr 
       fflush(stderr);
       exit(934);
    }
-   //printf ("dir used is %s\n", clk_dir_name [xchange_dir]); fflush (stdout);
 
    EdgePtr epn = ep->next;
    EdgePtr epp = ep->prev;
@@ -5490,28 +5291,8 @@ void bfacf_set_probabilities(CubicLatticeKnotPtr knot, double z)
    }
 }
 
-//qProb *q_prob = (qProb *) NULL;
-//int q_prob_size = 0;
-
 void init_probabilities_q(CubicLatticeKnotPtr clkp, int S, double z, double q, bool blurt)
 {
-   /*
-   static int last_S = 0;
-   static double last_z = 102.2;
-   static double last_q = 102.2;
-   if (last_S == S && last_z == z && last_q == q && q_prob) return;
-   if (q_prob && S > last_S) {
-     free (q_prob);
-     q_prob = (qProb *) NULL;
-     if (blurt) 
-       printf ("freeing previous q_prob\n");
-   }
-
-   q_prob_size = last_S = S;
-   last_z = z;
-   last_q = q;
-    */
-
    if (blurt)
    {
       printf("*** initializing q_prob with S = %d, z = %f, q = %f\n", S, z, q);
@@ -5614,16 +5395,6 @@ bool perform_recombination_inverted(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgeP
     ep1n->next = ep2n;
     ep2n->prev = ep1n;
 
-
-    /*ivector ep1start;
-    ivector ep2start;
-    sub_ivector (ep1start, ep1->start, clkp->loffset);
-    sub_ivector (ep2start, ep2->start, clkp->loffset);
-    printf ("%d %d %d, %d %d %d, kount = %d, nedges = %d\n",
-       ep1start [0], ep1start [1], ep1start [2],
-       ep2start [0], ep2start [1], ep2start [2],
-       kount, clkp->fcomp->nedges);*/
-
     kount = 0;
     ep = ep1;
     do {
@@ -5637,8 +5408,6 @@ bool perform_recombination_inverted(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgeP
 
    return true;
 }
-
-static int null_bug_a, null_bug_b, null_bug_c;
 
 bool perform_recombination(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgePtr ep2)
 {

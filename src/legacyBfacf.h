@@ -8,17 +8,6 @@
 
 #include "legacy.h"
 
-typedef struct {
-  double p_plus2;
-  double p_0;
-  double p_minus2;
-  double p_4p2;
-  double p_03p2;
-  double p_m23p2;
-  double p_2p0;
-  double p_2p02p2;
-} qProb;
- 
 typedef struct _edge {
   struct _edge *prev;   // pointer to previous edge in doubly linked list of edges
   struct _edge *next;   // pointer to next edge in doubly linked list of edges
@@ -110,9 +99,6 @@ typedef struct {
 
   int iteration;         // iteration count
 
-  qProb *q_prob;
-  int q_prob_size;
-
 } CubicLatticeKnot;
 
 typedef CubicLatticeKnot *CubicLatticeKnotPtr;
@@ -125,8 +111,6 @@ CubicLatticeKnotPtr bfacf_input_start_configuration (FILE *fpin, bool ignore_mid
 CubicLatticeKnotPtr bfacf_input_start_configuration (FILE *fp, bool ignore_mid, int poolsize);
 void bfacf_init_pool_and_lattice (CubicLatticeKnotPtr clkp, bool ignore_mid, int poolsize, ivector min, ivector max);
 bool perform_move (CubicLatticeKnotPtr knot);
-bool perform_move_q (CubicLatticeKnotPtr knot);
-
 bool freezeEdge (CubicLatticeKnotPtr knot, ivector start);
 void delete_Edge (CubicLatticeKnotPtr knot, ComponentCLKPtr comp, EdgePtr ep);
 
@@ -172,7 +156,6 @@ extern int kross [6][6];
 #define DEFAULT_ITERATIONS    60000000
 #define DEFAULT_SAVE_INTERVAL 5000
 #define DEFAULT_POOLSIZE      108000
-//#define DEFAULT_POOLSIZE      5080000
 
 #define RED     1
 #define GREEN   2
@@ -184,7 +167,6 @@ extern int kross [6][6];
 // from clk_util.h
 
 int bfacf_perform_recombination (CubicLatticeKnotPtr clkp, void mark (EdgePtr, EdgePtr));
-int bfacf_perform_recombination (CubicLatticeKnotPtr clkp);
 bool perform_recombination(CubicLatticeKnotPtr clkp, EdgePtr ep1, EdgePtr ep2);
 void bfacf_set_probabilities (ComponentCLKPtr comp, double pm2, double p0, double pp2);
 void bfacf_set_probabilities (CubicLatticeKnotPtr knot, double z);
@@ -193,7 +175,6 @@ void clk_get_extent (ivector minbb, ivector maxbb, CubicLatticeKnotPtr knot);
 bool clk_check_increment (ivector incr);
 bool clk_check_lattice (CubicLatticeKnotPtr knot);
 void clk_check_increments (CubicLatticeKnotPtr knot);
-void clk_par ();
 bool clk_check_for_edge_hits (CubicLatticeKnotPtr knot, int dir, ivector test_location);
 int clk_direction (ivector incr);
 int clk_direction (ivector end, ivector start);
@@ -207,7 +188,6 @@ void invert_lattice (CubicLatticeKnotPtr clkp);
 void dilate_lattice (CubicLatticeKnotPtr clkp);
 void clear_lattice (CubicLatticeKnotPtr clkp, ivector min, ivector max);
 bool recentre_knot_in_lattice (CubicLatticeKnotPtr knot);
-void copy_array_to_CLKP (ivector *coord, int nedges, CubicLatticeKnotPtr clkp);
 bool bfacf_strand_pass (CubicLatticeKnotPtr clkp);
 bool bfacf_parsite_pass (CubicLatticeKnotPtr clkp); 
 void clk_validate (CubicLatticeKnotPtr clkp, char *s); 
@@ -232,8 +212,6 @@ extern int clk_min_arc_length_distance;
 int clk_arc_length_distance (CubicLatticeKnotPtr clkp, ivector s1, ivector s2);
 int clk_arc_length_distance (EdgePtr ep1, EdgePtr ep2);
 
-void set_recombo_direct (bool);
-
 void clk_bounding_box (int &X, int &Y, int &Z, CubicLatticeKnotPtr knot);
 
 int bfacf_info_filled (CubicLatticeKnotPtr knot);
@@ -250,6 +228,4 @@ bool has_parsite (CubicLatticeKnotPtr clkp);
 EdgePtr is_parsite (CubicLatticeKnotPtr clkp, EdgePtr ep);
 
 bool clk_allocation_alt_lattice (CubicLatticeKnotPtr clkp);
-void init_probabilities_q (CubicLatticeKnotPtr clkp, int ni, double z, double q, bool blurt);
-
 #endif

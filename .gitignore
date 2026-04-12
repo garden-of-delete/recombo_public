@@ -163,6 +163,7 @@ $RECYCLE.BIN/
 
 # CMake build artifacts
 cmake-build-*/
+build-cov/
 
 # Compiled objects
 *.o

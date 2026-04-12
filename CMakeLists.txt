@@ -31,6 +31,7 @@ add_library(recombo_core STATIC
         src/mmchain.cpp
         src/newsud.cpp
         src/polynomesAZ.c
+        src/writhe.cpp
         src/pseudorandom.cpp
         src/regularNgon.cpp
         src/zAnalyzer.cpp)

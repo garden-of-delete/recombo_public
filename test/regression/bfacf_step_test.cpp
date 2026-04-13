@@ -124,3 +124,124 @@ TEST_F(BfacfStepTest, NeverShrinksBelowFourVertices)
       EXPECT_GE((int)knot->writeAsNewsud().length(), 4) << "step " << i;
    }
 }
+
+TEST_F(BfacfStepTest, HigherZFavorsGrowth)
+{
+   // z=0.3 is above DEFAULT_Z (~0.208), so the knot grows more readily
+   // At step 2 this diverges from DEFAULT_Z (grows instead of staying)
+   init("enws", 2);
+   knot->setZ(0.3);
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwse");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwse");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwssen");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "nwssen");
+}
+
+TEST_F(BfacfStepTest, HighZGrowsQuickly)
+{
+   // z=0.4, seed=2: knot grows rapidly compared to default z
+   init("enws", 2);
+   knot->setZ(0.4);
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwse");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "endwuwse");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "endwuwse");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "ednwuwse");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "denwuwse");
+}
+
+TEST_F(BfacfStepTest, HighZSeed42Trajectory)
+{
+   // z=0.4, seed=42: different seed, same high z
+   init("enws", 42);
+   knot->setZ(0.4);
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "enws");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "ednwsu");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "edwu");
+   knot->step();
+   EXPECT_EQ(knot->writeAsNewsud(), "edwu");
+}
+
+TEST_F(BfacfStepTest, StepQWithQ1MatchesStep)
+{
+   // stepQ with q=1 should produce the same trajectory as step()
+   init("enws", 2);
+   knot->stepQ(1, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwse");
+   knot->stepQ(1, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwse");
+   knot->stepQ(1, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwse");
+   knot->stepQ(1, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "enws");
+}
+
+TEST_F(BfacfStepTest, StepQWithQ2SquareSeed2)
+{
+   // q=2 changes the length-dependent move probabilities
+   init("enws", 2);
+   knot->init_Q(DEFAULT_Z, 2);
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwse");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwse");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "enwwssen");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "nwssen");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "nwssen");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "nwssen");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "nwse");
+}
+
+TEST_F(BfacfStepTest, StepQWithQ2RectangleSeed42)
+{
+   init("eennwwss", 42);
+   knot->init_Q(DEFAULT_Z, 2);
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "euennwwssd");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "euenwnwssd");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "euennwwssd");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "euennwwssd");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "eunenwwssd");
+   knot->stepQ(2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "enenwwss");
+}
+
+TEST_F(BfacfStepTest, StepQMultiStepOverload)
+{
+   // stepQ(long c, int q, double z) runs c steps
+   init("enws", 2);
+   knot->init_Q(DEFAULT_Z, 2);
+   knot->stepQ(7L, 2, DEFAULT_Z);
+   EXPECT_EQ(knot->writeAsNewsud(), "nwse");
+}
+
+TEST_F(BfacfStepTest, StepQNeverShrinksBelowFourVertices)
+{
+   init("enws", 2);
+   knot->init_Q(DEFAULT_Z, 2);
+   for (int i = 0; i < 200; i++)
+   {
+      knot->stepQ(2, DEFAULT_Z);
+      EXPECT_GE((int)knot->writeAsNewsud().length(), 4) << "step " << i;
+   }
+}

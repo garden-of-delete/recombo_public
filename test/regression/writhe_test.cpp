@@ -5,6 +5,7 @@
 
 #include "clkConformationAsList.h"
 #include "legacy.h"
+#include "writhe.h"
 
 using namespace std;
 

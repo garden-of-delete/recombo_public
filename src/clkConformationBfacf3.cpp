@@ -1289,6 +1289,7 @@ bool clkConformationBfacf3::performRecombination(int n){   //only used by runRec
     }
     else
         perform_recombination(implementation->clkp, site.first, site.second);
+    return true;
 }
 
 //void clkConformationBfacf3::performPositiveVirtualRecombo()

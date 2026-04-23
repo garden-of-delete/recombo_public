@@ -116,8 +116,10 @@ int main(int argc, char* argv[]){
 		seed = time(NULL);
 	srand(seed);
 
+	cout << "seed= " << seed << endl;
+
 	Analyzer analyzer(const_cast<char*>(config.input_file.c_str()),
-		config.z_min, config.z_max, config.warmup, config.steps_between_samples, config.q);
+		config.z_min, config.z_max, config.warmup, config.steps_between_samples, config.q, seed);
 	analyzer.z_from_length(config.target_length, config.tolerance);
 
 	return 0;

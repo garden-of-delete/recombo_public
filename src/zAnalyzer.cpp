@@ -1,7 +1,8 @@
 #include "zAnalyzer.h"
 
-Analyzer::Analyzer(char* filename, double Init_lower, double Init_upper, int warmup, int C_steps, int Q){
+Analyzer::Analyzer(char* filename, double Init_lower, double Init_upper, int warmup, int C_steps, int Q, int seed){
 	add_initial_conformation_from_file(filename);
+	knot->setSeed(seed);
 	init_lower = Init_lower;
 	init_upper = Init_upper;
 	w = warmup;

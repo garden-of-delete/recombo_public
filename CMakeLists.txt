@@ -13,6 +13,7 @@ FetchContent_MakeAvailable(googletest)
 
 # Core library shared by all executables and tests
 add_library(recombo_core STATIC
+        src/bfacf_config.cpp
         src/autocorr.cpp
         src/bfacfProbabilities.cpp
         src/bfacfProbabilitiesFromZ.cpp
@@ -53,6 +54,9 @@ target_link_libraries(zAnalyzer recombo_core)
 
 add_executable(mmc src/mmcMain.cpp)
 target_link_libraries(mmc recombo_core)
+
+add_executable(bfacf src/bfacfMain.cpp)
+target_link_libraries(bfacf recombo_core)
 
 add_executable(homfly src/homfly1_21.c src/cross.c)
 target_link_libraries(homfly recombo_core)

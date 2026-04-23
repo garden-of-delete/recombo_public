@@ -26,11 +26,9 @@ void mmchain::initialize(const MmcConfig& config) {
 	m = config.num_chains;
 	w = config.warmup_steps;
 	seed = config.seed;
-	if (seed)
-		srand(seed);
-	else {
+	if (!seed)
 		seed = time(NULL);
-	};
+	srand(seed);
 	add_initial_conformation_from_file(infile);
 	block_file_size = config.block_file_size;
 	block_file_index = 0;
@@ -55,13 +53,13 @@ bool mmchain::add_initial_conformation(istream& is){
    if (n_components == 2){
 	   for(i=0; i<m; i++){
 		   tempChain.member_knot = new clkConformationBfacf3(initialComp0, initialComp1);
-		   tempChain.member_knot->setSeed(time(NULL)); //what is this doing? PRESERVED(->setSeed(m+rand());)
+		   tempChain.member_knot->setSeed(m+rand());
 		   chains.push_back(tempChain);
 	   }}
    else if (n_components == 1){
 		for (i=0;i<m;i++){
 			tempChain.member_knot = new clkConformationBfacf3(initialComp0);
-			tempChain.member_knot->setSeed(m+rand()); //what is this actually doing though?
+			tempChain.member_knot->setSeed(m+rand());
 			chains.push_back(tempChain);
 		}}
 

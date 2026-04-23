@@ -1,4 +1,5 @@
 #include "mmchain.h"
+#include "mmc_config.h"
 using namespace std;
 
 void print_usage(){
@@ -45,168 +46,101 @@ void print_usage(){
 }
 
 int main(int argc, char* argv[]){
-	bool supress_output = false;
-	char* infile,
-		*outfile,
-		mode = 's';
-
-	string recombo_paras; //used to store recomboParas
-
-	int sequence_type = -1, recombo_type = -1;
-	//0:inverted, 1:direct
-    // 0: standard,
-    // 1: positive,
-    // 2: negative,
-    // 3: automatic,
-    // 4: standard+positive,
-    // 5: standard+negative,
-    // 6: standard+automatic
-
-	double zmin = 0, zmax = 0, sr=0;
-
-	int q = 0, s = 0, n = 0, c = 0, m = 0, seed = 0, minarc = 0, maxarc = 0, targetlength = 0, bfs = 0, t=0;
-
-	long int w = 0;
-
 	if (argc <= 1){
 		print_usage();
 		exit(0);
 	}
-	else{
-		infile = argv[1];
-		outfile = argv[2];
 
-		for (int i = 3; i < argc; i++){
-			if (!strcmp(argv[i], "-zmin")){
-				zmin = atof(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-recomboParas"))
-			{
-				recombo_paras.append(argv[i + 1]);
+	MmcConfig config;
+	config.input_file = argv[1];
+	config.output_file = argv[2];
 
-                if (recombo_paras.length() == 2) {
-                    if (recombo_paras[0] == 'i')
-                    {
-                        sequence_type = 0;
-                        if (recombo_paras[1] == 's')
-                            recombo_type = 0;
-                        else if (recombo_paras[1] == 'p')
-                            recombo_type = 1;
-                        else if (recombo_paras[1] == 'n')
-                            recombo_type = 2;
-                        else if (recombo_paras[1] == 'a')
-                            recombo_type = 3;
-                    }
-                    else if (recombo_paras[0] == 'd')
-                    {
-                        sequence_type = 1;
-                        if (recombo_paras[1] == 's')
-                            recombo_type = 0;
-                        else if (recombo_paras[1] == 'p')
-                            recombo_type = 1;
-                        else if (recombo_paras[1] == 'n')
-                            recombo_type = 2;
-                        else if (recombo_paras[1] == 'a')
-                            recombo_type = 3;
-                    }
-                }
-                else if (recombo_paras.length() == 3) {
-                    if (recombo_paras[0] == 'i')
-                    {
-                        sequence_type = 0;
-                        if (recombo_paras[2] == 'p')
-                            recombo_type = 4;
-                        else if (recombo_paras[2] == 'n')
-                            recombo_type = 5;
-                        else if (recombo_paras[2] == 'a')
-                            recombo_type = 6;
-                    }
-                    else if (recombo_paras[0] == 'd')
-                    {
-                        sequence_type = 1;
-                        if (recombo_paras[2] == 'p')
-                            recombo_type = 4;
-                        else if (recombo_paras[2] == 'n')
-                            recombo_type = 5;
-                        else if (recombo_paras[2] == 'a')
-                            recombo_type = 6;
-                    }
-                }
-				i++;
-			}
-			else if (!strcmp(argv[i], "-zmax")){
-				zmax = atof(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-q")){
-				q = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-sr")){
-				sr = atof(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-s")){
-				s = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-n")){
-				n = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-c")){
-				c = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-m")){
-				m = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-w")){
-				w = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-mode")){
-				mode = *argv[i + 1];
-				i++;
-			}
-			else if (!strcmp(argv[i], "-seed")){
-				seed = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-minarc")){
-				minarc = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-maxarc")){
-				maxarc = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-targetlength")){
-				targetlength = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-bfs")){
-				bfs = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-t")){
-				t = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "+s")){
-				supress_output = true;
-			}
-			else{
-				cout << "unrecognized option " << argv[i] << ", Terminating program...\n";
-				return 0;
-			}
+	for (int i = 3; i < argc; i++){
+		if (!strcmp(argv[i], "-zmin")){
+			config.z_min = atof(argv[i + 1]);
+			i++;
 		}
-		//need to write checks for invalid operating parameters
-		mmchain mmc;
-		mmc.initialize(infile, outfile, zmin, zmax, q, sr, s, n, c, w, m, mode, seed, minarc, maxarc, targetlength, bfs, t, supress_output, sequence_type, recombo_type);
-		mmc.run_mmc();
+		else if (!strcmp(argv[i], "-recomboParas"))
+		{
+			string paras(argv[i + 1]);
+			if (!config.parse_recombo_paras(paras)) {
+				cerr << "Error: unrecognized -recomboParas value '" << paras << "'" << endl;
+				return 1;
+			}
+			i++;
+		}
+		else if (!strcmp(argv[i], "-zmax")){
+			config.z_max = atof(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-q")){
+			config.q = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-sr")){
+			config.swap_ratio = atof(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-s")){
+			config.swap_interval = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-n")){
+			config.num_samples = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-c")){
+			config.steps_between_samples = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-m")){
+			config.num_chains = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-w")){
+			config.warmup_steps = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-mode")){
+			config.sample_mode = *argv[i + 1];
+			i++;
+		}
+		else if (!strcmp(argv[i], "-seed")){
+			config.seed = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-minarc")){
+			config.min_arc = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-maxarc")){
+			config.max_arc = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-targetlength")){
+			config.target_recombo_length = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-bfs")){
+			config.block_file_size = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "-t")){
+			config.time_limit_hours = atoi(argv[i + 1]);
+			i++;
+		}
+		else if (!strcmp(argv[i], "+s")){
+			config.suppress_output = true;
+		}
+		else{
+			cerr << "Error: unrecognized option '" << argv[i] << "'" << endl;
+			return 1;
+		}
 	}
 
+	mmchain mmc;
+	mmc.initialize(config);
+	mmc.run_mmc();
+
+	return 0;
 }

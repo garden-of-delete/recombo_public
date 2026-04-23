@@ -24,6 +24,7 @@
 #include "clkConformationBfacf3.h"
 #include "conformationAsList.h"
 #include "genericConformation.h"
+#include "mmc_config.h"
 
 using namespace std;
 
@@ -53,56 +54,10 @@ public:
 class mmchain{
 public:
 	/*
-	* Initializer for use with command line argument processor
+	* Initialize from config struct.
 	*/
-	void initialize(char* in, 
-	char* Outfile_name, 
-	double zmin, 
-	double zmax, int Q, 
-	double sr, 
-	int s, 
-	int N, 
-	int C, 
-	long int W, 
-	int M, 
-	char mode, 
-	int Seed,
-	int Min_arc, 
-	int Max_arc, 
-	int Target_recombo_length, 
-	int bfs, 
-	int time_limit, 
-	bool Supress_output,
-	int Sequence_type,
-	int Recombo_type
-    );
+	void initialize(const MmcConfig& config);
 
-	/*
-	* Constructor for filtering samples to ones that meet recombination criteria
-	*/
-	void initialize(char* in, 
-	char* outfile_name, 
-	double zmin, 
-	double zmax, 
-	int q, 
-	double sr, 
-	int s, 
-	int n, 
-	int c, 
-	long int w, 
-	int m, 
-	char mode, 
-	int seed,
-	int Min_arc, 
-	int Max_arc, 
-	int Target_recombo_length, 
-	int bfs, 
-	int time_limit,
-	char orientation,
-	bool Supress_output,
-	int Sequence_type,
-	int Recombo_type
-    );
 
 	/**
 	* adds an initial conformation from the given istream. practically speaking, will only be called from outside add_initial_conformation_From_file(...)
@@ -155,30 +110,6 @@ private:
 	* Records the outcome of the swap attempt in the appropriate Interval. 
 	*/
 	void swap();
-
-	/**
-	* In the event that no config.txt file is found, this function creates a new config.txt file with some default values, informs the user, and exits 
-	*/
-	void create_config_file();
-
-	/**
-	* COMBO ULTRASETTER for the parameters needed to begin the calibration process. Called by initialize()
-	* @param Z_m the largest z value
-	* @param Z_1 the smallest z value
-	* @param Q the Q value for use in StepQ(...)
-	* @param Target_swap_ratio the swap ratio that will be targeted by calibrate_chains(). The number of chains created by calibrate_chains()
-	* will approach infinity as this parameter approaches 1. Default value is .8 per M. Szafron. 
-	* @param Swap_interval the number of BFACF steps to take between attempting a swap (aka, calling swap())
-	* @param Sample_mode controls how the samples are processed. 'a' records the length of the samples into a vector for autocorr analysis. 
-	* useful for testing the integrated autocorrelation data of the chains with a given set of operating parameters. 's' samples the conformations
-	* directly into the output file and performs no sample length analysis. 'b' performs both 'a' and 's'.
-	* @param n number of samples before process termination. 
-	* @param c number of steps between sampling attempts.
-	* @param m initial number of chains. This value may be increased by calibrate_chains(). The final m value will approach infinity faster than Z_M - Z_1 approaches infinity.
-	* @param w number of warmup steps. Per M. Szafron, w needs to be much larger than c. 1 billion is sufficient for trefoils and more complicated topologies. 10+ billion may be required for the unknot / hopf-link.
-	* Warmup should is performed with swapping and must complete before calibration can begin.
-	*/
-	void set_mmc(double Z_m, double Z_1, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int n, int c, int m, long int w);
 
 	/**
 	* old purpose: records operating parameters and filenames to log.txt

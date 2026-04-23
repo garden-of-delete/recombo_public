@@ -32,4 +32,11 @@ struct MmcConfig {
     // Parse recomboParas string (e.g. "is", "ds", "dsp") into sequence_type and recombo_type.
     // Returns true on success, false if the string is unrecognized.
     bool parse_recombo_paras(const std::string& paras);
+
+    // Load config from a JSON file. Keys match stamp_log() output.
+    // Returns errors via the errors vector; config is partially populated on failure.
+    static MmcConfig from_json(const std::string& filepath, std::vector<std::string>& errors);
+
+    // Serialize config to a JSON string.
+    std::string to_json() const;
 };

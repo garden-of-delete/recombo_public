@@ -9,8 +9,7 @@ void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax,
 	max_arc = Max_arc;
 	target_recombo_length = Target_recombo_length;
 	infile.append(in);
-	set_mmc(zmin, zmax, q, sr, s, mode, n, c, m, w);
-	z_m = zmax; 
+	z_m = zmax;
 	z_1 = zmin;
 	q = Q;
 	target_swap_ratio = sr;

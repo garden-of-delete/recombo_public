@@ -48,11 +48,11 @@ int main(int argc, char* argv[]){
 	bool supress_output = false;
 	char* infile,
 		*outfile,
-		mode;
+		mode = 's';
 
 	string recombo_paras; //used to store recomboParas
 
-	int sequence_type, recombo_type;
+	int sequence_type = -1, recombo_type = -1;
 	//0:inverted, 1:direct
     // 0: standard,
     // 1: positive,

@@ -7,22 +7,22 @@ using namespace std;
 void print_usage(){
 	cout << "Usage:" << endl;
 	cout << "zAnalyzer input_file [operators/options]" << endl;
-	cout << "zAnalyzer takes an input file of cubic lattice conformations " << 
-		"written in Rob Schaerin's CUBE format and outputs a table of average length / Z " << 
-		"vaue associations with the provided tolerance" << endl << endl;
+	cout << "zAnalyzer takes an input file of cubic lattice conformations " <<
+		"written in Rob Scharein's CUBE format and outputs a table of average length / Z " <<
+		"value associations with the provided tolerance" << endl << endl;
 	cout << "zAnalyzer operators:" << endl;
 	cout << "-l\ttarget length" << endl;
 	cout << "-tol\ttolerated error in avg length of the returned z-value" << endl;
 	cout << "-zmin\tbest guess for Z value that is a lower bound for the target Z value" << endl;
-	cout << "-zmax\tbest guess for Z valye that is an upper bound for the target Z value" << endl;
+	cout << "-zmax\tbest guess for Z value that is an upper bound for the target Z value" << endl;
 	cout << "-c\tbest guess for the number of BFACF steps needed between samples for independence" << endl;
 	cout << "-w\tbest guess for an appropriate warmup" << endl;
 	cout << "-q\tbest guess for an initial q value" << endl;
-	cout << "-s\tset seed to a specific valye (default is current system time)" << endl;
+	cout << "-s\tset seed to a specific value (default is current system time)" << endl;
 }
 
 int main(int argc, char* argv[]){
-	char* infile = NULL, *outfile = NULL;
+	char* infile = NULL;
 	int target_length = 0, tol = 0, warmup = 0, c = 0, q = 0, seed = time(NULL);
 	double z_min = 0, z_max = 0;
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]){
 	}
 		//sanity check
 	if (z_min > z_max){
-		cout << "zmin must be strictly greater than zmax. terminating program..." << endl;
+		cout << "Error: zmin must be less than zmax." << endl;
 		return 0;
 	}
 	

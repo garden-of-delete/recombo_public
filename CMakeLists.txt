@@ -26,6 +26,7 @@ add_library(recombo_core STATIC
         src/conformationAsList.cpp
         src/conformationWlc.cpp
         src/id.cpp
+        src/json11.cpp
         src/legacy.cpp
         src/legacyBfacf.cpp
         src/mmc_config.cpp
@@ -35,7 +36,8 @@ add_library(recombo_core STATIC
         src/writhe.cpp
         src/pseudorandom.cpp
         src/regularNgon.cpp
-        src/zAnalyzer.cpp)
+        src/zAnalyzer.cpp
+        src/zanalyzer_config.cpp)
 target_include_directories(recombo_core PUBLIC src)
 
 # Executables

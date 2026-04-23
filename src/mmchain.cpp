@@ -2,54 +2,46 @@
 
 using namespace std;
 
-void mmchain::initialize(char* in, char* Outfile_name, double zmin, double zmax, int Q, double sr, int s, int N, int C, long int W, int M, char mode, int Seed,
-	int Min_arc, int Max_arc, int Target_recombo_length, int bfs, int T, bool Supress_output, int Sequence_type, int Recombo_type){
-	string infile;
-	min_arc = Min_arc;
-	max_arc = Max_arc;
-	target_recombo_length = Target_recombo_length;
-	infile.append(in);
-	z_m = zmax;
-	z_1 = zmin;
-	q = Q;
-	target_swap_ratio = sr;
-	swap_interval = s;
-	sample_mode = mode;
-	n = N;
-	time_limit = T;
-	c = C;
-	m = M;
-	w = W;
-	seed = Seed;
+void mmchain::initialize(const MmcConfig& config) {
+	vector<string> errors = config.validate();
+	if (!errors.empty()) {
+		for (size_t i = 0; i < errors.size(); i++)
+			cerr << "Error: " << errors[i] << endl;
+		exit(1);
+	}
+
+	string infile = config.input_file;
+	min_arc = config.min_arc;
+	max_arc = config.max_arc;
+	target_recombo_length = config.target_recombo_length;
+	z_m = config.z_max;
+	z_1 = config.z_min;
+	q = config.q;
+	target_swap_ratio = config.swap_ratio;
+	swap_interval = config.swap_interval;
+	sample_mode = config.sample_mode;
+	n = config.num_samples;
+	time_limit = config.time_limit_hours;
+	c = config.steps_between_samples;
+	m = config.num_chains;
+	w = config.warmup_steps;
+	seed = config.seed;
 	if (seed)
 		srand(seed);
-	else{
-		seed = time(NULL); //set seed to current system time if unspecified
+	else {
+		seed = time(NULL);
 	};
 	add_initial_conformation_from_file(infile);
-	block_file_size = bfs;
+	block_file_size = config.block_file_size;
 	block_file_index = 0;
-	outfile_name = Outfile_name;
+	outfile_name = config.output_file;
 	current_block_file_number = 0;
-	supress_output = Supress_output;
+	supress_output = config.suppress_output;
 	sample_attempts = 0;
-	sequence_type = Sequence_type;
-	recombo_type = Recombo_type;
-	/*if (mode == 'm' or mode == 'f'){      //deleted on Jul 20, 18
-		stringstream ss;
-		ss << outfile_name << "%0.info";
-		info_file.open(ss.str().c_str(), ios::out);
-	}*/
+	sequence_type = config.sequence_type;
+	recombo_type = config.recombo_type;
 }
 
-void mmchain::create_config_file(){
-	ofstream config("config.txt", ios::out);
-	config << "initial_file= " << endl << "zmin= " << endl << "zmax= " << endl << "q= " << endl
-		<< "target_swap_ratio= " << endl << "swap_interval= " << endl << "n_samples= " << endl 
-		<< "steps_between_samples= " << endl << "initial_n_chains= 10" << endl
-		<<"warmup= " << endl << "sample_mode= b"; 
-	config.close();
-}
 
 bool mmchain::add_initial_conformation(istream& is){
 	chain tempChain;
@@ -87,19 +79,6 @@ bool mmchain::add_initial_conformation_from_file(string& filename){
 		return true;
 	else
 		return false;
-}
-
-void mmchain::set_mmc(double Z_1, double Z_m, int Q, double Target_swap_ratio, int Swap_interval, char Sample_mode, int num_samples, int iterations, int M, long int W){
-	z_m = Z_m;
-	z_1 = Z_1;
-	q = Q;
-	target_swap_ratio = Target_swap_ratio;
-	swap_interval = Swap_interval;
-	sample_mode = Sample_mode;
-	n = num_samples;
-	c = iterations;
-	m = M;  
-	w = W;
 }
 
 void mmchain::stamp_log(string buff){

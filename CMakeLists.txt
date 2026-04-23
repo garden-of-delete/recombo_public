@@ -28,6 +28,7 @@ add_library(recombo_core STATIC
         src/id.cpp
         src/legacy.cpp
         src/legacyBfacf.cpp
+        src/mmc_config.cpp
         src/mmchain.cpp
         src/newsud.cpp
         src/polynomesAZ.c

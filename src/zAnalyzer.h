@@ -48,5 +48,5 @@ public:
 	bool write_table(ofstream);
 	//void read_from_file(ifstream&);
 
-	Analyzer(char* filename, double Init_lower, double Init_upper, int warmup, int c, int init_q);
+	Analyzer(char* filename, double Init_lower, double Init_upper, int warmup, int c, int init_q, int seed);
 };

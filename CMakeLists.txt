@@ -36,6 +36,7 @@ add_library(recombo_core STATIC
         src/polynomesAZ.c
         src/writhe.cpp
         src/pseudorandom.cpp
+        src/recombo_config.cpp
         src/regularNgon.cpp
         src/zAnalyzer.cpp
         src/zanalyzer_config.cpp)
@@ -57,6 +58,9 @@ target_link_libraries(mmc recombo_core)
 
 add_executable(bfacf src/bfacfMain.cpp)
 target_link_libraries(bfacf recombo_core)
+
+add_executable(recombo src/recomboMain.cpp)
+target_link_libraries(recombo recombo_core)
 
 add_executable(homfly src/homfly1_21.c src/cross.c)
 target_link_libraries(homfly recombo_core)

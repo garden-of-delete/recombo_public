@@ -16,5 +16,6 @@ struct ZAnalyzerConfig {
 
     std::vector<std::string> validate() const;
 
+    static ZAnalyzerConfig from_cli(int argc, const char* const* argv, std::vector<std::string>& errors);
     static ZAnalyzerConfig from_json(const std::string& filepath, std::vector<std::string>& errors);
 };

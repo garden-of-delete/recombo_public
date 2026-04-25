@@ -18,5 +18,6 @@ struct RecomboConfig {
     std::vector<std::string> validate() const;
     bool parse_recombo_paras(const std::string& paras);
 
+    static RecomboConfig from_cli(int argc, const char* const* argv, std::vector<std::string>& errors);
     static RecomboConfig from_json(const std::string& filepath, std::vector<std::string>& errors);
 };

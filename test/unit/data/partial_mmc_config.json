@@ -1,0 +1,7 @@
+{
+    "input_file": "initial/0_1",
+    "output_file": "results/unknot",
+    "zmin": 0.18,
+    "zmax": 0.18,
+    "n_samples": 100
+}

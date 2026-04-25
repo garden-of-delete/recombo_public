@@ -1,0 +1,18 @@
+{
+    "input_file": "initial/3_1",
+    "output_file": "results/3_1",
+    "zmin": 0.1800,
+    "zmax": 0.1800,
+    "q": 1,
+    "target_swap_ratio": 0.8,
+    "swap_interval": 5,
+    "n_samples": 5000,
+    "steps_between_samples": 20000,
+    "initial_n_chains": 1,
+    "warmup": 1000000,
+    "sample_mode": "s",
+    "seed": 42,
+    "block_file_size": 5000,
+    "time_limit": 0,
+    "suppress_output": true
+}

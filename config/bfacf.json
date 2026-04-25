@@ -1,0 +1,12 @@
+{
+    "input_file": "initial/3_1",
+    "output_file": "results/3_1_bfacf",
+    "z": 0.2,
+    "q": 1,
+    "steps": 100000,
+    "save_interval": 10000,
+    "block_file_size": 10,
+    "seed": 42,
+    "output_format": "cube",
+    "suppress_output": false
+}

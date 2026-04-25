@@ -74,6 +74,53 @@ std::vector<std::string> MmcConfig::validate() const {
     return errors;
 }
 
+MmcConfig MmcConfig::from_cli(int argc, const char* const* argv, std::vector<std::string>& errors) {
+    MmcConfig config;
+
+    if (argc < 3) {
+        errors.push_back("usage: mmc input_file output_file [options]");
+        return config;
+    }
+
+    config.input_file = argv[1];
+    config.output_file = argv[2];
+
+    for (int i = 3; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "-config") {
+            errors.push_back("-config and CLI options are mutually exclusive");
+            return config;
+        }
+        else if (arg == "-zmin" && i + 1 < argc)    { config.z_min = atof(argv[++i]); }
+        else if (arg == "-zmax" && i + 1 < argc)    { config.z_max = atof(argv[++i]); }
+        else if (arg == "-q" && i + 1 < argc)       { config.q = atoi(argv[++i]); }
+        else if (arg == "-sr" && i + 1 < argc)      { config.swap_ratio = atof(argv[++i]); }
+        else if (arg == "-s" && i + 1 < argc)       { config.swap_interval = atoi(argv[++i]); }
+        else if (arg == "-n" && i + 1 < argc)       { config.num_samples = atoi(argv[++i]); }
+        else if (arg == "-c" && i + 1 < argc)       { config.steps_between_samples = atoi(argv[++i]); }
+        else if (arg == "-m" && i + 1 < argc)       { config.num_chains = atoi(argv[++i]); }
+        else if (arg == "-w" && i + 1 < argc)       { config.warmup_steps = atoi(argv[++i]); }
+        else if (arg == "-mode" && i + 1 < argc)    { config.sample_mode = argv[++i][0]; }
+        else if (arg == "-seed" && i + 1 < argc)    { config.seed = atoi(argv[++i]); }
+        else if (arg == "-minarc" && i + 1 < argc)  { config.min_arc = atoi(argv[++i]); }
+        else if (arg == "-maxarc" && i + 1 < argc)  { config.max_arc = atoi(argv[++i]); }
+        else if (arg == "-targetlength" && i + 1 < argc) { config.target_recombo_length = atoi(argv[++i]); }
+        else if (arg == "-bfs" && i + 1 < argc)     { config.block_file_size = atoi(argv[++i]); }
+        else if (arg == "-t" && i + 1 < argc)       { config.time_limit_hours = atoi(argv[++i]); }
+        else if (arg == "+s")                        { config.suppress_output = true; }
+        else if (arg == "-recomboParas" && i + 1 < argc) {
+            std::string paras = argv[++i];
+            if (!config.parse_recombo_paras(paras))
+                errors.push_back("unrecognized -recomboParas value '" + paras + "'");
+        }
+        else {
+            errors.push_back("unrecognized option '" + arg + "'");
+        }
+    }
+
+    return config;
+}
+
 MmcConfig MmcConfig::from_json(const std::string& filepath, std::vector<std::string>& errors) {
     MmcConfig config;
 

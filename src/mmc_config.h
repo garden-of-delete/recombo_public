@@ -37,6 +37,9 @@ struct MmcConfig {
     // Returns errors via the errors vector; config is partially populated on failure.
     static MmcConfig from_json(const std::string& filepath, std::vector<std::string>& errors);
 
+    // Parse CLI arguments (positional + flags). Expects argv[0]=program, argv[1]=input, argv[2]=output.
+    static MmcConfig from_cli(int argc, const char* const* argv, std::vector<std::string>& errors);
+
     // Serialize config to a JSON string.
     std::string to_json() const;
 };

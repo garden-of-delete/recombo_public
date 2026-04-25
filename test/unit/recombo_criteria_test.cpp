@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "test_data_util.h"
 
 #include <vector>
 #include <string>
@@ -23,27 +24,39 @@ using namespace std;
 
 class recomboCriteriaTestClass
 {
-    private:
-    static const int conflen= 120;
-    static const int preRecomboUnknot[conflen];
-    static const int postRecomboUnknot[conflen];
-    static const clkConformationAsList preConformationList;
-    static const clkConformationAsList postConformationList;
-
     public:
-    clkConformationBfacf3 preConformation;
-    clkConformationBfacf3 postConformation;
+    clkConformationBfacf3* preConformation;
+    clkConformationBfacf3* postConformation;
     mmchain mmctest;
     recomboCriteriaTestClass();
+    ~recomboCriteriaTestClass();
 };
 
-const int recomboCriteriaTestClass::preRecomboUnknot[120]={0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 1, 6, 0, 2, 6, 0, 3, 6, 0, 4, 6, 0, 4, 5, 0, 5, 5, 0, 6, 5, 0, 7, 5, 0, 7, 4, 0, 7, 3, 0, 7, 2, 0, 7, 1, 0, 7, 0, 0, 7, -1, 0, 6, -1, 0, 5, -1, 0, 4, -1, 0, 3, -1, 0, 3, 0, 0, 3, 0, 1, 3, 1, 1, 3, 2, 1, 3, 2, 0, 3, 3, 0, 3, 4, 0, 4, 4, 0, 5, 4, 0, 5, 3, 0, 5, 2, 0, 5, 1, 0, 4, 1, 0, 3, 1, 0, 2, 1, 0, 1, 1, 0};
-const int recomboCriteriaTestClass::postRecomboUnknot[120]={0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 6, 0, 1, 6, 0, 2, 6, 0, 3, 6, 0, 4, 6, 0, 4, 5, 0, 4, 4, 0, 3, 4, 0, 3, 3, 0, 3, 2, 0, 3, 2, 1, 3, 1, 1, 3, 0, 1, 3, 0, 0, 3, -1, 0, 4, -1, 0, 5, -1, 0, 6, -1, 0, 7, -1, 0, 7, 0, 0, 7, 1, 0, 7, 2, 0, 7, 3, 0, 7, 4, 0, 7, 5, 0, 6, 5, 0, 5, 5, 0, 5, 4, 0, 5, 3, 0, 5, 2, 0, 5, 1, 0, 4, 1, 0, 3, 1, 0, 2, 1, 0, 1, 1};
-const clkConformationAsList recomboCriteriaTestClass::preConformationList(preRecomboUnknot,40);
-const clkConformationAsList recomboCriteriaTestClass::postConformationList(postRecomboUnknot,40);
+recomboCriteriaTestClass::recomboCriteriaTestClass()
+{
+    json11::Json data = load_test_data("recombo_conformations.json");
+    int conflen = data["conformation_length"].int_value();
+    const json11::Json::array& preArr = data["pre_recombo_unknot"].array_items();
+    const json11::Json::array& postArr = data["post_recombo_unknot"].array_items();
 
-recomboCriteriaTestClass::recomboCriteriaTestClass() : preConformation(preConformationList), postConformation(postConformationList)
-{}
+    vector<int> preCoords(preArr.size());
+    vector<int> postCoords(postArr.size());
+    for (size_t i = 0; i < preArr.size(); i++)
+        preCoords[i] = preArr[i].int_value();
+    for (size_t i = 0; i < postArr.size(); i++)
+        postCoords[i] = postArr[i].int_value();
+
+    clkConformationAsList preList(preCoords.data(), conflen);
+    clkConformationAsList postList(postCoords.data(), conflen);
+    preConformation = new clkConformationBfacf3(preList);
+    postConformation = new clkConformationBfacf3(postList);
+}
+
+recomboCriteriaTestClass::~recomboCriteriaTestClass()
+{
+    delete preConformation;
+    delete postConformation;
+}
 
 TEST(RecomboTest, ParallelRecombination)
 {
@@ -56,8 +69,8 @@ TEST(RecomboTest, ParallelRecombination)
     int recombo_type = 1;
     int n_components = 1;
     int total_para_site, total_anti_site, Para_site, Anti_site;
-    sites=rctc.preConformation.countRecomboSites(min_arc, max_arc, sequence_type, recombo_type, total_para_site, total_anti_site, Para_site, Anti_site);
-    rctc.preConformation.performRecombination(sitechoice);
-    ASSERT_EQ(rctc.preConformation.size(), 1);
-    ASSERT_TRUE(rctc.preConformation.getComponent(0)==rctc.postConformation.getComponent(0));
+    sites=rctc.preConformation->countRecomboSites(min_arc, max_arc, sequence_type, recombo_type, total_para_site, total_anti_site, Para_site, Anti_site);
+    rctc.preConformation->performRecombination(sitechoice);
+    ASSERT_EQ(rctc.preConformation->size(), 1);
+    ASSERT_TRUE(rctc.preConformation->getComponent(0)==rctc.postConformation->getComponent(0));
 }

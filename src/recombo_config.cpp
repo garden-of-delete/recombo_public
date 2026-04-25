@@ -56,6 +56,42 @@ std::vector<std::string> RecomboConfig::validate() const {
     return errors;
 }
 
+RecomboConfig RecomboConfig::from_cli(int argc, const char* const* argv, std::vector<std::string>& errors) {
+    RecomboConfig config;
+
+    if (argc < 3) {
+        errors.push_back("usage: recombo input_file output_file [options]");
+        return config;
+    }
+
+    config.input_file = argv[1];
+    config.output_file = argv[2];
+
+    for (int i = 3; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "-config") {
+            errors.push_back("-config and CLI options are mutually exclusive");
+            return config;
+        }
+        else if (arg == "-minarc" && i + 1 < argc)  { config.min_arc = atoi(argv[++i]); }
+        else if (arg == "-maxarc" && i + 1 < argc)   { config.max_arc = atoi(argv[++i]); }
+        else if (arg == "-targetlength" && i + 1 < argc) { config.target_length = atoi(argv[++i]); }
+        else if (arg == "-seed" && i + 1 < argc)    { config.seed = atoi(argv[++i]); }
+        else if (arg == "-fmt" && i + 1 < argc)     { config.output_format = argv[++i]; }
+        else if (arg == "+s")                        { config.suppress_output = true; }
+        else if (arg == "-recomboParas" && i + 1 < argc) {
+            std::string paras = argv[++i];
+            if (!config.parse_recombo_paras(paras))
+                errors.push_back("unrecognized -recomboParas value '" + paras + "'");
+        }
+        else {
+            errors.push_back("unrecognized option '" + arg + "'");
+        }
+    }
+
+    return config;
+}
+
 RecomboConfig RecomboConfig::from_json(const std::string& filepath, std::vector<std::string>& errors) {
     RecomboConfig config;
 

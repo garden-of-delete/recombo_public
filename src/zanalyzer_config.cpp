@@ -15,6 +15,38 @@ std::vector<std::string> ZAnalyzerConfig::validate() const {
     return errors;
 }
 
+ZAnalyzerConfig ZAnalyzerConfig::from_cli(int argc, const char* const* argv, std::vector<std::string>& errors) {
+    ZAnalyzerConfig config;
+
+    if (argc < 2) {
+        errors.push_back("usage: zAnalyzer input_file [options]");
+        return config;
+    }
+
+    config.input_file = argv[1];
+
+    for (int i = 2; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "-config") {
+            errors.push_back("-config and CLI options are mutually exclusive");
+            return config;
+        }
+        else if (arg == "-l" && i + 1 < argc)       { config.target_length = atoi(argv[++i]); }
+        else if (arg == "-tol" && i + 1 < argc)     { config.tolerance = atoi(argv[++i]); }
+        else if (arg == "-zmin" && i + 1 < argc)    { config.z_min = atof(argv[++i]); }
+        else if (arg == "-zmax" && i + 1 < argc)    { config.z_max = atof(argv[++i]); }
+        else if (arg == "-q" && i + 1 < argc)       { config.q = atoi(argv[++i]); }
+        else if (arg == "-c" && i + 1 < argc)       { config.steps_between_samples = atoi(argv[++i]); }
+        else if (arg == "-w" && i + 1 < argc)       { config.warmup = atoi(argv[++i]); }
+        else if (arg == "-s" && i + 1 < argc)       { config.seed = atoi(argv[++i]); }
+        else {
+            errors.push_back("unrecognized option '" + arg + "'");
+        }
+    }
+
+    return config;
+}
+
 ZAnalyzerConfig ZAnalyzerConfig::from_json(const std::string& filepath, std::vector<std::string>& errors) {
     ZAnalyzerConfig config;
 

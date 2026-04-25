@@ -1,0 +1,9 @@
+{
+    "input_file": "initial/3_1",
+    "output_file": "results/bad",
+    "zmin": 0.3,
+    "zmax": 0.1,
+    "initial_n_chains": 5,
+    "sample_mode": "f",
+    "n_samples": 100
+}

@@ -17,5 +17,6 @@ struct BfacfConfig {
 
     std::vector<std::string> validate() const;
 
+    static BfacfConfig from_cli(int argc, const char* const* argv, std::vector<std::string>& errors);
     static BfacfConfig from_json(const std::string& filepath, std::vector<std::string>& errors);
 };

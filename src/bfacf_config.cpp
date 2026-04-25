@@ -25,6 +25,39 @@ std::vector<std::string> BfacfConfig::validate() const {
     return errors;
 }
 
+BfacfConfig BfacfConfig::from_cli(int argc, const char* const* argv, std::vector<std::string>& errors) {
+    BfacfConfig config;
+
+    if (argc < 3) {
+        errors.push_back("usage: bfacf input_file output_file [options]");
+        return config;
+    }
+
+    config.input_file = argv[1];
+    config.output_file = argv[2];
+
+    for (int i = 3; i < argc; i++) {
+        std::string arg = argv[i];
+        if (arg == "-config") {
+            errors.push_back("-config and CLI options are mutually exclusive");
+            return config;
+        }
+        else if (arg == "-z" && i + 1 < argc)       { config.z = atof(argv[++i]); }
+        else if (arg == "-q" && i + 1 < argc)       { config.q = atoi(argv[++i]); }
+        else if (arg == "-n" && i + 1 < argc)       { config.steps = atoi(argv[++i]); }
+        else if (arg == "-k" && i + 1 < argc)       { config.save_interval = atoi(argv[++i]); }
+        else if (arg == "-bfs" && i + 1 < argc)     { config.block_file_size = atoi(argv[++i]); }
+        else if (arg == "-seed" && i + 1 < argc)    { config.seed = atoi(argv[++i]); }
+        else if (arg == "-fmt" && i + 1 < argc)     { config.output_format = argv[++i]; }
+        else if (arg == "+s")                        { config.suppress_output = true; }
+        else {
+            errors.push_back("unrecognized option '" + arg + "'");
+        }
+    }
+
+    return config;
+}
+
 BfacfConfig BfacfConfig::from_json(const std::string& filepath, std::vector<std::string>& errors) {
     BfacfConfig config;
 

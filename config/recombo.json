@@ -1,0 +1,10 @@
+{
+    "input_file": "results/3_1_bfacfn1.b",
+    "output_file": "results/3_1_recombo",
+    "min_arc": 4,
+    "max_arc": 50,
+    "recombo_paras": "ds",
+    "seed": 42,
+    "output_format": "cube",
+    "suppress_output": false
+}

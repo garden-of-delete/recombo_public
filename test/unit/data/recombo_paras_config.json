@@ -1,0 +1,12 @@
+{
+    "input_file": "initial/3_1",
+    "output_file": "results/recombo",
+    "zmin": 0.2,
+    "zmax": 0.2,
+    "n_samples": 100,
+    "sample_mode": "f",
+    "min_arc": 4,
+    "max_arc": 50,
+    "sequence_type": "direct",
+    "recombo_type": "standard"
+}

@@ -48,9 +48,9 @@ int main(int argc, char* argv[]){
 	}
 
 	MmcConfig config;
+	vector<string> errors;
 
 	if (!strcmp(argv[1], "-config")) {
-		// JSON config mode
 		if (argc < 3) {
 			cerr << "Error: -config requires a file path" << endl;
 			return 1;
@@ -59,109 +59,15 @@ int main(int argc, char* argv[]){
 			cerr << "Error: -config and CLI options are mutually exclusive" << endl;
 			return 1;
 		}
-
-		vector<string> json_errors;
-		config = MmcConfig::from_json(argv[2], json_errors);
-		if (!json_errors.empty()) {
-			for (size_t i = 0; i < json_errors.size(); i++)
-				cerr << "Error: " << json_errors[i] << endl;
-			return 1;
-		}
+		config = MmcConfig::from_json(argv[2], errors);
 	} else {
-		// CLI mode
-		if (argc <= 2) {
-			print_usage();
-			return 0;
-		}
-		config.input_file = argv[1];
-		config.output_file = argv[2];
+		config = MmcConfig::from_cli(argc, argv, errors);
+	}
 
-		for (int i = 3; i < argc; i++){
-			if (!strcmp(argv[i], "-config")){
-				cerr << "Error: -config and CLI options are mutually exclusive" << endl;
-				return 1;
-			}
-			else if (!strcmp(argv[i], "-zmin")){
-				config.z_min = atof(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-recomboParas"))
-			{
-				string paras(argv[i + 1]);
-				if (!config.parse_recombo_paras(paras)) {
-					cerr << "Error: unrecognized -recomboParas value '" << paras << "'" << endl;
-					return 1;
-				}
-				i++;
-			}
-			else if (!strcmp(argv[i], "-zmax")){
-				config.z_max = atof(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-q")){
-				config.q = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-sr")){
-				config.swap_ratio = atof(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-s")){
-				config.swap_interval = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-n")){
-				config.num_samples = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-c")){
-				config.steps_between_samples = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-m")){
-				config.num_chains = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-w")){
-				config.warmup_steps = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-mode")){
-				config.sample_mode = *argv[i + 1];
-				i++;
-			}
-			else if (!strcmp(argv[i], "-seed")){
-				config.seed = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-minarc")){
-				config.min_arc = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-maxarc")){
-				config.max_arc = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-targetlength")){
-				config.target_recombo_length = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-bfs")){
-				config.block_file_size = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "-t")){
-				config.time_limit_hours = atoi(argv[i + 1]);
-				i++;
-			}
-			else if (!strcmp(argv[i], "+s")){
-				config.suppress_output = true;
-			}
-			else{
-				cerr << "Error: unrecognized option '" << argv[i] << "'" << endl;
-				return 1;
-			}
-		}
+	if (!errors.empty()) {
+		for (size_t i = 0; i < errors.size(); i++)
+			cerr << "Error: " << errors[i] << endl;
+		return 1;
 	}
 
 	mmchain mmc;

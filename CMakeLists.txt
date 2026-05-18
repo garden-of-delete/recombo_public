@@ -29,7 +29,15 @@ add_library(recombo_core STATIC
         src/id.cpp
         src/json11.cpp
         src/legacy.cpp
-        src/legacyBfacf.cpp
+        src/bfacfMove.cpp
+        src/edgePool.cpp
+        src/clkRecombination.cpp
+        src/clkValidation.cpp
+        src/clkLattice.cpp
+        src/clkTopology.cpp
+        src/clkGeometry.cpp
+        src/clkConfig.cpp
+        src/clkInit.cpp
         src/mmc_config.cpp
         src/mmchain.cpp
         src/newsud.cpp

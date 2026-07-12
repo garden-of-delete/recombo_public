@@ -1,0 +1,56 @@
+{
+  "cases": [
+    {
+      "name": "unknot_shrink_seed1",
+      "knot_type": "0_1",
+      "source_file": "initial/0_1",
+      "component_count": 1,
+      "seed": 1,
+      "high_z": 0.25,
+      "high_steps": 1000,
+      "low_z": 0.050000000000000003,
+      "low_steps": 20000,
+      "expected_final_newsud": ["swne"],
+      "expect_trivial_square": true
+    },
+    {
+      "name": "link_2_2_1_shrink_seed1",
+      "knot_type": "2_2_1",
+      "source_file": "initial/2_2_1a",
+      "component_count": 2,
+      "seed": 1,
+      "high_z": 0.25,
+      "high_steps": 1000,
+      "low_z": 0.050000000000000003,
+      "low_steps": 20000,
+      "expected_final_newsud": ["eesswwnn", "dnnuussd"],
+      "expect_trivial_square": false
+    },
+    {
+      "name": "trefoil_shrink_seed1",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 1,
+      "high_z": 0.25,
+      "high_steps": 1000,
+      "low_z": 0.050000000000000003,
+      "low_steps": 20000,
+      "expected_final_newsud": ["uuessddnnnuwwsseeedndwwu"],
+      "expect_trivial_square": false
+    },
+    {
+      "name": "figure8_shrink_seed1",
+      "knot_type": "4_1",
+      "source_file": "initial/4_1",
+      "component_count": 1,
+      "seed": 1,
+      "high_z": 0.25,
+      "high_steps": 1000,
+      "low_z": 0.050000000000000003,
+      "low_steps": 20000,
+      "expected_final_newsud": ["euuuuwwdddennuussseednnuwdwwddse"],
+      "expect_trivial_square": false
+    }
+  ]
+}

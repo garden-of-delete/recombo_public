@@ -1,0 +1,94 @@
+{
+  "cases": [
+    {
+      "name": "trefoil_z60_seed1",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.198787988281,
+      "steps": 1000,
+      "expected_newsud": ["nenneuussddennnuwuwndsswseeeesddswsdnwuuww"]
+    },
+    {
+      "name": "trefoil_z60_seed2",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 2,
+      "z": 0.198787988281,
+      "steps": 1000,
+      "expected_newsud": ["uwuwsesesdddennunueundwwdwswsueeeususdswdwdwwwununedeeednn"]
+    },
+    {
+      "name": "trefoil_z60_seed42",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 42,
+      "z": 0.198787988281,
+      "steps": 1000,
+      "expected_newsud": ["uneeuuuwssedwddnddnenuuuwssesddwdwuwne"]
+    },
+    {
+      "name": "trefoil_z100_seed1",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.20799753418,
+      "steps": 1000,
+      "expected_newsud": ["nuuusesddddnunnwwneunwwssseseeesdswwdnnu"]
+    },
+    {
+      "name": "trefoil_z150_seed1",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.21079726562500001,
+      "steps": 1000,
+      "expected_newsud": ["wuuwsseenndnwwsddsuueuuusedesddwdnnn"]
+    },
+    {
+      "name": "figure8_z60_seed1",
+      "knot_type": "4_1",
+      "source_file": "initial/4_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.18762490234400001,
+      "steps": 1000,
+      "expected_newsud": ["sseeuuunusuwwsddwdendennuwuussesdeenndwwwdnd"]
+    },
+    {
+      "name": "figure8_z60_seed2",
+      "knot_type": "4_1",
+      "source_file": "initial/4_1",
+      "component_count": 1,
+      "seed": 2,
+      "z": 0.18762490234400001,
+      "steps": 1000,
+      "expected_newsud": ["esuuuuwwddednnuusssessednunnndwwwdde"]
+    },
+    {
+      "name": "unknot_criticalz_seed42",
+      "knot_type": "0_1",
+      "source_file": "initial/0_1",
+      "component_count": 1,
+      "seed": 42,
+      "z": 0.21343806027490822,
+      "steps": 1000,
+      "expected_newsud": ["eeseeeeneeedeeeeeuesdeueeneeeuedeeeedeeueeeeueeedeeeseeeneeenuwnwdwwuwwddwuwwdwwswwuwwwuwnwdwswuwwwdnwwwwwwsdwwuunwddsuwswundwnwwwsdwuwwundwsdnwwuss"]
+    },
+    {
+      "name": "link_2_2_1a_seed1",
+      "knot_type": "2_2_1",
+      "source_file": "initial/2_2_1a",
+      "component_count": 2,
+      "seed": 1,
+      "z": 0.20815,
+      "steps": 1000,
+      "expected_newsud": ["ssendeeuunuuwdwwnwdsed", "dndwuunnusuuessdwded"]
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 // literal target conformation after 100 steps) -- there is no closed-form
 // answer to check these against, only "this is what a trusted version of
 // the code produced." That makes them regression tests, not unit tests,
-// per context/recombo/2026-07-12-test-suite-audit-and-style-guide.md.
+// which is why they moved here rather than staying in test/unit/.
 //
 // Bfacf3TestFixture's other two tests (Bfacf3, Bfacf3SetZ) stayed in
 // clk_test.cpp -- they check behavior against independently-computable
@@ -12,7 +12,7 @@
 // unit-shaped.
 //
 // Neither test here needs shared fixture state, so both are plain TEST()
-// with a locally-constructed clkCigar, per this file's own style guide.
+// with a locally-constructed clkCigar rather than a fixture class.
 
 #include <gtest/gtest.h>
 

@@ -4,19 +4,22 @@
 //
 // Cases and expected_newsud values live in test/data/bfacf_critical_z_cases.json
 // and are NOT hand-typed -- they were produced by actually running this same
-// simulation once and recording its output. See
-// context/recombo/2026-07-12-test-suite-audit-and-style-guide.md section 6
-// for the data-driven pattern this follows, and
-// context/recombo/2026-07-11-recovered-zvalue-table.md for where the
-// trefoil/figure-eight z-values come from.
+// simulation once and recording its output. Adding a new case is a data
+// change, not a code change: the TEST_P body below handles any number of
+// cases from the JSON file.
 //
 // z-value provenance per case, briefly:
-//  - 3_1, 4_1: recovered historical z-value table (target length in the
-//    case name), see the doc above.
+//  - 3_1, 4_1: a per-knot-type, per-target-length z-value table used to
+//    exist in src/legacyBfacf.cpp (added 2014, removed in "Remove legacy
+//    z-value tables", commit a54c754). These values are recovered from
+//    that table (`git show a54c754^:src/legacyBfacf.cpp`) -- the target
+//    length used for each case is in its name, e.g. trefoil_z60_seed1 used
+//    the entry calibrated for average length 60.
 //  - 0_1: CRITICAL_Z = 1/4.6852 (Schmirler 2012), the same constant already
-//    used in bfacf_regression_test.cpp. No table value exists for 0_1 -- it
-//    was UNKNOWN_Z at every target length in the recovered table, and it
-//    resisted zAnalyzer live too (see the zAnalyzer investigation doc).
+//    used in bfacf_regression_test.cpp. No entry exists for 0_1 in the
+//    recovered table -- it was UNKNOWN_Z at every target length there, and
+//    it also resisted a live zAnalyzer run (persistent non-convergence, see
+//    the commit history/PR discussion around this test for details).
 //  - 2_2_1: no calibrated value exists anywhere for this link; DEFAULT_Z
 //    (0.20815) is used as the codebase's general-purpose operating default,
 //    not a value verified for this specific topology.

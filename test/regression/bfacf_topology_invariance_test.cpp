@@ -1,16 +1,15 @@
 // Topology-invariance regression tests: grow a conformation at a relatively
 // high z, then shrink it at a very low z, and check the resulting length.
 //
-// The premise (see context/recombo/background-cubic-lattice-and-bfacf.md,
-// "Low-z shrinkage as an empirical topology-invariance check"): a 4-edge
-// closed self-avoiding polygon on the cubic lattice can only ever be the
-// unknot. BFACF's elementary moves are topology-preserving by construction,
-// so shrinking at low z can only reach that trivial 4-edge square if the
-// conformation genuinely is the unknot. A conformation that started (or
-// remained, after growth) genuinely knotted can never reach 4 edges -- it
-// will stabilize at some higher length specific to its own knot type.
-// Reaching exactly 4 is therefore only expected for 0_1; any other case
-// reaching 4 would indicate topology was NOT preserved during the run.
+// The premise: a 4-edge closed self-avoiding polygon on the cubic lattice
+// can only ever be the unknot. BFACF's elementary moves are
+// topology-preserving by construction, so shrinking at low z can only reach
+// that trivial 4-edge square if the conformation genuinely is the unknot.
+// A conformation that started (or remained, after growth) genuinely knotted
+// can never reach 4 edges -- it will stabilize at some higher length
+// specific to its own knot type. Reaching exactly 4 is therefore only
+// expected for 0_1; any other case reaching 4 would indicate topology was
+// NOT preserved during the run.
 //
 // Caveat: this specific "did length reach 4" check is only valid evidence
 // for the topology of an individual, single-component conformation. It is
@@ -20,7 +19,7 @@
 // only the pair is topologically nontrivial. So the 2_2_1 case here only
 // pins down the observed regression value -- it does not assert length > 4,
 // since a component reaching a short length near 4 would not by itself be
-// evidence of a bug. See the background doc for the full explanation.
+// evidence of a bug.
 //
 // Cases and expected_final_newsud values are generated, not hand-typed --
 // see test/data/bfacf_topology_invariance_cases.json.

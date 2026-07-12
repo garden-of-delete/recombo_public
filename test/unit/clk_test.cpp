@@ -325,8 +325,8 @@ TEST_F(ClkTestFixture, ReadFromCoords)
 // --- Bfacf3TestFixture suite: BFACF algorithm construction and configuration ---
 // (RandomReset and Bfacf3Run moved to test/regression/bfacf3_test.cpp on
 //  2026-07-12 -- they pin down actual simulation output with no closed-form
-//  answer to check against, which makes them regression tests. See
-//  context/recombo/2026-07-12-test-suite-audit-and-style-guide.md.)
+//  answer to check against, which makes them regression tests rather than
+//  unit tests. See that file's header comment for the full explanation.)
 
 TEST_F(Bfacf3TestFixture, Bfacf3)
 {

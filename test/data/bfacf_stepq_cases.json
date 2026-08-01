@@ -1,0 +1,103 @@
+{
+  "cases": [
+    {
+      "name": "trefoil_q1_seed1",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.198787988281,
+      "q": 1,
+      "steps": 300,
+      "expected_newsud": ["enueussedwdndenwneuuwnwswwseseeedsswwnwn"]
+    },
+    {
+      "name": "trefoil_q2_seed1",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.198787988281,
+      "q": 2,
+      "steps": 300,
+      "expected_newsud": ["enueussedwdndenwneuuwnwswwseseeendssswwnwn"]
+    },
+    {
+      "name": "trefoil_q3_seed1",
+      "knot_type": "3_1",
+      "source_file": "initial/3_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.198787988281,
+      "q": 3,
+      "steps": 300,
+      "expected_newsud": ["ueuussddendnwnwuusseeesswwwnwswdneednn"]
+    },
+    {
+      "name": "figure8_q1_seed1",
+      "knot_type": "4_1",
+      "source_file": "initial/4_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.18762490234400001,
+      "q": 1,
+      "steps": 300,
+      "expected_newsud": ["eusuuuwswdddnennwuuessseednnwwwdde"]
+    },
+    {
+      "name": "figure8_q2_seed1",
+      "knot_type": "4_1",
+      "source_file": "initial/4_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.18762490234400001,
+      "q": 2,
+      "steps": 300,
+      "expected_newsud": ["eusuuuwswdddnennwuuessseednnwwwdde"]
+    },
+    {
+      "name": "figure8_q1_seed2",
+      "knot_type": "4_1",
+      "source_file": "initial/4_1",
+      "component_count": 1,
+      "seed": 2,
+      "z": 0.18762490234400001,
+      "q": 1,
+      "steps": 300,
+      "expected_newsud": ["seuusuuuwwddednnuusssdeenunwdwwdddwnee"]
+    },
+    {
+      "name": "figure8_q2_seed2",
+      "knot_type": "4_1",
+      "source_file": "initial/4_1",
+      "component_count": 1,
+      "seed": 2,
+      "z": 0.18762490234400001,
+      "q": 2,
+      "steps": 300,
+      "expected_newsud": ["euuuuwwdddennuusssedennwwwddse"]
+    },
+    {
+      "name": "unknot_q1_seed1",
+      "knot_type": "0_1",
+      "source_file": "initial/0_1",
+      "component_count": 1,
+      "seed": 1,
+      "z": 0.21343806027490822,
+      "q": 1,
+      "steps": 300,
+      "expected_newsud": ["seeeneeeeeseneeeeeueedseeneeeeeedeeueesenuesdedeneeueeeeeeuedeeeedeeenwwwwwuwnwswwwuwwdwwuswnwwndswuwwswnwdwwwwwdnwwuswwuwwwdwwwwwwwwwdwuwwwsw"]
+    },
+    {
+      "name": "link_2_2_1_q1_seed1",
+      "knot_type": "2_2_1",
+      "source_file": "initial/2_2_1a",
+      "component_count": 2,
+      "seed": 1,
+      "z": 0.20815,
+      "q": 1,
+      "steps": 300,
+      "expected_newsud": ["dwdneseesuunwnws", "dnenenuwwueswsds"]
+    }
+  ]
+}

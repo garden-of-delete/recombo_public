@@ -28,6 +28,7 @@
 #include "test_data_util.h"
 
 #include <fstream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -84,15 +85,15 @@ TEST_P(BfacfCriticalZTest, MatchesRecordedResult)
     clkConformationAsList comp0, comp1;
     ASSERT_TRUE(comp0.readFromCoords(file)) << "Could not read component 0 from " << c.source_file;
 
-    clkConformationBfacf3* knot;
+    unique_ptr<clkConformationBfacf3> knot;
     if (c.component_count == 2)
     {
         ASSERT_TRUE(comp1.readFromCoords(file)) << "Could not read component 1 from " << c.source_file;
-        knot = new clkConformationBfacf3(comp0, comp1);
+        knot.reset(new clkConformationBfacf3(comp0, comp1));
     }
     else
     {
-        knot = new clkConformationBfacf3(comp0);
+        knot.reset(new clkConformationBfacf3(comp0));
     }
 
     knot->setSeed(c.seed);
@@ -107,8 +108,6 @@ TEST_P(BfacfCriticalZTest, MatchesRecordedResult)
         EXPECT_EQ(result.writeAsNewsud(), c.expected_newsud[i])
             << c.name << ": component " << i << " mismatch";
     }
-
-    delete knot;
 }
 
 INSTANTIATE_TEST_SUITE_P(

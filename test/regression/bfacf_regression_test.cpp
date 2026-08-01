@@ -3,7 +3,6 @@
 #include <clkCigar.h>
 #include <clkConformationBfacf3.h>
 #include <clkConformationAsList.h>
-#include <fstream>
 
 using namespace std;
 
@@ -21,21 +20,6 @@ protected:
     {
         clkCigar square;
         knot = new clkConformationBfacf3(square);
-        knot->setSeed(seed);
-        knot->setZ(z);
-    }
-
-    void initLinkFromFile(const string& filename, int seed, double z)
-    {
-        string fullPath = "/Users/kmo/repos/recombo_public/" + filename;
-        ifstream file(fullPath);
-        ASSERT_TRUE(file.is_open()) << "Could not open file: " << fullPath;
-
-        clkConformationAsList comp1, comp2;
-        ASSERT_TRUE(comp1.readFromText(file)) << "Could not read first component from " << filename;
-        ASSERT_TRUE(comp2.readFromText(file)) << "Could not read second component from " << filename;
-
-        knot = new clkConformationBfacf3(comp1, comp2);
         knot->setSeed(seed);
         knot->setZ(z);
     }

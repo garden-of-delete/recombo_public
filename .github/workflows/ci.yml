@@ -20,3 +20,11 @@ jobs:
 
       - name: Test
         run: cd build && ctest --output-on-failure
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t recombo .

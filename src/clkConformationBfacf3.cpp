@@ -728,7 +728,7 @@ implementation(new clkConformationBfacf3::impl(firstComponent, secondComponent))
 clkConformationBfacf3::~clkConformationBfacf3()
 {
    delete implementation;
-   delete probMap;
+   delete[] probMap;
 }
 
 void clkConformationBfacf3::setKnot(const clk & component)

@@ -11,4 +11,4 @@ WORKDIR /recombo
 COPY . .
 
 RUN cmake -B build && cmake --build build
-RUN ./build/src/bin/unitTest
+RUN cd build && ctest --output-on-failure
